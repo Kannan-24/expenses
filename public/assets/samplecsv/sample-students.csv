@@ -1,0 +1,5 @@
+name,email,phone,roll_no,dob,blood_group,address
+John Doe,johndoe@example.com,9876543210,101,2005-06-15,O+,123 Street, City
+Jane Smith,janesmith@example.com,9876543211,102,2006-08-20,A-,456 Avenue, City
+Robert Brown,robertbrown@example.com,9876543212,103,2005-12-10,B+,789 Road, City
+Emily White,emilywhite@example.com,9876543213,104,2007-03-05,AB-,321 Boulevard, City
