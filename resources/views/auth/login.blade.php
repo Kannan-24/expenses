@@ -1,55 +1,16 @@
 <x-guest-layout>
     <x-slot name="title">
-        {{ __('Login') }} - {{ config('app.name', 'expenses') }}
+        {{ __('Login') }} - {{ config('app.name', 'Expense Manager') }}
     </x-slot>
 
     <div class="flex items-center justify-center min-h-screen px-6">
-        <div class="grid w-full max-w-6xl grid-cols-1 overflow-hidden bg-white rounded-lg shadow-lg md:grid-cols-2">
-
-            <!-- Left Section: Branding & Info -->
-            <div class="flex-col justify-center hidden px-10 py-16 text-white bg-blue-700 md:flex">
-
-                <h2 class="text-3xl font-extrabold">Automated Transport Management System</h2>
-                <p class="mt-4 text-lg leading-relaxed">
-                    Secure and efficient transport management for students, parents, and staff .
-                </p>
-                <div class="mt-6 space-y-4 text-left">
-                    <div class="flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-white" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M9.75 6.75h4.5M9.75 9.75h4.5m-4.5 3h4.5m0 3h-4.5m-4.5 0h.007m.993 0h3.5m5.5 0h.007m.993 0h3.5m-10-6H9m5 0h.007m.993 0h3.5">
-                            </path>
-                        </svg>
-                        <span> Live Bus Tracking for safety and convenience</span>
-                    </div>
-                    <div class="flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-white" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 11c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zm0 2c-2.485 0-4.5 2.015-4.5 4.5h9c0-2.485-2.015-4.5-4.5-4.5z">
-                            </path>
-                        </svg>
-                        <span> Automated Attendance for better record-keeping</span>
-                    </div>
-                    <div class="flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-white" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M15.232 5.232a2 2 0 012.828 0l.707.707a2 2 0 010 2.828l-5.657 5.657a2 2 0 01-2.828 0l-.707-.707a2 2 0 010-2.828l5.657-5.657zM6.343 15.657a2 2 0 010 2.828l-.707.707a2 2 0 01-2.828 0l-.707-.707a2 2 0 010-2.828l.707-.707a2 2 0 012.828 0z">
-                            </path>
-                        </svg>
-                        <span> Personalized Dashboard for users & admins</span>
-                    </div>
-                </div>
-            </div>
-
+        <div class="grid w-full max-w-6xl overflow-hidden bg-white rounded-lg shadow-lg ">
             <!-- Right Section: Login Form -->
             <div class="max-w-md p-8 mx-auto">
                 <div class="mb-8 ">
                     <h3 class="text-3xl font-bold text-gray-800">Welcome Back</h3>
                     <p class="mt-2 text-sm text-gray-500">
-                        Log in to access your transport details, schedules, and attendance records .
+                        Log in to manage your expenses, track spending, and view your financial records.
                     </p>
                 </div>
 
@@ -64,8 +25,8 @@
                                 class="w-full py-3 pl-4 pr-10 text-sm text-gray-800 border border-gray-300 rounded-lg outline-blue-600"
                                 placeholder="Enter your email" value="{{ old('email') }}" autofocus
                                 autocomplete="username" />
-                            </div>
-                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                        </div>
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
 
                     <!-- Password -->

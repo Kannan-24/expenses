@@ -28,7 +28,7 @@
 
         <!-- Desktop Menu -->
         <ul class="hidden md:flex space-x-6 text-gray-600">
-            <li><a href="#" class="hover:text-blue-500">Home</a></li>
+            <li><a href="#" class="hover:text-blue-500">Dashboard</a></li>
             <li><a href="#about" class="hover:text-blue-500">About</a></li>
             <li><a href="#features" class="hover:text-blue-500">Features</a></li>
             <li><a href="#team" class="hover:text-blue-500">Team</a></li>
@@ -42,7 +42,7 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="absolute top-16 left-0 w-full bg-white shadow-md hidden md:hidden">
             <ul class="flex flex-col items-center py-4 space-y-4 text-gray-600">
-                <li><a href="#" class="hover:text-blue-500">Home</a></li>
+                <li><a href="#" class="hover:text-blue-500">Dashboard</a></li>
                 <li><a href="#about" class="hover:text-blue-500">About</a></li>
                 <li><a href="#features" class="hover:text-blue-500">Features</a></li>
                 <li><a href="#team" class="hover:text-blue-500">Team</a></li>

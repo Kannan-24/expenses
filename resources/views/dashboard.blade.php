@@ -6,75 +6,158 @@
     <div class="ml-4 py-9 sm:ml-64 sm:me-4 lg:me-0">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            <!-- Welcome -->
-            <div
-                class="p-6 mb-6 text-center text-white rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-indigo-600">
+            <!-- Welcome Message -->
+            <div class="p-6 mb-6 text-center text-white rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-indigo-600">
                 <h1 class="text-3xl font-bold">Welcome Back! 👋</h1>
-                <p class="mt-2 text-lg">Here's a quick summary of your finances today.</p>
+                <p class="mt-2 text-lg">Here’s your monthly financial summary.</p>
             </div>
 
             <!-- Summary Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="p-6 bg-white rounded shadow text-center">
-                    <p class="text-sm text-gray-500">Total Income</p>
-                    <h2 class="text-2xl font-semibold text-green-600">₹{{ number_format($totalIncome, 2) }}</h2>
-                </div>
-                <div class="p-6 bg-white rounded shadow text-center">
-                    <p class="text-sm text-gray-500">Total Expenses</p>
-                    <h2 class="text-2xl font-semibold text-red-600">₹{{ number_format($totalExpense, 2) }}</h2>
-                </div>
-                <div class="p-6 bg-white rounded shadow text-center">
-                    <p class="text-sm text-gray-500">Balance</p>
-                    <h2 class="text-2xl font-semibold text-blue-600">₹{{ number_format($balance, 2) }}</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <x-summary-card title="This Month's Income" value="₹{{ number_format($totalIncome, 2) }}" color="green" />
+                <x-summary-card title="This Month's Expense" value="₹{{ number_format($totalExpense, 2) }}" color="red" />
+                <x-summary-card title="Net Balance" value="₹{{ number_format($monthlyNetBalance, 2) }}" color="blue" />
+
+                <div class="p-6 bg-white border-l-4 border-yellow-400 shadow rounded-xl">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-gray-600 text-lg font-semibold">Cash / Bank</h2>
+                        <a href="{{ route('balance.edit') }}" class="text-sm text-indigo-600 underline hover:text-indigo-800">Edit Balance</a>
+                    </div>
+                    <p class="mt-2 text-xl text-gray-700">
+                        💵 Cash: ₹{{ number_format($balance->cash ?? 0, 2) }}<br>
+                        🏦 Bank: ₹{{ number_format($balance->bank ?? 0, 2) }}<br>
+                        <span class="text-lg font-semibold">Total: ₹{{ number_format(($balance->cash ?? 0) + ($balance->bank ?? 0), 2) }}</span>
+                    </p>
                 </div>
             </div>
 
             <!-- Recent Transactions -->
-            <div class="bg-white shadow rounded-lg p-6">
-                <h3 class="text-lg font-semibold mb-4">Recent Transactions</h3>
+            <div class="bg-white shadow rounded-lg p-6 mb-8">
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">Recent Transactions</h3>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full text-sm text-left text-gray-600">
-                        <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
+                    <table class="min-w-full text-sm text-left text-gray-700">
+                        <thead class="bg-gray-100 text-xs text-gray-500 uppercase">
                             <tr>
                                 <th class="px-4 py-2">#</th>
                                 <th class="px-4 py-2">Date</th>
-                                <th class="px-4 py-2">Category</th>
                                 <th class="px-4 py-2">Type</th>
+                                <th class="px-4 py-2">Payment Method</th>
                                 <th class="px-4 py-2">Amount</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $recentExpenses = $expenses->take(10);
-                            @endphp
-                            @forelse($recentExpenses as $expense)
+                            @forelse ($recentExpenses as $expense)
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-2">{{ $expense->date }}</td>
-                                    <td class="px-4 py-2">{{ $expense->category->name ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">{{ \Carbon\Carbon::parse($expense->date)->format('d M Y') }}</td>
                                     <td class="px-4 py-2">
-                                        <span
-                                            class="px-2 py-1 rounded text-xs {{ $expense->type == 'income' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                                        <span class="font-semibold {{ $expense->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
                                             {{ ucfirst($expense->type) }}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-2">₹{{ number_format($expense->amount, 2) }}</td>
+                                    <td class="px-4 py-2">
+                                        @if ($expense->payment_method === 'cash')
+                                            <span class="text-yellow-400">Cash</span>
+                                        @else
+                                            <span class="text-blue-400">Bank</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        <span class="{{ $expense->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
+                                            ₹{{ number_format($expense->amount, 2) }}
+                                        </span>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center py-4 text-gray-500">No transactions found.
-                                    </td>
+                                    <td colspan="5" class="text-center py-4 text-gray-400">No recent transactions.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
+            </div>
 
-                <!-- Pagination -->
-                <div class="mt-4">
-                    {{ $expenses->links() }}
+            <!-- Monthly Overview Table -->
+            <div class="bg-white shadow rounded-lg p-6 mt-8">
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">Monthly Income vs Expense</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm text-left text-gray-700">
+                        <thead class="bg-gray-100 text-xs text-gray-500 uppercase">
+                            <tr>
+                                <th class="px-4 py-2">Month</th>
+                                <th class="px-4 py-2">Income</th>
+                                <th class="px-4 py-2">Expense</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($monthlyData as $month)
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="px-4 py-2">{{ \Carbon\Carbon::createFromFormat('Y-m', $month->month)->format('F Y') }}</td>
+                                    <td class="px-4 py-2 text-green-600 font-semibold">₹{{ number_format($month->total_income, 2) }}</td>
+                                    <td class="px-4 py-2 text-red-600 font-semibold">₹{{ number_format($month->total_expense, 2) }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="text-center py-4 text-gray-400">No monthly data available.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
+
+            <!-- Chart Section -->
+            <div class="bg-white shadow rounded-lg p-6 mt-8">
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">Graphical View: Monthly Income vs Expense</h3>
+                <canvas id="incomeExpenseChart" height="100"></canvas>
+            </div>
+
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('incomeExpenseChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @json($chartLabels),
+                datasets: [
+                    {
+                        label: 'Income',
+                        data: @json($incomeData),
+                        backgroundColor: 'rgba(34,197,94,0.7)',
+                        borderColor: 'rgba(34,197,94,1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Expense',
+                        data: @json($expenseData),
+                        backgroundColor: 'rgba(239,68,68,0.7)',
+                        borderColor: 'rgba(239,68,68,1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
 </x-app-layout>

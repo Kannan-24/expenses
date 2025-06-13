@@ -41,7 +41,6 @@ class ProfileController extends Controller
             'address' => $request->address,
         ]);
 
-        return redirect()->back()->with('success', 'Profile updated successfully.');
+        return redirect()->route('profile.show')->with('success', 'Profile updated successfully.');
     }
 }
-

@@ -42,10 +42,6 @@
                             @endforelse
                         </tbody>
                     </table>
-
-                    <div class="mt-4">
-                        {{ $categories->links() }}
-                    </div>
                 </div>
 
                 <x-pagination :paginator="$categories" />

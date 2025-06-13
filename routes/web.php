@@ -5,18 +5,16 @@ use App\Http\Controllers\AccountSettingsController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BalanceController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
-// Dashboard Route
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-// Authenticated User Routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -32,4 +30,12 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('expenses', ExpenseController::class);
     Route::resource('categories', CategoryController::class);
+    Route::get('/balance/edit', [BalanceController::class, 'edit'])->name('balance.edit');
+    Route::put('/balance/update', [BalanceController::class, 'update'])->name('balance.update');
+    Route::get('/balance/history', [BalanceController::class, 'history'])->name('balance.history');
+    Route::get('/reports/expenses', [ReportController::class, 'expenseReport'])->name('reports.expenses');
+    Route::get('/reports/expenses/pdf', [ReportController::class, 'exportExpensePdf'])->name('reports.expenses.pdf');
+    Route::get('/reports/expenses/excel', [ReportController::class, 'exportExpenseExcel'])->name('reports.expenses.excel');
 });
+
+require __DIR__ . '/auth.php';

@@ -19,9 +19,9 @@
 <body class="font-sans antialiased text-gray-900">
     <div class="flex flex-col items-center min-h-screen pt-6 bg-blue-200 sm:justify-center sm:pt-0">
 
-        <a href="/" class="absolute top-8 left-8">
+        {{-- <a href="/" class="absolute top-8 left-8">
             <x-application-logo class="text-gray-500 fill-current " />
-        </a>
+        </a> --}}
 
         <div>
             {{ $slot }}

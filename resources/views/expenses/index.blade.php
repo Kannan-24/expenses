@@ -4,7 +4,7 @@
     </x-slot>
 
     <!-- Main Content Section -->
-    <div class="py-6    ml-4 sm:ml-64">
+    <div class="py-4 ml-4 sm:ml-64">
         <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8">
             <x-bread-crumb-navigation />
 
@@ -28,6 +28,8 @@
                             class="border border-gray-300 rounded px-3 py-1 text-sm text-gray-800">
                         <button type="submit"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm">Filter</button>
+                        <a href="{{ route('expenses.index') }}"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-1 rounded text-sm">Reset</a>
                     </div>
                 </form>
 
@@ -37,11 +39,11 @@
                             <tr>
                                 <th class="px-4 py-2">#</th>
                                 <th class="px-4 py-2">Date</th>
-                                <th class="px-4 py-2">Type</th>
                                 <th class="px-4 py-2">Category</th>
+                                <th class="px-4 py-2">Type</th>
+                                <th class="px-4 py-2">Payment Method</th>
                                 <th class="px-4 py-2">Amount</th>
-                                <th class="px-4 py-2">Note</th>
-                                <th class="px-4 py-2 text-right">Actions</th>
+                                <th class="px-4 py-2 text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -50,6 +52,7 @@
                                     <td class="px-4 py-2">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-2">{{ \Carbon\Carbon::parse($expense->date)->format('Y-m-d') }}
                                     </td>
+                                    <td class="px-4 py-2">{{ $expense->category->name ?? 'N/A' }}</td>
                                     <td class="px-4 py-2">
                                         @if ($expense->type === 'income')
                                             <span class="text-green-400 font-semibold">Income</span>
@@ -57,8 +60,14 @@
                                             <span class="text-red-400 font-semibold">Expense</span>
                                         @endif
                                     </td>
-                                    <td class="px-4 py-2">{{ $expense->category->name ?? 'N/A' }}</td>
                                     <td class="px-4 py-2">
+                                        @if ($expense->payment_method === 'cash')
+                                            <span class="text-yellow-400">Cash</span>
+                                        @else
+                                            <span class="text-blue-400">Bank</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-2 ">
                                         @if ($expense->type === 'income')
                                             <span
                                                 class="text-green-400">₹{{ number_format($expense->amount, 2) }}</span>
@@ -66,7 +75,7 @@
                                             <span class="text-red-400">₹{{ number_format($expense->amount, 2) }}</span>
                                         @endif
                                     </td>
-                                    <td class="px-4 py-2 text-right space-x-2">
+                                    <td class="px-4 py-2 text-center space-x-2">
                                         <a href="{{ route('expenses.edit', $expense->id) }}"
                                             class="text-blue-400 hover:text-blue-200">Edit</a>
                                         <a href="{{ route('expenses.show', $expense->id) }}"
@@ -87,10 +96,6 @@
                             @endforelse
                         </tbody>
                     </table>
-
-                    <div class="mt-4">
-                        {{ $expenses->links() }}
-                    </div>
                 </div>
 
                 <x-pagination :paginator="$expenses" />
