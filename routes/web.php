@@ -35,9 +35,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/balance/edit', [BalanceController::class, 'edit'])->name('balance.edit');
     Route::put('/balance/update', [BalanceController::class, 'update'])->name('balance.update');
     Route::get('/balance/history', [BalanceController::class, 'history'])->name('balance.history');
-    Route::get('/reports/expenses', [ReportController::class, 'expenseReport'])->name('reports.expenses');
-    Route::get('/reports/expenses/pdf', [ReportController::class, 'exportExpensePdf'])->name('reports.expenses.pdf');
-    Route::get('/reports/expenses/excel', [ReportController::class, 'exportExpenseExcel'])->name('reports.expenses.excel');
+    Route::get('/reports/expenses', [ReportController::class, 'expenses'])->name('reports.expenses');
+    Route::get('/reports/expenses/pdf', [ReportController::class, 'expensesPdf'])->name('reports.expenses_report');
 });
 
 require __DIR__ . '/auth.php';

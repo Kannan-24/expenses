@@ -1,100 +1,156 @@
-<x-app-layout>
-    <x-slot name="title">
-        Expense Report - {{ config('app.name') }}
-    </x-slot>
+<!DOCTYPE html>
+<html>
 
-    <div class="py-6 ml-4 sm:ml-64">
-        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <x-bread-crumb-navigation />
+<head>
+    <title>Expense Report</title>
+    <style>
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12px;
+            margin: 20px;
+        }
 
-            <div class="bg-white p-4 rounded-2xl">
-                <form method="GET" action="{{ route('reports.expenses') }}" class="mb-4 flex flex-wrap gap-3 items-center">
-                    <select name="filter" onchange="this.form.submit()"
-                        class="bg-white border border-gray-300 text-sm rounded px-3 py-2 text-gray-900">
-                        <option value="">All</option>
-                        <option value="7days" {{ request('filter') == '7days' ? 'selected' : '' }}>Last 7 Days</option>
-                        <option value="15days" {{ request('filter') == '15days' ? 'selected' : '' }}>Last 15 Days</option>
-                        <option value="30days" {{ request('filter') == '30days' ? 'selected' : '' }}>Last 30 Days</option>
-                    </select>
+        h2 {
+            text-align: center;
+            margin-bottom: 5px;
+        }
 
-                    <div class="flex items-center gap-2">
-                        <input type="date" name="start_date" value="{{ request('start_date') }}"
-                            class="border border-gray-300 rounded px-3 py-1 text-sm text-gray-800">
-                        <span class="text-gray-500">to</span>
-                        <input type="date" name="end_date" value="{{ request('end_date') }}"
-                            class="border border-gray-300 rounded px-3 py-1 text-sm text-gray-800">
-                        <button type="submit"
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm">Filter</button>
-                        <a href="{{ route('reports.expenses') }}"
-                            class="bg-gray-300 text-gray-800 px-4 py-1 rounded text-sm ml-2">Reset</a>
-                        <a href="{{ route('reports.expenses.pdf', request()->query()) }}" target="_blank"
-                            class="bg-red-500 text-white px-4 py-1 rounded text-sm ml-2">Export PDF</a>
-                    </div>
-                </form>
+        .report-meta {
+            text-align: right;
+            font-size: 11px;
+            margin-bottom: 15px;
+        }
 
-                <div class="bg-gray-800 rounded-lg shadow p-4 overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-300">
-                        <thead class="text-xs uppercase bg-gray-700 text-gray-400">
-                            <tr>
-                                <th class="px-4 py-2">#</th>
-                                <th class="px-4 py-2">Date</th>
-                                <th class="px-4 py-2">Type</th>
-                                <th class="px-4 py-2">Category</th>
-                                <th class="px-4 py-2">Person</th>
-                                <th class="px-4 py-2">Amount</th>
-                                <th class="px-4 py-2">Method</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($expenses as $exp)
-                                <tr class="border-b border-gray-700 hover:bg-gray-700">
-                                    <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-2">{{ \Carbon\Carbon::parse($exp->date)->format('Y-m-d') }}</td>
-                                    <td class="px-4 py-2">
-                                        @if ($exp->type === 'income')
-                                            <span class="text-green-400 font-semibold">Income</span>
-                                        @else
-                                            <span class="text-red-400 font-semibold">Expense</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-2">{{ $exp->category->name ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2">
-                                        @if ($exp->person)
-                                            {{ $exp->person->name }}
-                                        @else
-                                            <span class="text-gray-500">N/A</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-2">
-                                        @if ($exp->type === 'income')
-                                            <span class="text-green-400">₹{{ number_format($exp->amount, 2) }}</span>
-                                        @else
-                                            <span class="text-red-400">₹{{ number_format($exp->amount, 2) }}</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-2">
-                                        @if ($exp->payment_method === 'cash')
-                                            <span class="text-yellow-400">Cash</span>
-                                        @else
-                                            <span class="text-blue-400">Bank</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center py-4 text-gray-400">No records found.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+        .person-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 5px;
+        }
 
-                    @if(method_exists($expenses, 'links'))
-                        <div class="mt-4">
-                            {{ $expenses->links() }}
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 5px 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: #e8e8e8;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            font-size: 11px;
+            text-align: right;
+            border-top: 1px solid #ccc;
+            padding-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Expense Report</h2>
+
+    <div class="report-meta">
+        <strong>Report Type:</strong> {{ ucfirst(str_replace('_', ' ', $reportType)) }}<br>
+        <strong>Report Period:</strong> {{ $filterRange ?? 'Full Report' }}
     </div>
-</x-app-layout>
+
+    @php
+        $grandIncome = 0;
+        $grandExpense = 0;
+    @endphp
+
+    @forelse($expenses as $personName => $list)
+        <div class="person-title">Person: {{ $personName }}</div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $totalIncome = 0;
+                    $totalExpense = 0;
+                @endphp
+
+                @foreach ($list as $i => $exp)
+                    @php
+                        $isIncome = $exp->type === 'income';
+                        $amount = $exp->amount;
+                        if ($isIncome) {
+                            $totalIncome += $amount;
+                            $grandIncome += $amount;
+                        } else {
+                            $totalExpense += $amount;
+                            $grandExpense += $amount;
+                        }
+                    @endphp
+                    <tr>
+                        <td>{{ $i + 1 }}</td>
+                        <td>{{ \Carbon\Carbon::parse($exp->date)->format('d-m-Y') }}</td>
+                        <td>{{ ucfirst($exp->type) }}</td>
+                        <td>{{ $exp->category->name ?? 'N/A' }}</td>
+                        <td>{{ number_format($amount, 2) }}</td>
+                        <td>{{ ucfirst($exp->payment_method) }}</td>
+                        <td>
+                            @php $j = 1; @endphp
+                            @foreach (explode('#', $exp->note) as $note)
+                                @if (trim($note) !== '')
+                                    {{ $j++ }}. {{ trim($note) }}<br>
+                                @endif
+                            @endforeach
+                        </td>
+                    </tr>
+                @endforeach
+
+            </tbody>
+        </table>
+    @empty
+        <p style="text-align:center;">No records found for this period.</p>
+    @endforelse
+
+    <hr>
+
+    <h3 style="text-align: right;">
+        Grand Total - Income: ₹{{ number_format($grandIncome, 2) }} |
+        Expense: ₹{{ number_format($grandExpense, 2) }} |
+        Net: ₹{{ number_format($grandIncome - $grandExpense, 2) }}
+    </h3>
+
+    <div class="footer">
+        <span style="float: left;">
+            Generated by: {{ auth()->user()->name ?? 'System' }}
+        </span>
+        <span style="float: right;">
+            Generated on: {{ \Carbon\Carbon::now()->format('d-m-Y h:i A') }}
+        </span>
+    </div>
+</body>
+
+</html>

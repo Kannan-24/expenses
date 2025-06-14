@@ -12,4 +12,5 @@ class ExpensePerson extends Model
         'user_id',
         'name',
     ];
+    
 }
