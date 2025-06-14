@@ -21,13 +21,6 @@
             margin-bottom: 15px;
         }
 
-        .person-title {
-            font-size: 14px;
-            font-weight: bold;
-            margin-top: 20px;
-            margin-bottom: 5px;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -73,46 +66,36 @@
         <strong>Report Period:</strong> {{ $filterRange ?? 'Full Report' }}
     </div>
 
-    @php
-        $grandIncome = 0;
-        $grandExpense = 0;
-    @endphp
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Person</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+                $grandIncome = 0;
+                $grandExpense = 0;
+                $counter = 1;
+            @endphp
 
-    @forelse($expenses as $personName => $list)
-        <div class="person-title">Person: {{ $personName }}</div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Category</th>
-                    <th>Amount</th>
-                    <th>Method</th>
-                    <th>Note</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    $totalIncome = 0;
-                    $totalExpense = 0;
-                @endphp
-
-                @foreach ($list as $i => $exp)
+            @forelse($expenses as $person => $records)
+                @foreach ($records as $exp)
                     @php
-                        $isIncome = $exp->type === 'income';
                         $amount = $exp->amount;
-                        if ($isIncome) {
-                            $totalIncome += $amount;
-                            $grandIncome += $amount;
-                        } else {
-                            $totalExpense += $amount;
-                            $grandExpense += $amount;
-                        }
+                        $isIncome = $exp->type === 'income';
+                        $isIncome ? ($grandIncome += $amount) : ($grandExpense += $amount);
                     @endphp
                     <tr>
-                        <td>{{ $i + 1 }}</td>
+                        <td>{{ $counter++ }}</td>
+                        <td>{{ $person }}</td>
                         <td>{{ \Carbon\Carbon::parse($exp->date)->format('d-m-Y') }}</td>
                         <td>{{ ucfirst($exp->type) }}</td>
                         <td>{{ $exp->category->name ?? 'N/A' }}</td>
@@ -128,19 +111,19 @@
                         </td>
                     </tr>
                 @endforeach
+            @empty
+                <tr>
+                    <td colspan="8" style="text-align:center;">No records found for this period.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
 
-            </tbody>
-        </table>
-    @empty
-        <p style="text-align:center;">No records found for this period.</p>
-    @endforelse
-
-    <hr>
-
-    <h3 style="text-align: right;">
-        Total Income: ₹{{ number_format($grandIncome, 2) }} |
-        Expense: ₹{{ number_format($grandExpense, 2) }}
-    </h3>
+    <div class="summary">
+        <strong>Summary:</strong><br>
+        <span style="font-weight: bold;">Total Income:</span> ₹{{ number_format($grandIncome, 2) }}<br>
+        <span style="font-weight: bold;">Total Expense:</span> ₹{{ number_format($grandExpense, 2) }}<br>
+    </div>
 
     <div class="footer">
         <span style="float: left;">
