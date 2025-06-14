@@ -19,6 +19,11 @@ class ReportController extends Controller
 
         $query = Expense::with(['category', 'person']);
 
+        // Filter by authenticated user
+        if ($request->user()) {
+            $query->where('user_id', $request->user()->id);
+        }
+
         // Date filters
         if ($request->filter === '7days') {
             $query->where('date', '>=', now()->subDays(7));
@@ -41,7 +46,8 @@ class ReportController extends Controller
 
         $expenses = $query->orderBy('date', 'desc')->paginate(50);
 
-        $people = ExpensePerson::select('name')->distinct()->orderBy('name')->get();
+        $people = ExpensePerson::where('user_id', $request->user()->id)
+            ->select('name')->distinct()->orderBy('name')->get();
 
         return view('reports.expenses', compact('expenses', 'people'));
     }

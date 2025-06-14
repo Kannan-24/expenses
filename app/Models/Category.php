@@ -11,11 +11,17 @@ class Category extends Model
 
     protected $fillable = [
         'name',
+        'user_id'
     ];
 
     // A category has many expenses
     public function expenses()
     {
         return $this->hasMany(Expense::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
