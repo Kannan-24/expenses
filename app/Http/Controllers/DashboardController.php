@@ -37,7 +37,7 @@ class DashboardController extends Controller
 
         $recentExpenses = Expense::with('category')
             ->where('user_id', $userId)
-            ->orderBy('date', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->take(5)
             ->get();
 

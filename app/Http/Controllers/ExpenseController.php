@@ -25,23 +25,9 @@ class ExpenseController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        $expenses = $query->orderBy('date', 'desc')->paginate(9);
+        $expenses = $query->orderBy('id', 'desc')->paginate(9);
 
-        $totalIncome = Expense::where('user_id', Auth::id())->where('type', 'income')->sum('amount');
-        $totalExpense = Expense::where('user_id', Auth::id())->where('type', 'expense')->sum('amount');
-        $balanceAmount = $totalIncome - $totalExpense;
-
-        $balance = Balance::firstOrCreate(
-            ['user_id' => Auth::id()],
-            ['cash' => 0, 'bank' => 0]
-        );
-
-        $lastExpense = Expense::with('category')
-            ->where('user_id', Auth::id())
-            ->orderBy('id', 'desc')
-            ->first();
-
-        return view('expenses.index', compact('expenses', 'totalIncome', 'totalExpense', 'balanceAmount', 'balance', 'lastExpense'));
+        return view('expenses.index', compact('expenses'));
     }
 
     public function create()

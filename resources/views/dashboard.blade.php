@@ -85,6 +85,7 @@
                     <table class="min-w-full text-sm text-left text-gray-700">
                         <thead class="bg-gray-100 text-xs text-gray-500 uppercase">
                             <tr>
+                                <th class="px-4 py-2">#</th>
                                 <th class="px-4 py-2">Month</th>
                                 <th class="px-4 py-2">Income</th>
                                 <th class="px-4 py-2">Expense</th>
@@ -93,6 +94,7 @@
                         <tbody>
                             @forelse ($monthlyData as $month)
                                 <tr class="border-b hover:bg-gray-50">
+                                    <td class="px-4 py-2">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-2">{{ \Carbon\Carbon::createFromFormat('Y-m', $month->month)->format('F Y') }}</td>
                                     <td class="px-4 py-2 text-green-600 font-semibold">₹{{ number_format($month->total_income, 2) }}</td>
                                     <td class="px-4 py-2 text-red-600 font-semibold">₹{{ number_format($month->total_expense, 2) }}</td>
