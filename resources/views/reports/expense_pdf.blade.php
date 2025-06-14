@@ -68,6 +68,7 @@
                 <th>Date</th>
                 <th>Type</th>
                 <th>Category</th>
+                <th>Person</th>
                 <th>Amount</th>
                 <th>Method</th>
                 <th>Note</th>
@@ -80,6 +81,7 @@
                     <td>{{ \Carbon\Carbon::parse($exp->date)->format('d-m-Y') }}</td>
                     <td>{{ ucfirst($exp->type) }}</td>
                     <td>{{ $exp->category->name ?? 'N/A' }}</td>
+                    <td>{{ $exp->person->name ?? 'N/A' }}</td>
                     <td>{{ number_format($exp->amount, 2) }}</td>
                     <td>{{ ucfirst($exp->payment_method) }}</td>
                     <td >

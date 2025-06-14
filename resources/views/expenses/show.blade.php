@@ -52,6 +52,18 @@
                                 <td class="py-2 px-4 font-semibold text-gray-700">:</td>        
                                 <td class="py-2 px-4 text-gray-600">{{ $expense->category?->name ?? 'N/A' }}</td>
                             </tr>
+
+                            <tr>
+                                <td class="py-2 px-4 font-semibold text-gray-700">Person</td>
+                                <td class="py-2 px-4 font-semibold text-gray-700">:</td>
+                                <td class="py-2 px-4 text-gray-600">
+                                    @if($expense->person)
+                                        {{ $expense->person->name }}
+                                    @else
+                                        <span class="text-gray-500">N/A</span>
+                                    @endif
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="py-2 px-4 font-semibold text-gray-700">Date</td>
                                 <td class="py-2 px-4 font-semibold text-gray-700">:</td>

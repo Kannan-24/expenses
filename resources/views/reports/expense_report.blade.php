@@ -40,6 +40,7 @@
                                 <th class="px-4 py-2">Date</th>
                                 <th class="px-4 py-2">Type</th>
                                 <th class="px-4 py-2">Category</th>
+                                <th class="px-4 py-2">Person</th>
                                 <th class="px-4 py-2">Amount</th>
                                 <th class="px-4 py-2">Method</th>
                             </tr>
@@ -57,6 +58,13 @@
                                         @endif
                                     </td>
                                     <td class="px-4 py-2">{{ $exp->category->name ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">
+                                        @if ($exp->person)
+                                            {{ $exp->person->name }}
+                                        @else
+                                            <span class="text-gray-500">N/A</span>
+                                        @endif
+                                    </td>
                                     <td class="px-4 py-2">
                                         @if ($exp->type === 'income')
                                             <span class="text-green-400">₹{{ number_format($exp->amount, 2) }}</span>

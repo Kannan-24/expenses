@@ -50,6 +50,6 @@ class ReportController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        return $query->orderBy('date', 'desc')->get();
+        return $query->orderBy('updated_at', 'desc')->get();
     }
 }

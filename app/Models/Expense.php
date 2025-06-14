@@ -12,6 +12,7 @@ class Expense extends Model
     protected $fillable = [
         'user_id',
         'category_id',
+        'expense_person_id',
         'amount',
         'type',
         'payment_method',
@@ -29,5 +30,10 @@ class Expense extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function person()
+    {
+        return $this->belongsTo(\App\Models\ExpensePerson::class, 'expense_person_id');
     }
 }

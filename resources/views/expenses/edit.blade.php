@@ -48,6 +48,23 @@
                         @enderror
                     </div>
 
+                    <!-- Expense Person -->
+                    <div class="mb-4">
+                        <label for="expense_person_id" class="block text-sm font-semibold text-gray-700">Expense Person</label>
+                        <select name="expense_person_id" id="expense_person_id"
+                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="">None</option>
+                            @foreach($people as $person)
+                                <option value="{{ $person->id }}" {{ old('expense_person_id', $expense->expense_person_id) == $person->id ? 'selected' : '' }}>
+                                    {{ $person->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('expense_person_id')
+                            <span class="text-sm text-red-600">{{ $message }}</span>
+                        @enderror
+                    </div>
+
                     <!-- Amount -->
                     <div class="mb-4">
                         <label for="amount" class="block text-sm font-semibold text-gray-700">Amount</label>

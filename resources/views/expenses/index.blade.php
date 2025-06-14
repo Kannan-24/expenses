@@ -40,6 +40,7 @@
                                 <th class="px-4 py-2">#</th>
                                 <th class="px-4 py-2">Date</th>
                                 <th class="px-4 py-2">Category</th>
+                                <th class="px-4 py-2">  Person</th>
                                 <th class="px-4 py-2">Type</th>
                                 <th class="px-4 py-2">Payment Method</th>
                                 <th class="px-4 py-2">Amount</th>
@@ -53,6 +54,13 @@
                                     <td class="px-4 py-2">{{ \Carbon\Carbon::parse($expense->date)->format('Y-m-d') }}
                                     </td>
                                     <td class="px-4 py-2">{{ $expense->category->name ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2">
+                                        @if ($expense->person)
+                                            {{ $expense->person->name }}
+                                        @else
+                                            <span class="text-gray-500">N/A</span>
+                                        @endif
+                                    </td>
                                     <td class="px-4 py-2">
                                         @if ($expense->type === 'income')
                                             <span class="text-green-400 font-semibold">Income</span>

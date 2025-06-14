@@ -6,6 +6,7 @@ use App\Models\Expense;
 use App\Models\Category;
 use App\Models\Balance;
 use App\Models\BalanceHistory;
+use App\Models\ExpensePerson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +14,7 @@ class ExpenseController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Expense::with('category')->where('user_id', Auth::id());
+        $query = Expense::with(['category', 'person'])->where('user_id', Auth::id());
 
         if ($request->filter === '7days') {
             $query->where('date', '>=', now()->subDays(7));
@@ -33,23 +34,26 @@ class ExpenseController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $people = ExpensePerson::where('user_id', Auth::id())->get();
+
         $balance = Balance::firstOrCreate(
             ['user_id' => Auth::id()],
             ['cash' => 0, 'bank' => 0]
         );
 
-        return view('expenses.create', compact('categories', 'balance'));
+        return view('expenses.create', compact('categories', 'balance', 'people'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'category_id'     => 'nullable|exists:categories,id',
-            'amount'          => 'required|numeric|min:0',
-            'date'            => 'required|date',
-            'note'            => 'nullable|string',
-            'type'            => 'required|in:income,expense',
-            'payment_method'  => 'required|in:cash,bank',
+            'category_id'        => 'nullable|exists:categories,id',
+            'expense_person_id'  => 'nullable|exists:expense_people,id',
+            'amount'             => 'required|numeric|min:0',
+            'date'               => 'required|date',
+            'note'               => 'nullable|string',
+            'type'               => 'required|in:income,expense',
+            'payment_method'     => 'required|in:cash,bank',
         ]);
 
         $balance = Balance::firstOrCreate(
@@ -57,7 +61,6 @@ class ExpenseController extends Controller
             ['cash' => 0, 'bank' => 0]
         );
 
-        // Validate available balance if expense
         if ($request->type === 'expense') {
             if ($request->amount > $balance->{$request->payment_method}) {
                 return back()->withErrors(['amount' => 'Insufficient ' . ucfirst($request->payment_method) . ' balance.'])->withInput();
@@ -65,13 +68,14 @@ class ExpenseController extends Controller
         }
 
         $expense = Expense::create([
-            'user_id'         => Auth::id(),
-            'category_id'     => $request->category_id,
-            'amount'          => $request->amount,
-            'date'            => $request->date,
-            'note'            => $request->note,
-            'type'            => $request->type,
-            'payment_method'  => $request->payment_method,
+            'user_id'           => Auth::id(),
+            'category_id'       => $request->category_id,
+            'expense_person_id' => $request->expense_person_id,
+            'amount'            => $request->amount,
+            'date'              => $request->date,
+            'note'              => $request->note,
+            'type'              => $request->type,
+            'payment_method'    => $request->payment_method,
         ]);
 
         $cashBefore = $balance->cash;
@@ -107,26 +111,29 @@ class ExpenseController extends Controller
         }
 
         $categories = Category::all();
+        $people = ExpensePerson::where('user_id', Auth::id())->get();
         $balance = Balance::firstOrCreate(
             ['user_id' => Auth::id()],
             ['cash' => 0, 'bank' => 0]
         );
 
-        return view('expenses.edit', compact('expense', 'categories', 'balance'));
+        return view('expenses.edit', compact('expense', 'categories', 'balance', 'people'));
     }
-public function update(Request $request, Expense $expense)
+
+    public function update(Request $request, Expense $expense)
     {
         if ($expense->user_id !== Auth::id()) {
             abort(403);
         }
 
         $request->validate([
-            'category_id'     => 'nullable|exists:categories,id',
-            'amount'          => 'required|numeric|min:0',
-            'date'            => 'required|date',
-            'note'            => 'nullable|string',
-            'type'            => 'required|in:income,expense',
-            'payment_method'  => 'required|in:cash,bank',
+            'category_id'        => 'nullable|exists:categories,id',
+            'expense_person_id'  => 'nullable|exists:expense_people,id',
+            'amount'             => 'required|numeric|min:0',
+            'date'               => 'required|date',
+            'note'               => 'nullable|string',
+            'type'               => 'required|in:income,expense',
+            'payment_method'     => 'required|in:cash,bank',
         ]);
 
         $balance = Balance::firstOrCreate(
@@ -134,7 +141,6 @@ public function update(Request $request, Expense $expense)
             ['cash' => 0, 'bank' => 0]
         );
 
-        // Validate available balance if expense
         if ($request->type === 'expense') {
             if ($request->amount > $balance->{$request->payment_method} + $expense->amount) {
                 return back()->withErrors(['amount' => 'Insufficient ' . ucfirst($request->payment_method) . ' balance.'])->withInput();
@@ -144,24 +150,24 @@ public function update(Request $request, Expense $expense)
         $cashBefore = $balance->cash;
         $bankBefore = $balance->bank;
 
-        // Adjust balance before updating
+        // Reverse previous
         if ($expense->type === 'income') {
             $balance->{$expense->payment_method} -= $expense->amount;
         } else {
             $balance->{$expense->payment_method} += $expense->amount;
         }
 
-        // Update expense
         $expense->update([
-            'category_id'     => $request->category_id,
-            'amount'          => $request->amount,
-            'date'            => $request->date,
-            'note'            => $request->note,
-            'type'            => $request->type,
-            'payment_method'  => $request->payment_method,
+            'category_id'       => $request->category_id,
+            'expense_person_id' => $request->expense_person_id,
+            'amount'            => $request->amount,
+            'date'              => $request->date,
+            'note'              => $request->note,
+            'type'              => $request->type,
+            'payment_method'    => $request->payment_method,
         ]);
 
-        // Adjust balance after updating
+        // Apply updated
         if ($request->type === 'income') {
             $balance->{$request->payment_method} += $request->amount;
         } else {
@@ -178,6 +184,7 @@ public function update(Request $request, Expense $expense)
             'bank_before' => $bankBefore,
             'bank_after'  => $balance->bank,
         ]);
+
         return redirect()->route('expenses.index')->with(
             'success',
             ucfirst($request->type) . " updated successfully. " . ucfirst($request->payment_method) . " balance adjusted."
