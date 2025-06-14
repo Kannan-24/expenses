@@ -77,9 +77,9 @@
                                     </td>
                                     <td class="px-4 py-2 text-center space-x-2">
                                         <a href="{{ route('expenses.edit', $expense->id) }}"
-                                            class="text-blue-400 hover:text-blue-200">Edit</a>
+                                            class="text-blue-300 hover:text-blue-200">Edit</a>
                                         <a href="{{ route('expenses.show', $expense->id) }}"
-                                            class="text-indigo-400 hover:text-indigo-200">Show</a>s
+                                            class="text-yellow-300 hover:text-indigo-200">Show</a>
                                         <form action="{{ route('expenses.destroy', $expense->id) }}" method="POST"
                                             class="inline-block" onsubmit="return confirm('Delete this transaction?')">
                                             @csrf

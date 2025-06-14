@@ -75,7 +75,8 @@
                     <!-- Date -->
                     <div class="mb-4">
                         <label for="date" class="block text-sm font-semibold text-gray-700">Date</label>
-                        <input type="date" name="date" id="date" value="{{ old('date') }}"
+                        <input type="date" name="date" id="date"
+                            value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required>
                         @error('date')

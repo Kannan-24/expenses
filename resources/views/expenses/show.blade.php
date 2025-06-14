@@ -30,12 +30,17 @@
                 <hr class="my-4">
 
                 <div class="mb-4">
-                    <table class="w-1/4 divide-y divide-gray-200">
+                    <table class="w-1/ divide-y divide-gray-200">
                         <tbody>
                             <tr>
                                 <td class="py-2 px-4 font-semibold text-gray-700">Type</td>
                                 <td class="py-2 px-4 font-semibold text-gray-700">:</td>
                                 <td class="py-2 px-4 text-gray-600">{{ ucfirst($expense->type) }}</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 font-semibold text-gray-700">Payment Method</td>
+                                <td class="py-2 px-4 font-semibold text-gray-700">:</td>
+                                <td class="py-2 px-4 text-gray-600">{{ $expense->payment_method ?? 'N/A' }}</td>
                             </tr>
                             <tr>
                                 <td class="py-2 px-4 font-semibold text-gray-700">Amount</td>
