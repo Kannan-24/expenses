@@ -36,7 +36,12 @@ class ExpenseController extends Controller
             ['cash' => 0, 'bank' => 0]
         );
 
-        return view('expenses.index', compact('expenses', 'totalIncome', 'totalExpense', 'balanceAmount', 'balance'));
+        $lastExpense = Expense::with('category')
+            ->where('user_id', Auth::id())
+            ->orderBy('id', 'desc')
+            ->first();
+
+        return view('expenses.index', compact('expenses', 'totalIncome', 'totalExpense', 'balanceAmount', 'balance', 'lastExpense'));
     }
 
     public function create()
