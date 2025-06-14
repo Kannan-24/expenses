@@ -138,9 +138,8 @@
     <hr>
 
     <h3 style="text-align: right;">
-        Grand Total - Income: ₹{{ number_format($grandIncome, 2) }} |
-        Expense: ₹{{ number_format($grandExpense, 2) }} |
-        Net: ₹{{ number_format($grandIncome - $grandExpense, 2) }}
+        Total Income: ₹{{ number_format($grandIncome, 2) }} |
+        Expense: ₹{{ number_format($grandExpense, 2) }}
     </h3>
 
     <div class="footer">
