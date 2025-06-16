@@ -3,30 +3,30 @@
         {{ __('Balance History') }} - {{ config('app.name', 'expenses') }}
     </x-slot>
 
-    <div class="py-6 ml-4 sm:ml-64">
+    <div class="sm:ml-64">
         <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8">
             <x-bread-crumb-navigation />
 
             <div class="bg-white p-4 rounded-2xl">
-                <form method="GET" class="mb-4 flex flex-wrap gap-3 items-center">
+                <form method="GET" class="mb-4 flex flex-col sm:flex-row flex-wrap gap-3 items-stretch sm:items-center">
                     <select name="filter" onchange="this.form.submit()"
-                        class="bg-white border border-gray-300 text-sm rounded px-3 py-2 text-gray-900">
+                        class="bg-white border border-gray-300 text-sm rounded px-3 py-2 text-gray-900 w-full sm:w-auto">
                         <option value="">All</option>
                         <option value="7days" {{ request('filter') == '7days' ? 'selected' : '' }}>Last 7 Days</option>
                         <option value="15days" {{ request('filter') == '15days' ? 'selected' : '' }}>Last 15 Days</option>
                         <option value="1month" {{ request('filter') == '1month' ? 'selected' : '' }}>Last 1 Month</option>
                     </select>
 
-                    <div class="flex items-center gap-2">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                         <input type="date" name="start_date" value="{{ request('start_date') }}"
-                            class="border border-gray-300 rounded px-3 py-1 text-sm text-gray-800">
-                        <span class="text-gray-500">to</span>
+                            class="border border-gray-300 rounded px-3 py-1 text-sm text-gray-800 w-full sm:w-auto">
+                        <span class="text-gray-500 text-center sm:text-left">to</span>
                         <input type="date" name="end_date" value="{{ request('end_date') }}"
-                            class="border border-gray-300 rounded px-3 py-1 text-sm text-gray-800">
+                            class="border border-gray-300 rounded px-3 py-1 text-sm text-gray-800 w-full sm:w-auto">
                         <button type="submit"
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm">Filter</button>
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm w-full sm:w-auto">Filter</button>
                         <a href="{{ route('balance.history') }}"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-1 rounded text-sm">Reset</a>
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-1 rounded text-sm text-center w-full sm:w-auto">Reset</a>
                     </div>
                 </form>
 

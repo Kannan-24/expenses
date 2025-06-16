@@ -10,7 +10,7 @@ class ExpensePersonController extends Controller
 {
     public function index()
     {
-        $people = ExpensePerson::where('user_id', Auth::id())->get();
+        $people = ExpensePerson::where('user_id', Auth::id())->paginate(10);
         return view('expense_people.index', compact('people'));
     }
 

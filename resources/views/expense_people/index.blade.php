@@ -3,7 +3,7 @@
         {{ __('People List') }} - {{ config('app.name', 'expenses') }}
     </x-slot>
 
-    <div class="py-6 ml-4 sm:ml-64">
+    <div class="sm:ml-64">
         <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8">
             <x-bread-crumb-navigation />
 
@@ -42,6 +42,7 @@
                         </tbody>
                     </table>
                 </div>
+                <x-pagination :paginator="$people" />
             </div>
         </div>
     </div>

@@ -26,7 +26,7 @@ class ExpenseController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        $expenses = $query->orderBy('id', 'desc')->paginate(9);
+        $expenses = $query->orderBy('date', 'desc')->paginate(9);
 
         return view('expenses.index', compact('expenses'));
     }

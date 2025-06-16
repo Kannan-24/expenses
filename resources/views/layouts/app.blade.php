@@ -23,14 +23,14 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased bg-blue-200 min-h-screen">
     <div class="min-h-[calc(100vh-80px)] mt-20 bg-blue-200">
         @if (Route::currentRouteName() !== 'welcome')
             @include('layouts.navigation')
         @endif
 
         <div id="message-alert"
-            class="fixed inset-x-0 bottom-5 right-5 z-50 transition-all ease-in-out duration-300 message-alert">
+            class="fixed inset-x-2 bottom-5 right-2 left-2 sm:inset-x-0 sm:right-5 sm:left-auto z-50 transition-all ease-in-out duration-300 message-alert">
             <!-- Message Alert -->
             @if (session()->has('response'))
                 <?php
@@ -55,7 +55,7 @@
                 }
                 ?>
 
-                <div class="bg-{{ $status }}-100 border border-{{ $status }}-400 text-{{ $status }}-700 px-3 py-2 rounded relative w-72 ms-auto my-1 flex items-center"
+                <div class="bg-{{ $status }}-100 border border-{{ $status }}-400 text-{{ $status }}-700 px-3 py-2 rounded relative w-full sm:w-72 ms-auto my-1 flex items-center text-sm sm:text-base"
                     role="alert">
                     <span class="block sm:inline">{{ $message['message'] }}</span>
                 </div>
@@ -63,9 +63,9 @@
 
             @if ($errors->any())
                 @foreach ($errors->all() as $error)
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded relative w-72 ms-auto my-1 flex items-center"
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded relative w-full sm:w-72 ms-auto my-1 flex items-center text-sm sm:text-base"
                         role="alert">
-                        <span class="block sm:inline text-sm">{{ $error }}</span>
+                        <span class="block sm:inline">{{ $error }}</span>
                     </div>
                 @endforeach
             @endif
@@ -74,14 +74,14 @@
         <!-- Page Heading -->
         @isset($header)
             <header class="bg-white shadow">
-                <div class="flex items-center justify-between px-4 py-6 W-full sm:px-6 lg:px-8">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 py-4 sm:py-6 w-full sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
             </header>
         @endisset
 
         <!-- Page Content -->
-        <main>
+        <main class="px-3 py-4 sm:px-0">
             {{ $slot }}
         </main>
     </div>
