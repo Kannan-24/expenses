@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Expense Report</title>
+    <title>Report</title>
     <style>
         /* @page {
             margin: 20mm 15mm 30mm 15mm;
@@ -76,7 +76,7 @@
 
 <body>
 
-    <h2>Expense Report</h2>
+    <h2>Report</h2>
 
     <div class="report-meta">
         <strong>Report Type:</strong> {{ ucfirst(str_replace('_', ' ', $reportType)) }}<br>
@@ -136,10 +136,20 @@
         </tbody>
     </table>
 
-    <div class="summary">
-        <p>Total Income: {{ number_format($grandIncome, 2) }}</p>
-        <p>Total Expense:{{ number_format($grandExpense, 2) }}</p>
-    </div>
+    @if ($reportType === 'income_and_expense')
+        <div class="summary">
+            <p>Total Income: {{ number_format($grandIncome, 2) }}</p>
+            <p>Total Expense: {{ number_format($grandExpense, 2) }}</p>
+        </div>
+    @elseif ($reportType === 'expense')
+        <div class="summary">
+            <p>Total Expense: {{ number_format($grandExpense, 2) }}</p>
+        </div>
+    @elseif ($reportType === 'income')
+        <div class="summary">
+            <p>Total Income: {{ number_format($grandIncome, 2) }}</p>
+        </div>
+    @endif
 
     <div class="footer">
         <span class="left">

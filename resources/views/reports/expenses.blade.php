@@ -56,11 +56,11 @@
                         </div>
                         <div class="flex flex-col gap-2 sm:flex-row sm:gap-2 w-full sm:w-auto">
                             <button type="submit"
-                                class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm">Filter</button>
+                                class="sm:w-auto w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm whitespace-nowrap">Filter</button>
                             <a href="{{ route('reports.expenses') }}"
-                                class="w-full sm:w-auto bg-gray-300 text-gray-800 px-4 py-1 rounded text-sm text-center">Reset</a>
+                                class="sm:w-auto w-full bg-gray-300 text-gray-800 px-4 py-1 rounded text-sm text-center whitespace-nowrap">Reset</a>
                             <a href="{{ route('reports.expenses_report', request()->query()) }}" target="_blank"
-                                class="w-full sm:w-auto bg-red-500 text-white px-4 py-1 rounded text-sm text-center">Export PDF</a>
+                                class="sm:w-auto w-full bg-red-500 text-white px-4 py-1 rounded text-sm text-center whitespace-nowrap">Export PDF</a>
                         </div>
                     </div>
                 </form>
