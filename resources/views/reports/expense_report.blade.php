@@ -4,12 +4,12 @@
 <head>
     <title>Expense Report</title>
     <style>
-        @page {
-            margin: 20mm 15mm 30mm 15mm; /* Top, Right, Bottom, Left */
-        }
+        /* @page {
+            margin: 20mm 15mm 30mm 15mm;
+        } */
 
         body {
-            font-family: DejaVu Sans, sans-serif;
+            font-family: 'Times New Roman', Times, serif, sans-serif;
             font-size: 12px;
             margin: 0;
         }
@@ -26,12 +26,12 @@
         }
 
         table {
-            width: 90%;
-            margin: 0 auto 10px;
+            width: 100%;
             border-collapse: collapse;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #000;
             padding: 5px 8px;
             text-align: left;
@@ -42,7 +42,7 @@
         }
 
         .summary {
-            width: 90%;
+            width: 100%;
             margin: 0 auto;
             margin-top: 15px;
             font-weight: bold;
@@ -137,9 +137,8 @@
     </table>
 
     <div class="summary">
-        <p>Total Income: ₹{{ number_format($grandIncome, 2) }}</p>
-        <p>Total Expense: ₹{{ number_format($grandExpense, 2) }}</p>
-        <p>Net Total: ₹{{ number_format($grandIncome - $grandExpense, 2) }}</p>
+        <p>Total Income: {{ number_format($grandIncome, 2) }}</p>
+        <p>Total Expense:{{ number_format($grandExpense, 2) }}</p>
     </div>
 
     <div class="footer">
