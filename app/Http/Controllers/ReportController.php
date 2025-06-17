@@ -10,7 +10,7 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
-    // Show HTML report view
+    // Show HTML report
     public function expenses(Request $request)
     {
         $type = $request->input('type', 'all');
@@ -31,7 +31,7 @@ class ReportController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        // Report type filter
+        // Filter by type/person
         if ($type === 'expenses_only') {
             $query->where('type', 'expense');
         } elseif ($type === 'person' && $person) {
@@ -48,7 +48,7 @@ class ReportController extends Controller
         return view('reports.expenses', compact('expenses', 'people', 'filterRange', 'type'));
     }
 
-    // Download PDF report
+    // Generate PDF report
     public function expensesPdf(Request $request)
     {
         $type = $request->input('type', 'all');
@@ -56,7 +56,7 @@ class ReportController extends Controller
         $filterRange = $this->getFilterRange($request);
 
         $query = Expense::with(['category', 'person'])
-            ->where('user_id', $request->user()->id); // Filter only current user data
+            ->where('user_id', $request->user()->id);
 
         // Date filters
         if ($request->filter === '7days') {
@@ -69,7 +69,7 @@ class ReportController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        // Report type filter
+        // Filter by type/person
         if ($type === 'expenses_only') {
             $query->where('type', 'expense');
         } elseif ($type === 'person' && $person) {
@@ -78,14 +78,15 @@ class ReportController extends Controller
             })->where('type', 'expense');
         }
 
-        $expenses = $query->orderBy('date', 'desc')->get();
+        $expenses = $query->orderBy('date', 'asc')->get();
 
-        // Group by person name
+        // Group by person and sort each group by date
         $groupedExpenses = $expenses->groupBy(function ($item) {
             return $item->person->name ?? 'N/A';
+        })->map(function ($group) {
+            return $group->sortBy('date');
         });
 
-        // Pass data to PDF view
         $pdf = Pdf::loadView('reports.expense_report', [
             'expenses' => $groupedExpenses,
             'filterRange' => $filterRange,
@@ -95,7 +96,7 @@ class ReportController extends Controller
         return $pdf->stream('expense_report_' . now()->format('Ymd_His') . '.pdf');
     }
 
-    // Format readable date range
+    // Get readable date range
     private function getFilterRange(Request $request)
     {
         if ($request->filter === '7days') {
