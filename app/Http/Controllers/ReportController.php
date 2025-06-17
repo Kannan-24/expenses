@@ -17,12 +17,8 @@ class ReportController extends Controller
         $person = $request->input('person');
         $filterRange = $this->getFilterRange($request);
 
-        $query = Expense::with(['category', 'person']);
-
-        // Filter by authenticated user
-        if ($request->user()) {
-            $query->where('user_id', $request->user()->id);
-        }
+        $query = Expense::with(['category', 'person'])
+            ->where('user_id', $request->user()->id);
 
         // Date filters
         if ($request->filter === '7days') {
@@ -49,7 +45,7 @@ class ReportController extends Controller
         $people = ExpensePerson::where('user_id', $request->user()->id)
             ->select('name')->distinct()->orderBy('name')->get();
 
-        return view('reports.expenses', compact('expenses', 'people'));
+        return view('reports.expenses', compact('expenses', 'people', 'filterRange', 'type'));
     }
 
     // Download PDF report
@@ -59,9 +55,10 @@ class ReportController extends Controller
         $person = $request->input('person');
         $filterRange = $this->getFilterRange($request);
 
-        $query = Expense::with(['category', 'person']);
+        $query = Expense::with(['category', 'person'])
+            ->where('user_id', $request->user()->id); // Filter only current user data
 
-        // Apply date filters
+        // Date filters
         if ($request->filter === '7days') {
             $query->where('date', '>=', now()->subDays(7));
         } elseif ($request->filter === '15days') {
@@ -72,7 +69,7 @@ class ReportController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        // Report type logic
+        // Report type filter
         if ($type === 'expenses_only') {
             $query->where('type', 'expense');
         } elseif ($type === 'person' && $person) {
@@ -83,21 +80,22 @@ class ReportController extends Controller
 
         $expenses = $query->orderBy('date', 'desc')->get();
 
-        // Group by person if needed
+        // Group by person name
         $groupedExpenses = $expenses->groupBy(function ($item) {
             return $item->person->name ?? 'N/A';
         });
 
+        // Pass data to PDF view
         $pdf = Pdf::loadView('reports.expense_report', [
             'expenses' => $groupedExpenses,
             'filterRange' => $filterRange,
             'reportType' => $type,
-        ]);
+        ])->setPaper('a4', 'portrait');
 
         return $pdf->stream('expense_report_' . now()->format('Ymd_His') . '.pdf');
     }
 
-    // Get readable date range string
+    // Format readable date range
     private function getFilterRange(Request $request)
     {
         if ($request->filter === '7days') {
@@ -110,6 +108,6 @@ class ReportController extends Controller
             return Carbon::parse($request->start_date)->format('d-m-Y') . ' to ' . Carbon::parse($request->end_date)->format('d-m-Y');
         }
 
-        return null;
+        return 'Full Report';
     }
 }

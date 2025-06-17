@@ -82,8 +82,7 @@
         <strong>Report Type:</strong> {{ ucfirst(str_replace('_', ' ', $reportType)) }}<br>
         <strong>Report Period:</strong> {{ $filterRange ?? 'Full Report' }}
     </div>
-
-    <table>
+    <table>r
         <thead>
             <tr>
                 <th>#</th>
@@ -136,12 +135,12 @@
         </tbody>
     </table>
 
-    @if ($reportType === 'income_and_expense')
+    @if ($reportType === 'income_and_expense' || $reportType === 'all')
         <div class="summary">
             <p>Total Income: {{ number_format($grandIncome, 2) }}</p>
             <p>Total Expense: {{ number_format($grandExpense, 2) }}</p>
         </div>
-    @elseif ($reportType === 'expense')
+    @elseif ($reportType === 'expenses_only' || $reportType === 'expense')
         <div class="summary">
             <p>Total Expense: {{ number_format($grandExpense, 2) }}</p>
         </div>
