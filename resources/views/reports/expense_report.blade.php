@@ -19,18 +19,6 @@
             margin: 20px 0 5px;
         }
 
-        .report-meta {
-            text-align: right;
-            font-size: 11px;
-            margin: 0 20px 10px;
-        }
-
-        .report-meta-1 {
-            text-align: left;
-            font-size: 11px;
-            margin: 0 20px 10px;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -82,19 +70,35 @@
 
 <body>
 
-    <h2>Report</h2>
+    <h2>
+        @if ($reportType === 'person' && isset($expenses) && $expenses->count() === 1)
+            {{ $expenses->keys()->first() }} Expences Report
+        @elseif ($reportType === 'expenses_only')
+            Expense Report
+        @elseif ($reportType === 'income')
+            Income Report
+        @elseif ($reportType === 'income_and_expense' || $reportType === 'all')
+            Income & Expense Report
+        @else
+            Report
+        @endif
+    </h2>
 
-    <div style="display: flex; justify-content: space-evenly; margin-bottom: 15px; width: 100%;">
-        <div style="text-align: left; font-size: 11px;">
-            <strong>Account Balance:</strong> {{ number_format($accountBalance, 2) }}<br>
-            <strong>Cash Balance:</strong> {{ number_format($cashBalance, 2) }}<br>
-            <strong>Total Amount:</strong> {{ number_format($totalAmount, 2) }}
-        </div>
-        <div style="text-align: right; font-size: 11px;">
-            <strong>Report Type:</strong> {{ ucfirst(str_replace('_', ' ', $reportType)) }}<br>
-            <strong>Report Period:</strong> {{ $filterRange ?? 'Full Report' }}
-        </div>
-    </div>
+    <table style="width: 100%; margin-bottom: 15px; padding:0; font-size: 11px; border: none;">
+        <tr>
+            <td style="text-align: left; vertical-align: top; border: none;">
+                <strong>Account Balance:</strong> {{ number_format($accountBalance, 2) }}<br>
+                <strong>Cash Balance:</strong> {{ number_format($cashBalance, 2) }}<br>
+                <strong>Total Amount:</strong> {{ number_format($totalAmount, 2) }}
+            </td>
+            <td style="text-align: right; vertical-align: top; border: none;">
+                <strong>Report Type:</strong> {{ ucfirst(str_replace('_', ' ', $reportType)) }}<br>
+                <strong>Report Period:</strong> {{ $filterRange ?? 'Full Report' }}
+            </td>
+        </tr>
+    </table>
+
+
     <table>
         <thead>
             <tr>
@@ -153,7 +157,7 @@
             <p>Total Income: {{ number_format($grandIncome, 2) }}</p>
             <p>Total Expense: {{ number_format($grandExpense, 2) }}</p>
         </div>
-    @elseif ($reportType === 'expenses_only' || $reportType === 'expense')
+    @elseif ($reportType === 'expenses_only' || $reportType === 'expense' || $reportType === 'person')
         <div class="summary">
             <p>Total Expense: {{ number_format($grandExpense, 2) }}</p>
         </div>
