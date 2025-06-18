@@ -87,10 +87,21 @@ class ReportController extends Controller
             return $group->sortBy('date');
         });
 
+        // Get current account and cash balance from balances table
+        $userId = $request->user()->id;
+        $balance = \App\Models\Balance::where('user_id', $userId)->first();
+
+        $accountBalance = $balance ? $balance->bank : 0;
+        $cashBalance = $balance ? $balance->cash : 0;
+        $totalAmount = $accountBalance + $cashBalance;
+
         $pdf = Pdf::loadView('reports.expense_report', [
             'expenses' => $groupedExpenses,
             'filterRange' => $filterRange,
             'reportType' => $type,
+            'accountBalance' => $accountBalance,
+            'cashBalance' => $cashBalance,
+            'totalAmount' => $totalAmount
         ])->setPaper('a4', 'portrait');
 
         return $pdf->stream('expense_report_' . now()->format('Ymd_His') . '.pdf');

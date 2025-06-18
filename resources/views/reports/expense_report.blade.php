@@ -25,6 +25,12 @@
             margin: 0 20px 10px;
         }
 
+        .report-meta-1 {
+            text-align: left;
+            font-size: 11px;
+            margin: 0 20px 10px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -78,11 +84,18 @@
 
     <h2>Report</h2>
 
-    <div class="report-meta">
-        <strong>Report Type:</strong> {{ ucfirst(str_replace('_', ' ', $reportType)) }}<br>
-        <strong>Report Period:</strong> {{ $filterRange ?? 'Full Report' }}
+    <div style="display: flex; justify-content: space-evenly; margin-bottom: 15px; width: 100%;">
+        <div style="text-align: left; font-size: 11px;">
+            <strong>Account Balance:</strong> {{ number_format($accountBalance, 2) }}<br>
+            <strong>Cash Balance:</strong> {{ number_format($cashBalance, 2) }}<br>
+            <strong>Total Amount:</strong> {{ number_format($totalAmount, 2) }}
+        </div>
+        <div style="text-align: right; font-size: 11px;">
+            <strong>Report Type:</strong> {{ ucfirst(str_replace('_', ' ', $reportType)) }}<br>
+            <strong>Report Period:</strong> {{ $filterRange ?? 'Full Report' }}
+        </div>
     </div>
-    <table>r
+    <table>
         <thead>
             <tr>
                 <th>#</th>

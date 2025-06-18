@@ -3,7 +3,7 @@
         {{ __('Create Category') }} - {{ config('app.name', 'expenses') }}
     </x-slot>
 
-    <div class="py-6 ml-4 sm:ml-64">
+    <div class="sm:ml-64">
         <div class="w-full max-w-4xl px-6 mx-auto">
             <x-bread-crumb-navigation />
 

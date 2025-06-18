@@ -3,7 +3,7 @@
         {{ __('Expense Details') }} - {{ config('app.name', 'expenses') }}
     </x-slot>
 
-    <div class="py-6 ml-4 sm:ml-64">
+    <div class=" sm:ml-64">
         <div class="w-full mx-auto sm:px-6 lg:px-8">
             <x-bread-crumb-navigation />
 
@@ -18,10 +18,12 @@
                                 Edit
                             </button>
                         </a>
-                        <form action="{{ route('expenses.destroy', $expense->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                        <form action="{{ route('expenses.destroy', $expense->id) }}" method="POST"
+                            onsubmit="return confirm('Are you sure?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="px-4 py-2 text-white bg-red-500 rounded-lg shadow-md hover:bg-red-700">
+                            <button type="submit"
+                                class="px-4 py-2 text-white bg-red-500 rounded-lg shadow-md hover:bg-red-700">
                                 Delete
                             </button>
                         </form>
@@ -49,7 +51,7 @@
                             </tr>
                             <tr>
                                 <td class="py-2 px-4 font-semibold text-gray-700">Category</td>
-                                <td class="py-2 px-4 font-semibold text-gray-700">:</td>        
+                                <td class="py-2 px-4 font-semibold text-gray-700">:</td>
                                 <td class="py-2 px-4 text-gray-600">{{ $expense->category?->name ?? 'N/A' }}</td>
                             </tr>
 
@@ -57,7 +59,7 @@
                                 <td class="py-2 px-4 font-semibold text-gray-700">Person</td>
                                 <td class="py-2 px-4 font-semibold text-gray-700">:</td>
                                 <td class="py-2 px-4 text-gray-600">
-                                    @if($expense->person)
+                                    @if ($expense->person)
                                         {{ $expense->person->name }}
                                     @else
                                         <span class="text-gray-500">N/A</span>
@@ -67,16 +69,17 @@
                             <tr>
                                 <td class="py-2 px-4 font-semibold text-gray-700">Date</td>
                                 <td class="py-2 px-4 font-semibold text-gray-700">:</td>
-                                <td class="py-2 px-4 text-gray-600">{{ \Carbon\Carbon::parse($expense->date)->format('d M Y') }}</td>
+                                <td class="py-2 px-4 text-gray-600">
+                                    {{ \Carbon\Carbon::parse($expense->date)->format('d M Y') }}</td>
                             </tr>
-                            @if($expense->note)
+                            @if ($expense->note)
                                 <tr>
                                     <td class="py-2 px-4 font-semibold text-gray-700 align-top">Note</td>
                                     <td class="py-2 px-4 font-semibold text-gray-700 align-top">:</td>
                                     <td class="py-2 px-4 text-gray-600">
                                         @php $i = 1; @endphp
-                                        @foreach(explode('#', $expense->note) as $note)
-                                            @if(trim($note) !== '')
+                                        @foreach (explode('#', $expense->note) as $note)
+                                            @if (trim($note) !== '')
                                                 <div class="mb-1">{{ $i++ }}. {{ trim($note) }}</div>
                                             @endif
                                         @endforeach
