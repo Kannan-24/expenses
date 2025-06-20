@@ -25,7 +25,7 @@
                             class="border border-gray-300 rounded px-3 py-1 text-sm text-gray-800 w-full sm:w-auto">
                         <button type="submit"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm w-full sm:w-auto">Filter</button>
-                        <a href="{{ route('balance.history') }}"
+                        <a href="{{ route('balance.index') }}"
                             class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-1 rounded text-sm text-center w-full sm:w-auto">Reset</a>
                     </div>
                 </form>

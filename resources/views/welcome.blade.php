@@ -4,360 +4,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome | expenses</title>
+    <title>Expense Tracker Landing Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .nav-link::after {
+            content: '';
+            display: block;
+            height: 2px;
+            width: 60%;
+            margin: 0 auto;
+            background: #2563eb;
+            transform: scaleX(0);
+            transition: transform 0.3s;
+            transform-origin: center;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.text-blue-600::after {
+            transform: scaleX(1);
+        }
+
+        body {
+            padding-top: 84px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 72px;
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-gradient-to-l from-blue-200 via-blue-200 to-blue-300">
-
-    <nav
-        class="flex items-center justify-between p-4 bg-white bg-opacity-70 backdrop-blur-md shadow-md sticky top-0 z-50">
-        <!-- Logo -->
-        <div class="flex items-center space-x-2">
-            <img src="{{ asset('assets/logo.png') }}" alt="expenses Logo" class="w-10 h-10">
-            <div class="text-3xl font-bold text-blue-500">expenses</div>
-        </div>
-
-        <!-- Mobile Menu Button -->
-        <button id="menu-btn" class="md:hidden focus:outline-none">
-            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-            </svg>
-        </button>
-
-        <!-- Desktop Menu -->
-        <ul class="hidden md:flex space-x-6 text-gray-600">
-            <li><a href="#" class="hover:text-blue-500">Dashboard</a></li>
-            <li><a href="#about" class="hover:text-blue-500">About</a></li>
-            <li><a href="#features" class="hover:text-blue-500">Features</a></li>
-            <li><a href="#team" class="hover:text-blue-500">Team</a></li>
-        </ul>
-
-        <a href="{{ route('login') }}"
-            class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 hidden md:block">
-            Get Started
-        </a>
-
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="absolute top-16 left-0 w-full bg-white shadow-md hidden md:hidden">
-            <ul class="flex flex-col items-center py-4 space-y-4 text-gray-600">
-                <li><a href="#" class="hover:text-blue-500">Dashboard</a></li>
-                <li><a href="#about" class="hover:text-blue-500">About</a></li>
-                <li><a href="#features" class="hover:text-blue-500">Features</a></li>
-                <li><a href="#team" class="hover:text-blue-500">Team</a></li>
-                <li>
-                    <a href="{{ route('login') }}"
-                        class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
-                        Get Started
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-
-    <!-- Hero Section -->
-    <section
-        class="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-10 py-16 space-y-6 md:space-y-0">
-        <!-- Left Content -->
-        <div class="md:w-1/2 space-y-6 text-justify md:text-left lg:ml-11">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
-                Smart Transport, <span class="text-blue-500">Seamless Attendance.</span>
-            </h1>
-            <p class="text-gray-700 text-base md:text-lg leading-relaxed">
-                expenses revolutionizes college transportation with <span class="font-semibold">barcode-based attendance
-                    tracking</span>,
-                <span class="font-semibold">real-time bus tracking</span>, and <span class="font-semibold">automated
-                    notifications</span>.
-                Ensure student safety, improve efficiency, and access detailed reports - all in one system.
-            </p>
-            <button onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' });"
-                class="bg-blue-500 text-white px-8 py-3 rounded-full shadow-lg hover:bg-blue-600 transition duration-300">
-                Explore expenses
-            </button>
-        </div>
-
-        <!-- Right Image -->
-        <div class="md:w-1/2 flex justify-center">
-            <img src="{{ asset('assets/landing.svg') }}" alt="Transport Illustration"
-                class="w-full max-w-xs md:max-w-md transform hover:scale-105 transition duration-300">
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-16 px-6 md:px-20">
-        <div class="max-w-8xl mx-auto flex flex-col md:flex-row items-center gap-20">
-
-            <!-- Left Side (Intro & Detailed Description) -->
-            <div class="md:w-1/2 text-justify">
-                <h2 class="text-4xl font-bold text-gray-900 leading-tight mb-6">
-                    About
-                </h2>
-                <p class="text-gray-700 text-lg leading-relaxed mb-4">
-                    The <span class="font-semibold text-blue-500">Automated Transport Management System (expenses)</span>
-                    is a <strong>modern and efficient</strong> solution
-                    designed to <strong>optimize transportation for educational institutions</strong>.
-                    Our system <strong>automates attendance tracking, monitors vehicles in real-time, and enhances
-                        safety</strong>
-                    for students and staff.
-                </p>
-                <p class="text-gray-700 text-lg leading-relaxed mb-4">
-                    <strong>Say goodbye to manual logs and inefficiencies!</strong> expenses ensures a <strong>smooth and
-                        reliable</strong> transport
-                    experience with <strong>instant notifications, automated reports, and a user-friendly
-                        interface</strong>.
-                    Faculty and parents can now stay <strong>updated about bus locations and student safety at all
-                        times</strong>.
-                </p>
-                <p class="text-gray-700 text-lg leading-relaxed">
-                    Built with <strong>cutting-edge technology</strong>, expenses is <strong>secure, scalable, and easy to
-                        integrate</strong> into
-                    any institution's transport system.
-                </p>
-            </div>
-
-            <!-- Right Side (Key Features) -->
-            <div class="md:w-1/2">
-                <h3 class="text-2xl font-semibold text-gray-900 mb-4">🌟 Why Choose expenses?</h3>
-                <ul class="space-y-4 text-gray-700 text-lg">
-                    <li class="flex items-center">
-                        <span class="text-orange-500 text-2xl mr-3">🚍</span>
-                        <span><span class="font-semibold">Live GPS Tracking:</span> Track buses in real-time for
-                            improved safety.</span>
-                    </li>
-                    <li class="flex items-center">
-                        <span class="text-orange-500 text-2xl mr-3">📢</span>
-                        <span><span class="font-semibold">Instant Alerts:</span> Get notified about bus arrivals, and
-                            attendance.</span>
-                    </li>
-                    <li class="flex items-center">
-                        <span class="text-orange-500 text-2xl mr-3">🎫</span>
-                        <span><span class="font-semibold">Automated Attendance:</span> Secure check-in & check-out with
-                            barcode scanning.</span>
-                    </li>
-                    <li class="flex items-center">
-                        <span class="text-orange-500 text-2xl mr-3">📊</span>
-                        <span><span class="font-semibold">Reports:</span> Generate attendance reports
-                            effortlessly.</span>
-                    </li>
-                    <li class="flex items-center">
-                        <span class="text-orange-500 text-2xl mr-3">⚡</span>
-                        <span><span class="font-semibold">User-Friendly Interface:</span> Simple, easy-to-use for all
-                            users.</span>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-    </section>
-
-    <section id="features">
-        <div class="max-w-4xl mx-auto py-16 px-6">
-            <h2 class="text-4xl font-bold text-center text-gray-900 mb-12">Modules</h2>
-
-            <div class="relative">
-                <!-- Vertical Line -->
-                <div class="absolute left-1/2 transform -translate-x-1/2 w-1 bg-blue-500 h-full hidden md:block">
-                </div>
-
-                <!-- Timeline Items -->
-                <div class="space-y-10">
-
-                    <!-- Timeline Card 1 -->
-                    <div class="flex flex-col md:flex-row items-center md:items-start">
-                        <div class="md:w-1/2 text-left md:pr-8">
-                            <div
-                                class="bg-white md:border-l-4 border-blue-500 shadow-lg rounded-xl p-6 w-full md:max-w-md transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
-                                <div class="flex items-center space-x-3">
-                                    <h3 class="text-xl md:text-2xl font-semibold text-gray-900">User Management</h3>
-                                </div>
-                                <p class="text-sm md:text-base text-gray-600 mt-4 leading-relaxed">
-                                    Manage roles and authentication for <span
-                                        class="font-semibold text-gray-900">Admins, Faculty, Drivers, Students, and
-                                        Parents</span>.
-                                </p>
-                            </div>
-                        </div>
-                        <div
-                            class="w-10 h-10 bg-blue-500 text-white font-bold flex items-center justify-center rounded-full border-4 border-white absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                            1</div>
-                    </div>
-
-                    <!-- Timeline Card 2 -->
-                    <div class="flex flex-col md:flex-row-reverse items-center md:items-start">
-                        <div class="md:w-1/2 text-left md:pl-8">
-                            <div
-                                class="bg-white md:border-l-4 border-blue-500 shadow-lg rounded-xl p-6 w-full md:max-w-md transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
-                                <div class="flex items-center space-x-3">
-                                    <h3 class="text-xl md:text-2xl font-semibold text-gray-900">Academic Management
-                                    </h3>
-                                </div>
-                                <p class="text-sm md:text-base text-gray-600 mt-4 leading-relaxed">
-                                    Seamless integration of academic schedules with transport operations.
-                                </p>
-                            </div>
-                        </div>
-                        <div
-                            class="w-10 h-10 bg-blue-500 text-white font-bold flex items-center justify-center rounded-full border-4 border-white absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                            2</div>
-                    </div>
-
-                    <!-- Timeline Card 3 -->
-                    <div class="flex flex-col md:flex-row items-center md:items-start">
-                        <div class="md:w-1/2 text-left md:pr-8">
-                            <div
-                                class="bg-white md:border-l-4 border-blue-500 shadow-lg rounded-xl p-6 w-full md:max-w-md transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
-                                <h3 class="text-xl md:text-2xl font-semibold text-gray-900">Transport Management</h3>
-                                <p class="text-sm md:text-base text-gray-600 mt-4 leading-relaxed">
-                                    Assign buses, manage routes, and optimize schedules efficiently.
-                                </p>
-                            </div>
-                        </div>
-                        <div
-                            class="w-10 h-10 bg-blue-500 text-white font-bold flex items-center justify-center rounded-full border-4 border-white absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                            3</div>
-                    </div>
-
-                    <!-- Timeline Card 4 -->
-                    <div class="flex flex-col md:flex-row-reverse items-center md:items-start">
-                        <div class="md:w-1/2 text-left md:pl-8">
-                            <div
-                                class="bg-white md:border-l-4 border-blue-500 shadow-lg rounded-xl p-6 w-full md:max-w-md transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
-                                <h3 class="text-xl md:text-2xl font-semibold text-gray-900">Attendance Management</h3>
-                                <p class="text-sm md:text-base text-gray-600 mt-4 leading-relaxed">
-                                    Automate attendance tracking using <span
-                                        class="font-semibold text-gray-900">barcode
-                                        scanning</span> and real-time reports.
-                                </p>
-                            </div>
-                        </div>
-                        <div
-                            class="w-10 h-10 bg-blue-500 text-white font-bold flex items-center justify-center rounded-full border-4 border-white absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                            4</div>
-                    </div>
-
-                    <!-- Timeline Card 5 -->
-                    <div class="flex flex-col md:flex-row items-center md:items-start">
-                        <div class="md:w-1/2 text-left md:pr-8">
-                            <div
-                                class="bg-white md:border-l-4 border-blue-500 shadow-lg rounded-xl p-6 w-full md:max-w-md transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
-                                <h3 class="text-xl md:text-2xl font-semibold text-gray-900">Live Vehicle Tracking</h3>
-                                <p class="text-sm md:text-base text-gray-600 mt-4 leading-relaxed">
-                                    Track bus locations in <span class="font-semibold text-gray-900">real-time</span>,
-                                    ensuring safety and instant updates.
-                                </p>
-                            </div>
-                        </div>
-                        <div
-                            class="w-10 h-10 bg-blue-500 text-white font-bold flex items-center justify-center rounded-full border-4 border-white absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                            5</div>
-                    </div>
-
-                    <!-- Timeline Card 6 -->
-                    <div class="flex flex-col md:flex-row-reverse items-center md:items-start">
-                        <div class="md:w-1/2 text-left md:pl-8">
-                            <div
-                                class="bg-white md:border-l-4 border-blue-500 shadow-lg rounded-xl p-6 w-full md:max-w-md transform transition duration-300 hover:shadow-xl hover:-translate-y-1">
-                                <h3 class="text-xl md:text-2xl font-semibold text-gray-900">Reports & Analytics</h3>
-                                <p class="text-sm md:text-base text-gray-600 mt-4 leading-relaxed">
-                                    Generate <span class="font-semibold text-gray-900">detailed reports</span> on
-                                    transport efficiency, attendance, and vehicle usage.
-                                </p>
-                            </div>
-                        </div>
-                        <div
-                            class="w-10 h-10 bg-blue-500 text-white font-bold flex items-center justify-center rounded-full border-4 border-white absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                            6</div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="team" class="py-16 px-6 md:px-20">
-        <div class="max-w-6xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-8">Our <span
-                    class="text-blue-500">Team</span></h2>
-            <p class="text-gray-700 text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-12">
-                Our team is dedicated to revolutionizing <strong>Automated Transport Management System (expenses)</strong>
-                with innovation and efficiency.
-            </p>
-
-            <!-- Team Members Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-
-                <!-- Team Member 1 -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-semibold text-gray-900">ABINAYASRI B</h3>
-                    <p class="text-blue-500 font-medium">730421104001</p>
-                    <p class="text-gray-700 text-sm mt-3">
-                        Student, Department of Computer Science & Engineering.
-                    </p>
-                </div>
-
-                <!-- Team Member 2 -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-semibold text-gray-900">JAYA PRAKASH M</h3>
-                    <p class="text-blue-500 font-medium">730421104032</p>
-                    <p class="text-gray-700 text-sm mt-3">
-                        Student, Department of Computer Science & Engineering.
-                    </p>
-                </div>
-
-                <!-- Team Member 3 -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-2xl font-semibold text-gray-900">KANNAN M</h3>
-                    <p class="text-blue-500 font-medium">730421104034</p>
-                    <p class="text-gray-700 text-sm mt-3">
-                        Student, Department of Computer Science & Engineering.
-                    </p>
-                </div>
-
-            </div>
-
-            <!-- Guide Section -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-10 mt-12">
-                <div class="flex flex-col justify-center items-center h-full">
-                    <div
-                        class="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl h-full flex flex-col justify-center">
-                        <h3 class="text-2xl font-semibold text-gray-900">Guided By</h3>
-                        <p class="text-blue-500 font-medium">Dr. SIVAKUMAR G</p>
-                        <p class="text-gray-700 text-sm mt-3">
-                            Professor, Department of Computer Science & Engineering, providing expert guidance and
-                            support.
-                        </p>
-                    </div>
-                </div>
-                <div class="flex flex-col justify-center items-center h-full">
-                    <div
-                        class="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl h-full flex flex-col justify-center">
-                        <h3 class="text-2xl font-semibold text-gray-900">Coordinated By</h3>
-                        <p class="text-blue-500 font-medium">KALAISELVI T</p>
-                        <p class="text-gray-700 text-sm mt-3">
-                            Associate Professor, Department of Computer Science & Engineering.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
-    </section>
-
-    <footer class="bg-blue-500 text-white py-6 text-center">
-        <p>&copy; 2025 expenses. All rights reserved.</p>
-    </footer>
-
-    <!-- JavaScript for Mobile Menu Toggle -->
+<body class="bg-white text-gray-800 font-sans">
+    <!-- Navbar -->
+    <header id="main-navbar"
+        class="flex justify-between items-center p-6 shadow-sm bg-white z-50 transition-all duration-300 fixed top-0 left-0 w-full ">
+        <h1 class="text-lg font-bold">Expense Tracker</h1>
+        <nav class="flex items-center gap-2 md:gap-4">
+            @php
+                $nav = [
+                    ['href' => '#home', 'label' => 'Home'],
+                    ['href' => '#features', 'label' => 'Features'],
+                    ['href' => '#how-it-works', 'label' => 'How It Works'],
+                    ['href' => '#faq', 'label' => 'FAQ'],
+                ];
+            @endphp
+            @foreach ($nav as $item)
+                <a href="{{ $item['href'] }}"
+                    class="relative nav-link flex flex-col items-center px-3 py-1 rounded transition
+                       @if (request()->get('section') === ltrim($item['href'], '#')) text-blue-600 font-semibold @endif">
+                    <span class="z-10">{{ $item['label'] }}</span>
+                </a>
+            @endforeach
+            <a href="{{ route('login') }}"
+                class="relative nav-link flex flex-col items-center px-3 py-1 rounded transition
+                   @if (Route::currentRouteName() === 'login') text-blue-600 font-semibold @endif">
+                <span class="z-10">Sign In</span>
+            </a>
+            <a href="{{ route('register') }}"
+                class="bg-blue-600 text-white px-5 py-2 rounded-full ml-2 hover:bg-blue-700 transition font-semibold shadow
+                   @if (Route::currentRouteName() === 'register') ring-2 ring-blue-400 @endif">
+                Sign Up
+            </a>
+        </nav>
+    </header>
     <script>
-        document.getElementById('menu-btn').addEventListener('click', function() {
-            let mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
+        // Active nav on scroll and click
+        function setActiveNav() {
+            const sections = ['home', 'features', 'how-it-works', 'faq'];
+            let scrollPos = window.scrollY + 10 + document.getElementById('main-navbar').offsetHeight;
+            let found = false;
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const el = document.getElementById(sections[i]) || document.querySelector(`[id='${sections[i]}']`);
+                if (el && el.offsetTop <= scrollPos) {
+                    document.querySelectorAll('.nav-link').forEach(a => a.classList.remove('text-blue-600',
+                        'font-semibold'));
+                    document.querySelectorAll('.nav-link').forEach(a => {
+                        if (a.getAttribute('href') === '#' + sections[i]) {
+                            a.classList.add('text-blue-600', 'font-semibold');
+                        }
+                    });
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                document.querySelectorAll('.nav-link').forEach(a => a.classList.remove('text-blue-600', 'font-semibold'));
+            }
+        }
+        window.addEventListener('scroll', setActiveNav);
+        window.addEventListener('DOMContentLoaded', setActiveNav);
+
+        // Smooth scroll and offset for navbar height
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        e.preventDefault();
+                        const navbarHeight = document.getElementById('main-navbar').offsetHeight;
+                        const top = target.getBoundingClientRect().top + window.scrollY - navbarHeight + 1;
+                        window.scrollTo({
+                            top,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
         });
     </script>
 
+    <!-- Hero Section -->
+    <section id="home" class="flex flex-col md:flex-row justify-between items-center px-10 py-20 bg-gray-50"
+        style="font-family: 'Poppins', 'Roboto', sans-serif;">
+        <div class="flex-1 flex flex-col justify-center items-start md:pr-12 pl-2 md:pl-12">
+            <h2 class="text-6xl md:text-7xl font-bold mb-4 leading-tight text-black"
+                style="font-family: 'Poppins', 'Roboto', sans-serif;">
+                Take control of<br>
+                <span class="text-black">Your money</span>
+            </h2>
+            <p class="mb-4 text-gray-400 text-lg md:text-sm">Track your income, spending, and savings with ease.</p>
+            <button
+                class="bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold shadow hover:bg-blue-700 transition">Get
+                Started</button>
+        </div>
+        <div class="flex-1 flex justify-center items-center mt-10 md:mt-0">
+            <img src="{{ asset('assets/landing.svg') }}" alt="Illustration" class="w-full max-w-md">
+        </div>
+    </section>
+    <!-- Google Fonts for Poppins/Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&family=Roboto:wght@700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Features -->
+    <section id="features" class="text-center py-16 relative"
+        style="background: url('{{ asset('assets/Features_BG.png') }}') center center / cover no-repeat; min-height: 100vh;">
+        <div class="relative z-10 max-w-6xl mx-auto">
+            <h2 class="text-5xl font-bold mb-8">Why Use Expense Tracker</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 px-10">
+                <div class="bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-start relative">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-full mb-4"
+                        style="background: linear-gradient(135deg, #059669 0%, #34D399 100%);">
+                        <img src="{{ asset('assets/money-bag.svg') }}" alt="Money Bag" class="w-10 h-10">
+                    </div>
+                    <p class="font-semibold mb-3 text-xl text-gray-900 text-left w-full">Track Every Rupee</p>
+                    <hr class="w-24 my-2 ml-0" style="border-top: 4px solid #34D399; border-radius: 50px;">
+                    <p class="text-gray-600 text-sm text-left mt-3 w-full">Add your daily expenses with category and
+                        payment
+                        method.</p>
+                </div>
+                <div class="bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-start relative">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-full mb-4"
+                        style="background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);">
+                        <img src="{{ asset('assets/insight.svg') }}" alt="Visual Insights" class="w-10 h-10">
+                    </div>
+                    <p class="font-semibold mb-3 text-xl text-gray-900 text-left w-full">Visual Insights</p>
+                    <hr class="w-24 my-2 ml-0" style="border-top: 4px solid #2563eb; border-radius: 50px;">
+                    <p class="text-gray-600 text-sm text-left mt-3 w-full">Understand your habits with graphs and
+                        reports.</p>
+                </div>
+                <div class="bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-start relative">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-full mb-4"
+                        style="background: linear-gradient(135deg, #60A5FA 0%, #0891B2 100%);">
+                        <img src="{{ asset('assets/wallet.svg') }}" alt="Manage Wallets" class="w-10 h-10">
+                    </div>
+                    <p class="font-semibold mb-3 text-xl text-gray-900 text-left w-full">Manage Wallets</p>
+                    <hr class="w-24 my-2 ml-0" style="border-top: 4px solid #60A5FA; border-radius: 50px;">
+                    <p class="text-gray-600 text-sm text-left mt-3 w-full">Support for cash, bank, digital wallets like
+                        GPay
+                        or Paytm.</p>
+                </div>
+                <div class="bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-start relative">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-full mb-4"
+                        style="background: linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%);">
+                        <img src="{{ asset('assets/recurring.svg') }}" alt="Recurring Transactions" class="w-10 h-10">
+                    </div>
+                    <p class="font-semibold mb-3 text-xl text-gray-900 text-left w-full">Recurring Transactions</p>
+                    <hr class="w-24 my-2 ml-0" style="border-top: 4px solid #A78BFA; border-radius: 50px;">
+                    <p class="text-gray-600 text-sm text-left mt-3 w-full">Set monthly bills once and forget.</p>
+                </div>
+                <div class="bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-start relative">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-full mb-4"
+                        style="background: linear-gradient(135deg, #9CA3AF 0%, #4B5563 100%);">
+                        <img src="{{ asset('assets/receipt.svg') }}" alt="Upload Receipts" class="w-10 h-10">
+                    </div>
+                    <p class="font-semibold mb-3 text-xl text-gray-900 text-left w-full">Upload Receipts</p>
+                    <hr class="w-24 my-2 ml-0" style="border-top: 4px solid #9CA3AF; border-radius: 50px;">
+                    <p class="text-gray-600 text-sm text-left mt-3 w-full">Attach bills, invoices, or images.</p>
+                </div>
+                <div class="bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-start relative">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-full mb-4"
+                        style="background: linear-gradient(135deg, #FBBF24 0%, #F97316 100%);">
+                        <img src="{{ asset('assets/alert.svg') }}" alt="Smart Alerts" class="w-10 h-10">
+                    </div>
+                    <p class="font-semibold mb-3 text-xl text-gray-900 text-left w-full">Smart Alerts</p>
+                    <hr class="w-24 my-2 ml-0" style="border-top: 4px solid #FBBF24; border-radius: 50px;">
+                    <p class="text-gray-600 text-sm text-left mt-3 w-full">Budgets, due bills, and savings reminders.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-16 bg-white text-center">
+        <h2 class="text-2xl font-bold mb-6">How It Works</h2>
+        <p class="mb-12">Getting started is easy. In just a few steps, you'll be tracking your expenses and building
+            better financial habits.</p>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 px-6">
+            <div class="bg-blue-50 p-6 rounded shadow">
+                <p class="text-sm font-bold mb-2">STEP 1</p>
+                <p class="font-semibold mb-2">Sign Up & Set Up Your Wallets</p>
+                <p>Create your free account and add cash, bank, or digital wallets like GPay or Paytm.</p>
+            </div>
+            <div class="bg-blue-50 p-6 rounded shadow">
+                <p class="text-sm font-bold mb-2">STEP 2</p>
+                <p class="font-semibold mb-2">Track Your Expenses</p>
+                <p>Log daily expenses and categorize them easily.</p>
+            </div>
+            <div class="bg-blue-50 p-6 rounded shadow">
+                <p class="text-sm font-bold mb-2">STEP 3</p>
+                <p class="font-semibold mb-2">Understand Where Your Money Goes</p>
+                <p>Get visual insights with bar charts, summaries, and breakdowns.</p>
+            </div>
+            <div class="bg-blue-50 p-6 rounded shadow">
+                <p class="text-sm font-bold mb-2">STEP 4</p>
+                <p class="font-semibold mb-2">Set Budgets and Get Alerts</p>
+                <p>Add budget goals and get alerts before overspending.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="bg-gray-100 py-16">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-2xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <details class="bg-white p-4 rounded shadow">
+                    <summary class="cursor-pointer font-medium">What is Expense Tracker?</summary>
+                    <p class="mt-2 text-sm">A tool to manage personal finances, track daily spending, set budgets, and
+                        get insights.</p>
+                </details>
+                <details class="bg-white p-4 rounded shadow">
+                    <summary class="cursor-pointer font-medium">Is Expense Tracker free to use?</summary>
+                    <p class="mt-2 text-sm">Yes, it's completely free. No ads or credit card required.</p>
+                </details>
+                <details class="bg-white p-4 rounded shadow">
+                    <summary class="cursor-pointer font-medium">Can I manage both cash and bank transactions?</summary>
+                    <p class="mt-2 text-sm">Yes, you can add and track multiple wallet types.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="text-center py-10">
+        <button class="bg-blue-600 text-white px-6 py-3 rounded-full text-lg">Start Tracking Your Expenses
+            Today</button>
+        <p class="text-sm text-gray-600 mt-2">No ads. No credit card required.</p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white text-sm px-6 py-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <h3 class="font-semibold mb-2">Quick Links</h3>
+                <ul>
+                    <li><a href="#faq" class="hover:underline">FAQ</a></li>
+                    <li><a href="#" class="hover:underline">Terms of Service</a></li>
+                    <li><a href="#" class="hover:underline">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-semibold mb-2">Contact</h3>
+                <p>contact@duodev.in</p>
+            </div>
+            <div>
+                <h3 class="font-semibold mb-2">Subscribe to our newsletter</h3>
+                <div class="flex">
+                    <input type="email" placeholder="Your Email" class="p-2 rounded-l text-black">
+                    <button class="bg-blue-600 px-4 py-2 rounded-r">Subscribe</button>
+                </div>
+            </div>
+        </div>
+        <p class="text-center mt-10">Expense Tracker — A personal finance management product by <span
+                class="font-semibold">Duo Dev Technologies</span>.</p>
+    </footer>
 </body>
 
 </html>

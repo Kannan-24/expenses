@@ -50,7 +50,7 @@ class BalanceController extends Controller
         return redirect()->route('dashboard')->with('success', 'Balance updated successfully.');
     }
 
-    public function history(Request $request)
+    public function index(Request $request)
     {
         $query = BalanceHistory::with('editor')
             ->where('user_id', Auth::id());
@@ -76,6 +76,6 @@ class BalanceController extends Controller
 
         $histories = $query->orderByDesc('created_at')->paginate(9)->withQueryString();
 
-        return view('balance.history', compact('histories'));
+        return view('balance.index', compact('histories'));
     }
 }

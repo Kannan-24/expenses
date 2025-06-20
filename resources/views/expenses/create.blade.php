@@ -4,10 +4,10 @@
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full max-w-4xl px-6 mx-auto">
+        <div class="w-full max-w-4xl mx-auto sm:px-4">
             <x-bread-crumb-navigation />
 
-            <div class="p-8 bg-white border border-gray-200 rounded-lg shadow-lg">
+            <div class="p-4 sm:p-8 bg-white border border-gray-200 rounded-lg shadow-lg">
                 <div class="mb-4 text-sm text-gray-600">
                     <strong>Available Cash:</strong> ₹{{ number_format($balance->cash, 2) }}<br>
                     <strong>Available Bank:</strong> ₹{{ number_format($balance->bank, 2) }}
@@ -36,7 +36,7 @@
                         <select name="category_id" id="category_id"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">None</option>
-                            @foreach ($categories as $category)
+                            @foreach ($categories->where('user_id', auth()->id()) as $category)
                                 <option value="{{ $category->id }}"
                                     {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                     {{ $category->name }}
@@ -66,7 +66,6 @@
                             <span class="text-sm text-red-600">{{ $message }}</span>
                         @enderror
                     </div>
-
 
                     <!-- Amount -->
                     <div class="mb-4">
@@ -120,7 +119,7 @@
 
                     <div class="flex justify-end">
                         <button type="submit"
-                            class="px-4 py-2 text-lg font-semibold text-white transition duration-300 rounded-lg shadow-md bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600">
+                            class="w-full sm:w-auto px-4 py-2 text-lg font-semibold text-white transition duration-300 rounded-lg shadow-md bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600">
                             Create
                         </button>
                     </div>

@@ -4,10 +4,10 @@
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full max-w-4xl px-6 mx-auto">
+        <div class="w-full max-w-4xl mx-auto sm:px-4">
             <x-bread-crumb-navigation />
 
-            <div class="p-8 bg-white border border-gray-200 rounded-lg shadow-lg">
+            <div class="p-4 sm:p-8 bg-white border border-gray-200 rounded-lg shadow-lg">
                 <form action="{{ route('categories.store') }}" method="POST">
                     @csrf
 
@@ -24,7 +24,7 @@
 
                     <div class="flex justify-end">
                         <button type="submit"
-                            class="px-4 py-2 text-lg font-semibold text-white transition duration-300 rounded-lg shadow-md bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600">
+                            class="w-full sm:w-auto px-4 py-2 text-lg font-semibold text-white transition duration-300 rounded-lg shadow-md bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600">
                             Create
                         </button>
                     </div>

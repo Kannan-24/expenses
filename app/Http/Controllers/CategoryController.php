@@ -54,7 +54,7 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Category updated.');
     }
 
-    public function destroy(Category $category)
+    public function destroy(Category $ccategory)
     {
         $this->authorizeCategory($category);
 

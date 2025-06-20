@@ -1,37 +1,32 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('Edit Balance') }} - {{ config('app.name', 'ExpenseTracker') }}
+        {{ __('Edit Category') }} - {{ config('app.name', 'expenses') }}
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full max-w-4xl px-6 mx-auto">
+        <div class="w-full max-w-4xl mx-auto sm:px-4">
             <x-bread-crumb-navigation />
 
-            <div class="p-8 bg-white border border-gray-200 rounded-lg shadow-lg">
-                <form action="{{ route('balance.update') }}" method="POST">
+            <div class="p-4 sm:p-8 bg-white border border-gray-200 rounded-lg shadow-lg">
+                <form action="{{ route('categories.update', $category->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 
-                    <!-- Cash -->
+                    <!-- Name -->
                     <div class="mb-4">
-                        <label for="cash" class="block text-sm font-semibold text-gray-700">Cash Balance</label>
-                        <input type="number" step="0.01" name="cash" id="cash" value="{{ old('cash', $balance->cash) }}"
+                        <label for="name" class="block text-sm font-semibold text-gray-700">Category Name</label>
+                        <input type="text" name="name" id="name" value="{{ old('name', $category->name) }}"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            required>
-                    </div>
-
-                    <!-- Bank -->
-                    <div class="mb-4">
-                        <label for="bank" class="block text-sm font-semibold text-gray-700">Bank Balance</label>
-                        <input type="number" step="0.01" name="bank" id="bank" value="{{ old('bank', $balance->bank) }}"
-                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            required>
+                            required maxlength="255">
+                        @error('name')
+                            <span class="text-sm text-red-600">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="flex justify-end">
                         <button type="submit"
-                            class="px-4 py-2 text-lg font-semibold text-white transition duration-300 rounded-lg shadow-md bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600">
-                            Update Balance
+                            class="w-full sm:w-auto px-4 py-2 text-lg font-semibold text-white transition duration-300 rounded-lg shadow-md bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600">
+                            Update
                         </button>
                     </div>
                 </form>

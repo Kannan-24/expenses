@@ -32,9 +32,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('expenses', ExpenseController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('expense-people', ExpensePersonController::class);
+    Route::get('balance', [BalanceController::class, 'index'])->name('balance.index');
     Route::get('/balance/edit', [BalanceController::class, 'edit'])->name('balance.edit');
     Route::put('/balance/update', [BalanceController::class, 'update'])->name('balance.update');
-    Route::get('/balance/history', [BalanceController::class, 'history'])->name('balance.history');
     Route::get('/reports/expenses', [ReportController::class, 'expenses'])->name('reports.expenses');
     Route::get('/reports/expenses/pdf', [ReportController::class, 'expensesPdf'])->name('reports.expenses_report');
 });

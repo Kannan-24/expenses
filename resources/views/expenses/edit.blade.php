@@ -4,10 +4,10 @@
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full max-w-4xl px-6 mx-auto">
+        <div class="w-full max-w-4xl mx-auto sm:px-4">
             <x-bread-crumb-navigation />
 
-            <div class="p-8 bg-white border border-gray-200 rounded-lg shadow-lg">
+            <div class="p-4 sm:p-8 bg-white border border-gray-200 rounded-lg shadow-lg">
                 <div class="mb-4 text-sm text-gray-600">
                     <strong>Available Cash:</strong> ₹{{ number_format($balance->cash, 2) }}<br>
                     <strong>Available Bank:</strong> ₹{{ number_format($balance->bank, 2) }}
@@ -37,8 +37,9 @@
                         <select name="category_id" id="category_id"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">None</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ old('category_id', $expense->category_id) == $category->id ? 'selected' : '' }}>
+                            @foreach ($categories->where('user_id', auth()->id()) as $category)
+                                <option value="{{ $category->id }}"
+                                    {{ old('category_id', $expense->category_id) == $category->id ? 'selected' : '' }}>
                                     {{ $category->name }}
                                 </option>
                             @endforeach
@@ -54,8 +55,9 @@
                         <select name="expense_person_id" id="expense_person_id"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">None</option>
-                            @foreach($people as $person)
-                                <option value="{{ $person->id }}" {{ old('expense_person_id', $expense->expense_person_id) == $person->id ? 'selected' : '' }}>
+                            @foreach ($people as $person)
+                                <option value="{{ $person->id }}"
+                                    {{ old('expense_person_id', $expense->expense_person_id) == $person->id ? 'selected' : '' }}>
                                     {{ $person->name }}
                                 </option>
                             @endforeach
@@ -93,7 +95,8 @@
                     <!-- Date -->
                     <div class="mb-4">
                         <label for="date" class="block text-sm font-semibold text-gray-700">Date</label>
-                        <input type="date" name="date" id="date" value="{{ old('date', $expense->date ? $expense->date : '') }}"
+                        <input type="date" name="date" id="date"
+                            value="{{ old('date', $expense->date ? \Carbon\Carbon::parse($expense->date)->format('Y-m-d') : '') }}"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required>
                         @error('date')
@@ -113,7 +116,7 @@
 
                     <div class="flex justify-end">
                         <button type="submit"
-                            class="px-4 py-2 text-lg font-semibold text-white transition duration-300 rounded-lg shadow-md bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600">
+                            class="w-full sm:w-auto px-4 py-2 text-lg font-semibold text-white transition duration-300 rounded-lg shadow-md bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600">
                             Update
                         </button>
                     </div>
