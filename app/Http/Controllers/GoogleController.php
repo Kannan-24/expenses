@@ -6,7 +6,7 @@ use Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-class GoogleAuthController extends Controller
+class GoogleController extends Controller
 {
     public function redirectToGoogle()
     {
