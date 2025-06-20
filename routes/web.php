@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ExpensePersonController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -32,6 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('expenses', ExpenseController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('expense-people', ExpensePersonController::class);
+    Route::resource('user', UserController::class);
     Route::get('balance', [BalanceController::class, 'index'])->name('balance.index');
     Route::get('/balance/edit', [BalanceController::class, 'edit'])->name('balance.edit');
     Route::put('/balance/update', [BalanceController::class, 'update'])->name('balance.update');
