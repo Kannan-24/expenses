@@ -215,7 +215,7 @@
                         <div class="items-start w-full">
                             <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded-full mb-4 sm:mb-5"
                                 style="background: {{ $feature['color'] }};">
-                                <img src="{{ asset('assets/' . $feature['icon']) }}" alt="{{ $feature['title'] }}"
+                                <img src="{{ asset('assets/svg/' . $feature['icon']) }}" alt="{{ $feature['title'] }}"
                                     class="w-8 h-8 sm:w-10 sm:h-10">
                             </div>
                             <p class="font-semibold mb-3 sm:mb-5 text-lg sm:text-xl text-gray-900 text-left w-full">
@@ -248,7 +248,7 @@
                 @php
                     $steps = [
                         [
-                            'icon' => 'transaction-icon.svg',
+                            'icon' => 'signup-step.svg',
                             'color' => 'from-green-500 to-emerald-400',
                             'step' => 'STEP 1',
                             'title' => 'Sign Up & Set Up Your Wallets',
@@ -256,7 +256,7 @@
                                 'Create your free account and add your cash, bank, or digital wallets like GPay or Paytm.',
                         ],
                         [
-                            'icon' => 'wallet-icon.svg',
+                            'icon' => 'transaction-step.svg',
                             'color' => 'from-purple-500 to-violet-400',
                             'step' => 'STEP 2',
                             'title' => 'Log Your Income & Spending',
@@ -264,7 +264,7 @@
                                 'Enter your daily expenses and incomes by selecting the category, type, and payment method.',
                         ],
                         [
-                            'icon' => 'graph-icon.svg',
+                            'icon' => 'report-step.svg',
                             'color' => 'from-yellow-400 to-orange-500',
                             'step' => 'STEP 3',
                             'title' => 'Understand Where Your Money Goes',
@@ -272,7 +272,7 @@
                                 'Get visual insights with bar charts, monthly summaries, and category-wise breakdowns.',
                         ],
                         [
-                            'icon' => 'alert-icon.svg',
+                            'icon' => 'alert-step.svg',
                             'color' => 'from-blue-400 to-sky-500',
                             'step' => 'STEP 4',
                             'title' => 'Set Budgets and Get Alerts',
@@ -285,7 +285,7 @@
                     <div
                         class="bg-white rounded-3xl shadow-lg p-6 flex flex-col items-start justify-start text-left h-auto sm:h-[330px]">
                         <div class="bg-gradient-to-br {{ $step['color'] }} p-4 rounded-full mb-4 mt-2 sm:mt-4">
-                            <img src="{{ asset('assets/' . $step['icon']) }}" alt="Icon" class="w-8 h-8" />
+                            <img src="{{ asset('assets/svg/' . $step['icon']) }}" alt="Icon" class="w-8 h-8" />
                         </div>
                         <span
                             class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-full font-semibold mb-3 inline-block">

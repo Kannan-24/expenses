@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('transaction', function (Blueprint $table) {
+        Schema::table('transactions', function (Blueprint $table) {
             // Drop 'payment_method' column if it exists
             if (Schema::hasColumn('transaction', 'payment_method')) {
                 $table->dropColumn('payment_method');
@@ -27,7 +27,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('transaction', function (Blueprint $table) {
+        Schema::table('transactions', function (Blueprint $table) {
             // Drop 'wallet_id' column if it exists
             if (Schema::hasColumn('transaction', 'wallet_id')) {
                 $table->dropForeign(['wallet_id']);
