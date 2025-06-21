@@ -189,6 +189,12 @@ return [
         'store' => 'default',
     ],
 
+
+    /**
+     * The permissions and roles defined here are used to manage access control
+     * within the application. They are used to define what actions users can
+     * perform based on their assigned roles.
+     */
     'permissions' => [
         'view user dashboard',
 
@@ -230,5 +236,11 @@ return [
                 'request support'
             ]
         ]
-    ]
+    ],
+
+    /*
+     * The default role assigned to users when they register or log in.
+     * This can be overridden by assigning a different role to the user.
+     */
+    'default_role' => 'user',
 ];

@@ -28,6 +28,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Check if the user has any roles assigned
+        if (Auth::user()->roles->isEmpty()) {
+            Auth::user()->assignRole(config('permission.default_role'));
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
