@@ -10,9 +10,20 @@ class CurrencyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $currencies = Currency::orderBy('name')->paginate(10);
+        $query = Currency::query();
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+                  ->orWhere('name', 'like', "%{$search}%")
+                  ->orWhere('symbol', 'like', "%{$search}%");
+            });
+        }
+
+        $currencies = $query->orderBy('name')->paginate(10)->withQueryString();
+
         return view('currencies.index', compact('currencies'));
     }
 
