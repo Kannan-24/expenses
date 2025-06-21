@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Socialite;
+use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
 {
@@ -26,12 +28,16 @@ class GoogleController extends Controller
                 'name' => $googleUser->getName(),
                 'email' => $googleUser->getEmail(),
                 'google_id' => $googleUser->getId(),
-                'password' => bcrypt('password'), // optional, can be null
+                'password' => bcrypt(Str::random(16)),
+            ]);
+        } else {
+            $user->update([
+                'google_id' => $googleUser->getId(),
             ]);
         }
 
         Auth::login($user);
 
-        return redirect()->route('dashboard'); // your home/dashboard route
+        return redirect()->route('dashboard');
     }
 }
