@@ -25,15 +25,6 @@ class SocialLoginController extends Controller
         // Check if user exists
         $user = User::where('email', $googleUser->getEmail())->first();
 
-        Log::info('Google user data:', [
-            'id' => $googleUser->getId(),
-            'name' => $googleUser->getName(),
-            'email' => $googleUser->getEmail(),
-            'token' => $googleUser->token,
-            'refreshToken' => $googleUser->refreshToken,
-            'expiresIn' => $googleUser->expiresIn,
-        ]);
-
         if (!$user) {
             // Register new user
             $user = User::create([
