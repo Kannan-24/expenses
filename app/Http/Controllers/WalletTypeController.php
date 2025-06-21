@@ -41,7 +41,7 @@ class WalletTypeController extends Controller
             'is_active' => $request->input('is_active', true),
         ]);
 
-        return redirect()->route('wallet_types.index')->with('success', 'Wallet Type created successfully.');
+        return redirect()->route('wallet-types.index')->with('success', 'Wallet Type created successfully.');
     }
 
     /**
@@ -69,7 +69,7 @@ class WalletTypeController extends Controller
             'is_active' => $request->input('is_active', true),
         ]);
 
-        return redirect()->route('wallet_types.index')->with('success', 'Wallet Type updated successfully.');
+        return redirect()->route('wallet-types.index')->with('success', 'Wallet Type updated successfully.');
     }
 
     /**
