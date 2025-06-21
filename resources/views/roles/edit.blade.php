@@ -30,7 +30,7 @@
                             @foreach ($permissions as $permission)
                                 <label class="flex items-center space-x-2">
                                     <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                                        {{ in_array($permission->id, old('permissions', $role->permissions->pluck('id')->toArray() ?? [])) || $role->hasPermissionTo($permission->name) ? 'checked' : '' }}>
+                                        {{ in_array($permission->name, old('permissions')) || $role->hasPermissionTo($permission->name) ? 'checked' : '' }}>
                                     <span>{{ $permission->name }}</span>
                                 </label>
                             @endforeach
