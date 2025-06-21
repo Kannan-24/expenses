@@ -10,9 +10,17 @@ class WalletTypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $walletTypes = WalletType::orderBy('name')->paginate(10);
+        $query = WalletType::query();
+
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%');
+        }
+
+        $walletTypes = $query->orderBy('name')->paginate(10)->withQueryString();
+
         return view('wallet_types.index', compact('walletTypes'));
     }
 
