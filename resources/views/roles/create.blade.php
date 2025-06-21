@@ -26,9 +26,9 @@
                     <div class="mb-4">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Permissions</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            @foreach($permissions as $permission)
+                            @foreach ($permissions as $permission)
                                 <label class="flex items-center space-x-2">
-                                    <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
+                                    <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                         {{ in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}>
                                     <span>{{ $permission->name }}</span>
                                 </label>
