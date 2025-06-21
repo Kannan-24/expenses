@@ -33,12 +33,19 @@ class SocialLoginController extends Controller
                 'google_id' => $googleUser->getId(),
                 'password' => bcrypt(Str::random(16)),
             ]);
-
-            $user->syncRoles(['user']);
         } else {
             $user->update([
                 'google_id' => $googleUser->getId(),
             ]);
+        }
+
+        if (!$user->google_id) {
+            $user->google_id = $googleUser->getId();
+            $user->save();
+        }
+
+        if ($user->roles->isEmpty()) {
+            $user->syncRoles([config('permission.default_role')]);
         }
 
         Auth::login($user);
