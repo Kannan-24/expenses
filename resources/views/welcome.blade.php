@@ -167,7 +167,7 @@
                     $features = [
                         [
                             'icon' => 'money-bag.svg',
-                            'color' => 'linear-gradient(135deg, #059669 0%, #34D399 100%)',
+                            'color' => 'linear-gradient(135deg, #34D399 0%, #059669 100%)',
                             'hr' => '#34D399',
                             'title' => 'Track Every Rupee',
                             'desc' => 'Add your daily expenses with category and payment method.',
@@ -249,7 +249,7 @@
                     $steps = [
                         [
                             'icon' => 'signup-step.svg',
-                            'color' => 'from-green-500 to-emerald-400',
+                            'color' => 'from-emerald-400 to-emerald-600',
                             'step' => 'STEP 1',
                             'title' => 'Sign Up & Set Up Your Wallets',
                             'desc' =>
@@ -257,7 +257,7 @@
                         ],
                         [
                             'icon' => 'transaction-step.svg',
-                            'color' => 'from-purple-500 to-violet-400',
+                            'color' => 'from-violet-400 to-purple-600',
                             'step' => 'STEP 2',
                             'title' => 'Log Your Income & Spending',
                             'desc' =>
@@ -265,7 +265,7 @@
                         ],
                         [
                             'icon' => 'report-step.svg',
-                            'color' => 'from-yellow-400 to-orange-500',
+                            'color' => 'from-amber-400 to-orange-500',
                             'step' => 'STEP 3',
                             'title' => 'Understand Where Your Money Goes',
                             'desc' =>
@@ -273,7 +273,7 @@
                         ],
                         [
                             'icon' => 'alert-step.svg',
-                            'color' => 'from-blue-400 to-sky-500',
+                            'color' => 'from-indigo-400 to-indigo-700',
                             'step' => 'STEP 4',
                             'title' => 'Set Budgets and Get Alerts',
                             'desc' =>
@@ -284,7 +284,7 @@
                 @foreach ($steps as $step)
                     <div
                         class="bg-white rounded-3xl shadow-lg p-6 flex flex-col items-start justify-start text-left h-auto sm:h-[330px]">
-                        <div class="bg-gradient-to-br {{ $step['color'] }} p-4 rounded-full mb-4 mt-2 sm:mt-4">
+                        <div class="bg-gradient-to-br {{ $step['color'] }} p-4 rounded-full mb-4 mt-2 sm:mt-4 shadow-sm inset-shadow-lg">
                             <img src="{{ asset('assets/svg/' . $step['icon']) }}" alt="Icon" class="w-8 h-8" />
                         </div>
                         <span
