@@ -16,7 +16,7 @@ class WalletTypeController extends Controller
 
         if ($search = $request->input('search')) {
             $query->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%');
+                ->orWhere('description', 'like', '%' . $search . '%');
         }
 
         $walletTypes = $query->orderBy('name')->paginate(10)->withQueryString();
@@ -74,7 +74,7 @@ class WalletTypeController extends Controller
         $walletType->update([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
-            'is_active' => $request->input('is_active', true),
+            'is_active' => $request->input('is_active') ? true : false,
         ]);
 
         return redirect()->route('wallet-types.index')->with('success', 'Wallet Type updated successfully.');
