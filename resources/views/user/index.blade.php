@@ -27,11 +27,17 @@
                                     <td class="px-4 py-2">{{ $user->name }}</td>
                                     <td class="px-4 py-2">{{ $user->email }}</td>
                                     <td class="px-4 py-2">
-                                        @if (isset($user->role))
-                                            {{ ucfirst($user->role) }}
-                                        @else
-                                            <span class="text-gray-500">N/A</span>
-                                        @endif
+                                        @forelse ($user->roles as $role)
+                                            <span
+                                                class="inline-block bg-gray-600 text-gray-200 px-2 py-1 rounded-full text-xs">
+                                                {{ $role->name }}
+                                            </span>
+                                        @empty
+                                            <span
+                                                class="inline-block bg-gray-600 text-gray-200 px-2 py-1 rounded-full text-xs">
+                                                No Role
+                                            </span>
+                                        @endforelse
                                     </td>
                                     <td class="px-4 py-2 text-center space-x-2">
                                         <a href="{{ route('user.show', $user->id) }}" class="text-yellow-400">Show</a>
