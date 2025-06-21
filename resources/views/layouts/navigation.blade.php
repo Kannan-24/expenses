@@ -39,11 +39,7 @@
                             @endif
                             <div class="text-left">
                                 <p class="text-sm font-medium">{{ Auth::user()->name }}</p>
-                                @forelse (Auth::user()->roles as $role)
-                                    <p class="text-xs text-gray-400">{{ $role->name }}</p>
-                                @empty
-                                    <p class="text-xs text-gray-400">No Role Assigned</p>
-                                @endforelse
+                                <p class="text-xs text-gray-300">{{ Auth::user()->email }}</p>
                             </div>
                             <svg class="w-4 h-4 text-gray-300 transition-transform duration-200 transform"
                                 :class="userDropdown ? 'rotate-180' : 'rotate-0'" fill="none" stroke="currentColor"
