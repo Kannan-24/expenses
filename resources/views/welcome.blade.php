@@ -155,7 +155,7 @@
 
         <!-- Right Image -->
         <div class="flex-1 flex justify-center items-center mt-4 md:mt-0 w-full">
-            <img src="{{ asset('assets/landing.svg') }}" alt="Illustration"
+            <img src="{{ asset('assets/svg/landing.svg') }}" alt="Illustration"
                 class="w-4/5 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
         </div>
     </section>
