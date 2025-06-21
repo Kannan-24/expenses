@@ -39,9 +39,13 @@
             }
         }
     </style>
+
+    <x-google-analytics-head />
 </head>
 
 <body class="bg-white text-gray-800 font-sans">
+    <x-google-analytics-body />
+
     <!-- Navbar -->
     <header id="main-navbar"
         class="flex justify-between items-center p-4 shadow-sm bg-white z-50 transition-all duration-300 fixed top-0 left-0 w-full"
@@ -284,8 +288,10 @@
                 @foreach ($steps as $step)
                     <div
                         class="bg-white rounded-3xl shadow-lg p-6 flex flex-col items-start justify-start text-left h-auto sm:h-[330px]">
-                        <div class="bg-gradient-to-br {{ $step['color'] }} p-4 rounded-full mb-4 mt-2 sm:mt-4" style="box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.25);">
-                            <img src="{{ asset('assets/svg/' . $step['icon']) }}" alt="Icon" class="w-8 h-8" style="filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));" />
+                        <div class="bg-gradient-to-br {{ $step['color'] }} p-4 rounded-full mb-4 mt-2 sm:mt-4"
+                            style="box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.25);">
+                            <img src="{{ asset('assets/svg/' . $step['icon']) }}" alt="Icon" class="w-8 h-8"
+                                style="filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));" />
                         </div>
                         <span
                             class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-full font-semibold mb-3 inline-block">
