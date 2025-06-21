@@ -39,8 +39,11 @@
                             @endif
                             <div class="text-left">
                                 <p class="text-sm font-medium">{{ Auth::user()->name }}</p>
-                                <!-- Replace with dynamic name -->
-                                <p class="text-xs text-gray-400">Admin</p> <!-- Replace with dynamic role -->
+                                @forelse (Auth::user()->roles as $role)
+                                    <p class="text-xs text-gray-400">{{ $role->name }}</p>
+                                @empty
+                                    <p class="text-xs text-gray-400">No Role Assigned</p>
+                                @endforelse
                             </div>
                             <svg class="w-4 h-4 text-gray-300 transition-transform duration-200 transform"
                                 :class="userDropdown ? 'rotate-180' : 'rotate-0'" fill="none" stroke="currentColor"
@@ -99,61 +102,77 @@
                         <span class="ml-3">Dashboard</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('expenses.index') }}"
-                        class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
-                    {{ request()->routeIs('expenses.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
-                        <span class="ml-3">Transactions</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('categories.index') }}"
-                        class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
-                    {{ request()->routeIs('categories.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
-                        <span class="ml-3">Categories</span>
-                    </a>
-                </li>
 
-                {{-- People --}}
-                <li>
-                    <a href="{{ route('expense-people.index') }}"
-                        class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
-                    {{ request()->routeIs('expense-people.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
-                        <span class="ml-3">Persons</span>
-                    </a>
-                </li>
-
-                {{-- Payment Methods --}}
-                <li>
-                    <a href="{{ route('balance.index') }}"
-                        class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
-                    {{ request()->routeIs('balance.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
-                        <span class="ml-3">Balance</span>
-                    </a>
-                </li>
-
-                {{-- Reports --}}
-                <li>
-                    <a href="{{ route('reports.expenses') }}"
-                        class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
-                    {{ request()->routeIs('reports.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
-                        <span class="ml-3">Reports</span>
-                    </a>
-                </li>
-
-                {{-- Users --}}
-                @php
-                    $isFirstUser = Auth::check() && Auth::user()->id === 1;
-                @endphp
-                @if ($isFirstUser)
+                @can('manage transactions')
                     <li>
-                        <a href="{{ route('user.index') }}"
+                        <a href="{{ route('expenses.index') }}"
                             class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
-                            {{ request()->routeIs('users.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
-                            <span class="ml-3">Users</span>
+                    {{ request()->routeIs('expenses.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
+                            <span class="ml-3">Transactions</span>
                         </a>
                     </li>
-                @endif
+                @endcan
+
+                @can('manage categories')
+                    {{-- Categories --}}
+                    <li>
+                        <a href="{{ route('categories.index') }}"
+                            class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
+                    {{ request()->routeIs('categories.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
+                            <span class="ml-3">Categories</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('manage expense people')
+                    {{-- People --}}
+                    <li>
+                        <a href="{{ route('expense-people.index') }}"
+                            class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
+                    {{ request()->routeIs('expense-people.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
+                            <span class="ml-3">Persons</span>
+                        </a>
+                    </li>
+                @endcan
+
+
+                @can('manage balance')
+                    {{-- Balance --}}
+                    <li>
+                        <a href="{{ route('balance.index') }}"
+                            class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
+                    {{ request()->routeIs('balance.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
+                            <span class="ml-3">Balance</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('generate reports')
+                    {{-- Reports --}}
+                    <li>
+                        <a href="{{ route('reports.expenses') }}"
+                            class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
+                    {{ request()->routeIs('reports.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
+                            <span class="ml-3">Reports</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('manage users')
+                    {{-- User Management --}}
+                    @php
+                        $isFirstUser = Auth::check() && Auth::user()->id === 1;
+                    @endphp
+                    @if ($isFirstUser)
+                        <li>
+                            <a href="{{ route('user.index') }}"
+                                class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
+                            {{ request()->routeIs('users.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
+                                <span class="ml-3">Users</span>
+                            </a>
+                        </li>
+                    @endif
+                @endcan
             </ul>
         </div>
     </aside>

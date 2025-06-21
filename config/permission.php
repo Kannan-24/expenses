@@ -188,4 +188,47 @@ return [
 
         'store' => 'default',
     ],
+
+    'permissions' => [
+        'view user dashboard',
+
+        'manage transactions',
+        'manage categories',
+        'manage expense people',
+        'manage balance',
+        'generate reports',
+        'request support',
+
+        'manage users',
+        'manage roles',
+        'manage permissions',
+        'manage support enquiries',
+        'manage application settings',
+    ],
+
+    'roles' => [
+        [
+            'name' => 'admin',
+            'permissions' => [
+                'view user dashboard',
+                'manage users',
+                'manage roles',
+                'manage permissions',
+                'manage support enquiries',
+                'manage application settings'
+            ]
+        ],
+        [
+            'name' => 'user',
+            'permissions' => [
+                'view user dashboard',
+                'manage transactions',
+                'manage categories',
+                'manage expense people',
+                'manage balance',
+                'generate reports',
+                'request support'
+            ]
+        ]
+    ]
 ];
