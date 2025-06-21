@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expense;
+use App\Models\Transaction;
 use App\Models\Category;
 use App\Models\Balance;
 use App\Models\BalanceHistory;
@@ -11,11 +11,23 @@ use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ExpenseController extends Controller
+class TransactionController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can:manage transactions');
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
-        $query = Expense::with(['category', 'person'])->where('user_id', Auth::id());
+        $query = Transaction::with(['category', 'person'])->where('user_id', Auth::id());
 
         if ($request->filter === '7days') {
             $query->where('date', '>=', now()->subDays(7));
@@ -32,6 +44,9 @@ class ExpenseController extends Controller
         return view('transactions.index', compact('transactions'));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         $categories = Category::all();
@@ -47,6 +62,9 @@ class ExpenseController extends Controller
         return view('transactions.create', compact('categories', 'balance', 'people', 'wallets'));
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -70,7 +88,7 @@ class ExpenseController extends Controller
             }
         }
 
-        $expense = Expense::create([
+        $transaction = Transaction::create([
             'user_id'           => Auth::id(),
             'category_id'       => $request->category_id,
             'expense_person_id' => $request->expense_person_id,
@@ -107,9 +125,12 @@ class ExpenseController extends Controller
         );
     }
 
-    public function edit(Expense $expense)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Transaction $transaction)
     {
-        if ($expense->user_id !== Auth::id()) {
+        if ($transaction->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -125,9 +146,12 @@ class ExpenseController extends Controller
         return view('transactions.edit', compact('expense', 'categories', 'balance', 'people', 'wallets'));
     }
 
-    public function update(Request $request, Expense $expense)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Transaction $transaction)
     {
-        if ($expense->user_id !== Auth::id()) {
+        if ($transaction->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -147,7 +171,7 @@ class ExpenseController extends Controller
         );
 
         if ($request->type === 'expense') {
-            if ($request->amount > $balance->{$request->payment_method} + $expense->amount) {
+            if ($request->amount > $balance->{$request->payment_method} + $transaction->amount) {
                 return back()->withErrors(['amount' => 'Insufficient ' . ucfirst($request->payment_method) . ' balance.'])->withInput();
             }
         }
@@ -156,13 +180,13 @@ class ExpenseController extends Controller
         $bankBefore = $balance->bank;
 
         // Reverse previous
-        if ($expense->type === 'income') {
-            $balance->{$expense->payment_method} -= $expense->amount;
+        if ($transaction->type === 'income') {
+            $balance->{$transaction->payment_method} -= $transaction->amount;
         } else {
-            $balance->{$expense->payment_method} += $expense->amount;
+            $balance->{$transaction->payment_method} += $transaction->amount;
         }
 
-        $expense->update([
+        $transaction->update([
             'category_id'       => $request->category_id,
             'expense_person_id' => $request->expense_person_id,
             'amount'            => $request->amount,
@@ -196,18 +220,24 @@ class ExpenseController extends Controller
         );
     }
 
-    public function show(Expense $expense)
+    /**
+     * Display the specified resource.
+     */
+    public function show(Transaction $transaction)
     {
-        if ($expense->user_id !== Auth::id()) {
+        if ($transaction->user_id !== Auth::id()) {
             abort(403);
         }
 
         return view('transactions.show', compact('expense'));
     }
 
-    public function destroy(Expense $expense)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Transaction $transaction)
     {
-        if ($expense->user_id !== Auth::id()) {
+        if ($transaction->user_id !== Auth::id()) {
             abort(403);
         }
 
@@ -219,14 +249,14 @@ class ExpenseController extends Controller
         $cashBefore = $balance->cash;
         $bankBefore = $balance->bank;
 
-        if ($expense->type === 'income') {
-            $balance->{$expense->payment_method} -= $expense->amount;
+        if ($transaction->type === 'income') {
+            $balance->{$transaction->payment_method} -= $transaction->amount;
         } else {
-            $balance->{$expense->payment_method} += $expense->amount;
+            $balance->{$transaction->payment_method} += $transaction->amount;
         }
 
         $balance->save();
-        $expense->delete();
+        $transaction->delete();
 
         BalanceHistory::create([
             'user_id'     => Auth::id(),
@@ -239,7 +269,7 @@ class ExpenseController extends Controller
 
         return redirect()->route('transactions.index')->with(
             'success',
-            ucfirst($expense->type) . " deleted successfully. Balance restored."
+            ucfirst($transaction->type) . " deleted successfully. Balance restored."
         );
     }
 }
