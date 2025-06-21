@@ -36,7 +36,7 @@ class SocialLoginController extends Controller
             ]);
 
             Session::put('just_registered', true);
-            Session::put('registration_method', 'email');
+            Session::put('registration_method', 'google');
         } else {
             $user->update([
                 'google_id' => $googleUser->getId(),
