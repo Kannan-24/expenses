@@ -30,7 +30,8 @@
                         @foreach ($wallets as $wallet)
                             <span class="block">{{ $wallet->name }}: ₹{{ number_format($wallet->balance, 2) }}</span>
                         @endforeach
-                        <span class="text-lg font-semibold">Total: ₹{{ number_format($wallets->sum('balance'), 2) }}</span>
+                        <span class="text-lg font-semibold">Total:
+                            ₹{{ number_format($wallets->sum('balance'), 2) }}</span>
                     </p>
                 </div>
             </div>
@@ -130,6 +131,22 @@
 
         </div>
     </div>
+
+    @if (session('just_registered'))
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+                event: 'expense_register_success',
+                method: '{{ session('registration_method', 'email') }}'
+            });
+        </script>
+
+        {{-- Clear the session so it only fires once --}}
+        @php
+            session()->forget('just_registered');
+            session()->forget('registration_method');
+        @endphp
+    @endif
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>

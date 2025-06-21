@@ -21,9 +21,13 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <x-google-analytics-head />
 </head>
 
 <body class="font-sans antialiased bg-blue-200 min-h-screen">
+    <x-google-analytics-body />
+    
     <div class="min-h-[calc(100vh-80px)] mt-20 bg-blue-200">
         @if (Route::currentRouteName() !== 'welcome')
             @include('layouts.navigation')

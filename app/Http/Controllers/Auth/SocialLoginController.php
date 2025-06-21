@@ -10,6 +10,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class SocialLoginController extends Controller
 {
@@ -33,6 +34,9 @@ class SocialLoginController extends Controller
                 'google_id' => $googleUser->getId(),
                 'password' => bcrypt(Str::random(16)),
             ]);
+
+            Session::put('just_registered', true);
+            Session::put('registration_method', 'email');
         } else {
             $user->update([
                 'google_id' => $googleUser->getId(),
