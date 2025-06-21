@@ -16,7 +16,9 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
@@ -31,6 +33,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
     Route::resource('expenses', ExpenseController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('expense-people', ExpensePersonController::class);
@@ -40,8 +44,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/balance/update', [BalanceController::class, 'update'])->name('balance.update');
     Route::get('/reports/expenses', [ReportController::class, 'expenses'])->name('reports.expenses');
     Route::get('/reports/expenses/pdf', [ReportController::class, 'expensesPdf'])->name('reports.expenses_report');
-    Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
-    Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 });
 
 require __DIR__ . '/auth.php';
