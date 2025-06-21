@@ -37,7 +37,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/account-settings/password', [AccountSettingsController::class, 'updatePassword'])->name('account.update.password');
     Route::delete('/account-settings/delete', [AccountSettingsController::class, 'destroy'])->name('account.destroy');
 
-    Route::resource('expenses', ExpenseController::class);
+    Route::resource('transactions', ExpenseController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('expense-people', ExpensePersonController::class);
     Route::resource('wallets', WalletController::class);

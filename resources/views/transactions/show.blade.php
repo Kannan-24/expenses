@@ -13,12 +13,12 @@
                         {{ ucfirst($expense->type) }} Details
                     </h2>
                     <div class="flex gap-4">
-                        <a href="{{ route('expenses.edit', $expense->id) }}">
+                        <a href="{{ route('transactions.edit', $expense->id) }}">
                             <button class="px-4 py-2 text-white bg-green-500 rounded-lg shadow-md hover:bg-green-700">
                                 Edit
                             </button>
                         </a>
-                        <form action="{{ route('expenses.destroy', $expense->id) }}" method="POST"
+                        <form action="{{ route('transactions.destroy', $expense->id) }}" method="POST"
                             onsubmit="return confirm('Are you sure?');">
                             @csrf
                             @method('DELETE')

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('Batch List') }} - {{ config('app.name', 'expenses') }}
+        {{ __('Transactions') }} - {{ config('app.name', 'transactions') }}
     </x-slot>
 
     <!-- Main Content Section -->
@@ -14,19 +14,21 @@
                         class="bg-white border border-gray-300 text-sm rounded px-3 py-2 text-gray-900 w-full sm:w-auto">
                         <option value="">All</option>
                         <option value="7days" {{ request('filter') == '7days' ? 'selected' : '' }}>Last 7 Days</option>
-                        <option value="15days" {{ request('filter') == '15days' ? 'selected' : '' }}>Last 15 Days</option>
-                        <option value="1month" {{ request('filter') == '1month' ? 'selected' : '' }}>Last 1 Month</option>
+                        <option value="15days" {{ request('filter') == '15days' ? 'selected' : '' }}>Last 15 Days
+                        </option>
+                        <option value="1month" {{ request('filter') == '1month' ? 'selected' : '' }}>Last 1 Month
+                        </option>
                     </select>
 
                     <div class="flex items-center gap-2 w-full sm:w-auto flex-col sm:flex-row">
                         <input type="date" name="start_date" value="{{ request('start_date') }}"
                             class="border border-gray-300 rounded px-3 py-1 text-sm text-gray-800 w-full sm:w-auto">
-                            <span class="text-gray-500 text-center sm:text-left">to</span>
+                        <span class="text-gray-500 text-center sm:text-left">to</span>
                         <input type="date" name="end_date" value="{{ request('end_date') }}"
                             class="border border-gray-300 rounded px-3 py-1 text-sm text-gray-800 w-full sm:w-auto">
                         <button type="submit"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm w-full sm:w-auto mt-2 sm:mt-0">Filter</button>
-                        <a href="{{ route('expenses.index') }}"
+                        <a href="{{ route('transactions.index') }}"
                             class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-1 rounded text-sm w-full sm:w-auto mt-2 sm:mt-0 text-center">Reset</a>
                     </div>
                 </form>
@@ -38,7 +40,7 @@
                                 <th class="px-4 py-2">#</th>
                                 <th class="px-4 py-2">Date</th>
                                 <th class="px-4 py-2">Category</th>
-                                <th class="px-4 py-2">  Person</th>
+                                <th class="px-4 py-2"> Person</th>
                                 <th class="px-4 py-2">Type</th>
                                 <th class="px-4 py-2">Payment Method</th>
                                 <th class="px-4 py-2">Amount</th>
@@ -46,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($expenses as $expense)
+                            @forelse ($transactions as $expense)
                                 <tr class="border-b border-gray-700 hover:bg-gray-700">
                                     <td class="px-4 py-2">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-2">{{ \Carbon\Carbon::parse($expense->date)->format('Y-m-d') }}
@@ -82,11 +84,11 @@
                                         @endif
                                     </td>
                                     <td class="px-4 py-2 text-center space-x-2">
-                                        <a href="{{ route('expenses.edit', $expense->id) }}"
+                                        <a href="{{ route('transactions.edit', $expense->id) }}"
                                             class="text-blue-500 ">Edit</a>
-                                        <a href="{{ route('expenses.show', $expense->id) }}"
+                                        <a href="{{ route('transactions.show', $expense->id) }}"
                                             class="text-yellow-400">Show</a>
-                                        <form action="{{ route('expenses.destroy', $expense->id) }}" method="POST"
+                                        <form action="{{ route('transactions.destroy', $expense->id) }}" method="POST"
                                             class="inline-block" onsubmit="return confirm('Delete this transaction?')">
                                             @csrf
                                             @method('DELETE')
@@ -104,7 +106,7 @@
                     </table>
                 </div>
 
-                <x-pagination :paginator="$expenses" />
+                <x-pagination :paginator="$transactions" />
             </div>
         </div>
     </div>

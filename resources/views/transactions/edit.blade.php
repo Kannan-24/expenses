@@ -13,7 +13,7 @@
                     <strong>Available Bank:</strong> ₹{{ number_format($balance->bank, 2) }}
                 </div>
 
-                <form action="{{ route('expenses.update', $expense->id) }}" method="POST">
+                <form action="{{ route('transactions.update', $expense->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 

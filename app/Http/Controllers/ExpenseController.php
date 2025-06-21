@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Balance;
 use App\Models\BalanceHistory;
 use App\Models\ExpensePerson;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,9 +27,9 @@ class ExpenseController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        $expenses = $query->orderBy('date', 'desc')->paginate(9);
+        $transactions = $query->orderBy('date', 'desc')->paginate(9);
 
-        return view('expenses.index', compact('expenses'));
+        return view('transactions.index', compact('transactions'));
     }
 
     public function create()
@@ -41,7 +42,9 @@ class ExpenseController extends Controller
             ['cash' => 0, 'bank' => 0]
         );
 
-        return view('expenses.create', compact('categories', 'balance', 'people'));
+        $wallets = Wallet::where('user_id', Auth::id())->get();
+
+        return view('transactions.create', compact('categories', 'balance', 'people', 'wallets'));
     }
 
     public function store(Request $request)
@@ -98,7 +101,7 @@ class ExpenseController extends Controller
             'bank_after'  => $balance->bank,
         ]);
 
-        return redirect()->route('expenses.index')->with(
+        return redirect()->route('transactions.index')->with(
             'success',
             ucfirst($request->type) . " added successfully. " . ucfirst($request->payment_method) . " balance updated."
         );
@@ -117,7 +120,9 @@ class ExpenseController extends Controller
             ['cash' => 0, 'bank' => 0]
         );
 
-        return view('expenses.edit', compact('expense', 'categories', 'balance', 'people'));
+        $wallets = Wallet::where('user_id', Auth::id())->get();
+
+        return view('transactions.edit', compact('expense', 'categories', 'balance', 'people', 'wallets'));
     }
 
     public function update(Request $request, Expense $expense)
@@ -185,7 +190,7 @@ class ExpenseController extends Controller
             'bank_after'  => $balance->bank,
         ]);
 
-        return redirect()->route('expenses.index')->with(
+        return redirect()->route('transactions.index')->with(
             'success',
             ucfirst($request->type) . " updated successfully. " . ucfirst($request->payment_method) . " balance adjusted."
         );
@@ -197,7 +202,7 @@ class ExpenseController extends Controller
             abort(403);
         }
 
-        return view('expenses.show', compact('expense'));
+        return view('transactions.show', compact('expense'));
     }
 
     public function destroy(Expense $expense)
@@ -232,7 +237,7 @@ class ExpenseController extends Controller
             'bank_after'  => $balance->bank,
         ]);
 
-        return redirect()->route('expenses.index')->with(
+        return redirect()->route('transactions.index')->with(
             'success',
             ucfirst($expense->type) . " deleted successfully. Balance restored."
         );
