@@ -7,10 +7,13 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BalanceController;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ExpensePersonController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\WalletController;
+use App\Http\Controllers\WalletTypeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -32,7 +35,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('expenses', ExpenseController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('expense-people', ExpensePersonController::class);
-    Route::resource('user', UserController::class);
+    Route::resource('wallets', WalletController::class);
+
     Route::get('balance', [BalanceController::class, 'index'])->name('balance.index');
     Route::get('/balance/edit', [BalanceController::class, 'edit'])->name('balance.edit');
     Route::put('/balance/update', [BalanceController::class, 'update'])->name('balance.update');
@@ -41,7 +45,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Admin Routes
     Route::resources([
+        'user' => UserController::class,
         'roles' => RoleController::class,
+        'wallet-types' => WalletTypeController::class,
+        'currencies' => CurrencyController::class,
+    ], [
+        'except' => [
+            'wallet-types.show',
+            'currencies.show',
+        ],
     ]);
 });
 
