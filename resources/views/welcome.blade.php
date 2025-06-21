@@ -101,16 +101,31 @@
                     <span class="z-10">{{ $item['label'] }}</span>
                 </a>
             @endforeach
-            <a href="{{ route('login') }}"
-                class="relative nav-link flex flex-col items-center px-3 py-1 rounded transition
+            @auth
+                <a href="{{ route('dashboard') }}"
+                    class="bg-blue-600 text-white px-5 py-2 rounded-full ml-2 hover:bg-blue-700 transition font-semibold shadow">
+                    <span class="z-10">Dashboard</span>
+                </a>
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button type="submit"
+                        class="relative nav-link flex flex-col items-center px-3 py-1 rounded transition bg-red-600 text-white hover:bg-red-700">
+                        <span class="z-10">Logout</span>
+                    </button>
+                </form>
+            @endauth
+            @if (!auth()->check())
+                <a href="{{ route('login') }}"
+                    class="relative nav-link flex flex-col items-center px-3 py-1 rounded transition
                     @if (Route::currentRouteName() === 'login') text-blue-600 font-semibold @endif">
-                <span class="z-10">Sign In</span>
-            </a>
-            <a href="{{ route('register') }}"
-                class="bg-blue-600 text-white px-5 py-2 rounded-full ml-2 hover:bg-blue-700 transition font-semibold shadow
+                    <span class="z-10">Sign In</span>
+                </a>
+                <a href="{{ route('register') }}"
+                    class="bg-blue-600 text-white px-5 py-2 rounded-full ml-2 hover:bg-blue-700 transition font-semibold shadow
                     @if (Route::currentRouteName() === 'register') ring-2 ring-blue-400 @endif">
-                Sign Up
-            </a>
+                    Sign Up
+                </a>
+            @endif
         </nav>
     </header>
 
@@ -289,7 +304,8 @@
     <section id="faq" class="py-16 sm:py-20 bg-white text-gray-800">
         <div class="max-w-4xl mx-auto px-4">
             <h2 class="text-2xl sm:text-4xl font-bold text-center mb-4 sm:mb-6">Frequently Asked Questions</h2>
-            <p class="text-center text-gray-500 mb-8 sm:mb-12 text-sm sm:text-base">Everything you need to know about Expense Tracker</p>
+            <p class="text-center text-gray-500 mb-8 sm:mb-12 text-sm sm:text-base">Everything you need to know about
+                Expense Tracker</p>
 
             @php
                 $faqs = [
@@ -367,7 +383,8 @@
                                 </svg>
                             </span>
                         </button>
-                        <div x-show="open === {{ $i + 1 }}" x-collapse class="pb-3 sm:pb-4 text-sm text-gray-600">
+                        <div x-show="open === {{ $i + 1 }}" x-collapse
+                            class="pb-3 sm:pb-4 text-sm text-gray-600">
                             {{ $faq['answer'] }}
                         </div>
                     </div>
@@ -388,12 +405,12 @@
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
             <!-- Quick Links -->
             <div>
-            <h3 class="font-semibold text-lg mb-4">Quick Links</h3>
-            <ul class="space-y-2 text-sm text-gray-300">
-                <li><a href="#faq" class="hover:text-white">FAQ</a></li>
-                <li><a href="#terms" class="hover:text-white">Terms of Service</a></li>
-                <li><a href="#privacy" class="hover:text-white">Privacy Policy</a></li>
-            </ul>
+                <h3 class="font-semibold text-lg mb-4">Quick Links</h3>
+                <ul class="space-y-2 text-sm text-gray-300">
+                    <li><a href="#faq" class="hover:text-white">FAQ</a></li>
+                    <li><a href="#terms" class="hover:text-white">Terms of Service</a></li>
+                    <li><a href="#privacy" class="hover:text-white">Privacy Policy</a></li>
+                </ul>
             </div>
 
             <!-- Contact -->
@@ -401,10 +418,10 @@
                 <h3 class="font-semibold text-lg mb-3">Contact</h3>
                 <div class="flex items-center space-x-2 text-gray-300 text-sm">
                     <svg width="22" height="22" viewBox="0 0 30 30" fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M25 5C27.0711 5 28.75 6.67894 28.75 8.75V21.25C28.75 23.3211 27.0711 25 25 25H5C2.92894 25 1.25 23.3211 1.25 21.25V8.75C1.25 6.67894 2.92894 5 5 5H25ZM24.0661 7.5H5.93398L14.2255 14.0459C14.6796 14.4045 15.3204 14.4045 15.7746 14.0459L24.0661 7.5ZM3.75 8.961V21.25C3.75 21.9404 4.30965 22.5 5 22.5H25C25.6904 22.5 26.25 21.9404 26.25 21.25V8.96102L17.3236 16.0081C15.9613 17.0838 14.0387 17.0838 12.6764 16.0081L3.75 8.961Z"
-                        fill="white" />
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M25 5C27.0711 5 28.75 6.67894 28.75 8.75V21.25C28.75 23.3211 27.0711 25 25 25H5C2.92894 25 1.25 23.3211 1.25 21.25V8.75C1.25 6.67894 2.92894 5 5 5H25ZM24.0661 7.5H5.93398L14.2255 14.0459C14.6796 14.4045 15.3204 14.4045 15.7746 14.0459L24.0661 7.5ZM3.75 8.961V21.25C3.75 21.9404 4.30965 22.5 5 22.5H25C25.6904 22.5 26.25 21.9404 26.25 21.25V8.96102L17.3236 16.0081C15.9613 17.0838 14.0387 17.0838 12.6764 16.0081L3.75 8.961Z"
+                            fill="white" />
                     </svg>
                     <span class="break-all">contact@duodev.in</span>
                 </div>
@@ -421,7 +438,7 @@
                         class="px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-r-full text-sm font-semibold">Subscribe</button>
                 </form>
             </div>
-            </div>
+        </div>
         </div>
 
         <!-- Bottom Text -->

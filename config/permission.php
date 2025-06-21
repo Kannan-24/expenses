@@ -202,11 +202,14 @@ return [
         'manage categories',
         'manage expense people',
         'manage balance',
+        'manage wallets',
         'generate reports',
         'request support',
 
         'manage users',
         'manage roles',
+        'manage wallet types',
+        'manage currencies',
         'manage permissions',
         'manage support enquiries',
         'manage application settings',
@@ -217,6 +220,8 @@ return [
             'name' => 'admin',
             'permissions' => [
                 'view user dashboard',
+                'manage wallet types',
+                'manage currencies',
                 'manage users',
                 'manage roles',
                 'manage permissions',
@@ -232,6 +237,7 @@ return [
                 'manage categories',
                 'manage expense people',
                 'manage balance',
+                'manage wallets',
                 'generate reports',
                 'request support'
             ]

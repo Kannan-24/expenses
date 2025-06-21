@@ -12,7 +12,7 @@ class CurrencyController extends Controller
      */
     public function index()
     {
-        $currencies = Currency::all();
+        $currencies = Currency::orderBy('name')->paginate(10);
         return view('currencies.index', compact('currencies'));
     }
 
