@@ -42,6 +42,8 @@ class SocialLoginController extends Controller
                 'google_id' => $googleUser->getId(),
                 'password' => bcrypt(Str::random(16)),
             ]);
+
+            $user->syncRoles(['user']);
         } else {
             $user->update([
                 'google_id' => $googleUser->getId(),
