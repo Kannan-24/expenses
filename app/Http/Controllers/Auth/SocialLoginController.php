@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
-class GoogleController extends Controller
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
+
+class SocialLoginController extends Controller
 {
     public function redirectToGoogle()
     {
@@ -21,6 +24,15 @@ class GoogleController extends Controller
 
         // Check if user exists
         $user = User::where('email', $googleUser->getEmail())->first();
+
+        Log::info('Google user data:', [
+            'id' => $googleUser->getId(),
+            'name' => $googleUser->getName(),
+            'email' => $googleUser->getEmail(),
+            'token' => $googleUser->token,
+            'refreshToken' => $googleUser->refreshToken,
+            'expiresIn' => $googleUser->expiresIn,
+        ]);
 
         if (!$user) {
             // Register new user
