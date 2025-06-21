@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Expense;
 use App\Models\Balance;
+use App\Models\Wallet;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -52,6 +53,8 @@ class DashboardController extends Controller
             ->limit(6)
             ->get();
 
+        $wallets = Wallet::where('user_id', $userId)->get();
+
         $chartLabels = $monthlyData->pluck('month')->map(function ($month) {
             return \Carbon\Carbon::createFromFormat('Y-m', $month)->format('M Y');
         });
@@ -68,7 +71,8 @@ class DashboardController extends Controller
             'monthlyData',
             'chartLabels',
             'incomeData',
-            'expenseData'
+            'expenseData',
+            'wallets'
         ));
     }
 }
