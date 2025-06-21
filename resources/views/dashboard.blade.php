@@ -23,7 +23,7 @@
                 <div class="p-6 bg-white border-l-4 border-yellow-400 shadow rounded-xl">
                     <div class="flex items-center justify-between">
                         <h2 class="text-gray-600 text-lg font-semibold">Wallets</h2>
-                        <a href="{{ route('balance.edit') }}"
+                        <a href="{{ route('wallets.index') }}"
                             class="text-sm text-indigo-600 underline hover:text-indigo-800">Edit Balance</a>
                     </div>
                     <p class="mt-2 text-xl text-gray-700">

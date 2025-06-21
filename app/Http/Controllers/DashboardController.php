@@ -60,7 +60,6 @@ class DashboardController extends Controller
             'totalIncome',
             'totalExpense',
             'monthlyNetBalance',
-            'balance',
             'recentExpenses',
             'monthlyData',
             'chartLabels',
