@@ -143,6 +143,17 @@
                     </li>
                 @endcan
 
+                @can('manage wallets')
+                    {{-- Wallets --}}
+                    <li>
+                        <a href="{{ route('wallets.index') }}"
+                            class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
+                    {{ request()->routeIs('wallets.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
+                            <span class="ml-3">Wallets</span>
+                        </a>
+                    </li>
+                @endcan
+
                 @can('generate reports')
                     {{-- Reports --}}
                     <li>
@@ -150,6 +161,28 @@
                             class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
                     {{ request()->routeIs('reports.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
                             <span class="ml-3">Reports</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('wallet types')
+                    {{-- Wallet Types --}}
+                    <li>
+                        <a href="{{ route('wallet-types.index') }}"
+                            class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
+                    {{ request()->routeIs('wallet-types.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
+                            <span class="ml-3">Wallet Types</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('currencies')
+                    {{-- Currencies --}}
+                    <li>
+                        <a href="{{ route('currencies.index') }}"
+                            class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
+                    {{ request()->routeIs('currencies.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
+                            <span class="ml-3">Currencies</span>
                         </a>
                     </li>
                 @endcan
