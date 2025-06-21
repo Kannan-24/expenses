@@ -165,7 +165,7 @@
                     </li>
                 @endcan
 
-                @can('wallet types')
+                @can('manage wallet types')
                     {{-- Wallet Types --}}
                     <li>
                         <a href="{{ route('wallet-types.index') }}"
@@ -176,7 +176,7 @@
                     </li>
                 @endcan
 
-                @can('currencies')
+                @can('manage currencies')
                     {{-- Currencies --}}
                     <li>
                         <a href="{{ route('currencies.index') }}"

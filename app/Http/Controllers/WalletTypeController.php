@@ -12,7 +12,7 @@ class WalletTypeController extends Controller
      */
     public function index()
     {
-        $walletTypes = WalletType::all();
+        $walletTypes = WalletType::orderBy('name')->paginate(10);
         return view('wallet_types.index', compact('walletTypes'));
     }
 
