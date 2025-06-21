@@ -14,9 +14,14 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <x-google-analytics-head />
 </head>
 
 <body class="font-sans antialiased text-gray-900">
+
+    <x-google-analytics-body />
+
     <div class="flex flex-col items-center min-h-screen pt-6 bg-blue-200 sm:justify-center sm:pt-0">
 
         {{-- <a href="/" class="absolute top-8 left-8">
