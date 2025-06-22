@@ -9,9 +9,9 @@
         </p>
     </header>
 
-    @if (count($sessions) > 0)
+    @if (count($sessions ?? []) > 0)
         <div class="mt-6 space-y-6">
-            @foreach ($sessions as $session)
+            @foreach (($sessions ?? []) as $session)
                 <div class="flex items-center">
                     <div>
                         @if ($session->agent->isDesktop())
