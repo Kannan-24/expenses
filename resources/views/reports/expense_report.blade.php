@@ -87,9 +87,10 @@
     <table style="width: 100%; margin-bottom: 15px; padding:0; font-size: 11px; border: none;">
         <tr>
             <td style="text-align: left; vertical-align: top; border: none;">
-                <strong>Account Balance:</strong> {{ number_format($accountBalance, 2) }}<br>
-                <strong>Cash Balance:</strong> {{ number_format($cashBalance, 2) }}<br>
-                <strong>Total Amount:</strong> {{ number_format($totalAmount, 2) }}
+                @foreach ($wallets as $wallet)
+                    <strong>{{ $wallet->name }}:</strong> {{ number_format($wallet->balance, 2) }}<br>
+                @endforeach
+                <strong>Total Amount:</strong> {{ $wallets->sum('balance') }}
             </td>
             <td style="text-align: right; vertical-align: top; border: none;">
                 <strong>Report Type:</strong> {{ ucfirst(str_replace('_', ' ', $reportType)) }}<br>

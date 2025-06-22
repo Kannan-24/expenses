@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\ExpensePerson;
+use App\Models\Wallet;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 
@@ -89,19 +90,13 @@ class ReportController extends Controller
 
         // Get current account and cash balance from balances table
         $userId = $request->user()->id;
-        $balance = \App\Models\Wallet::where('user_id', $userId)->first();
-
-        $accountBalance = $balance ? $balance->bank : 0;
-        $cashBalance = $balance ? $balance->cash : 0;
-        $totalAmount = $accountBalance + $cashBalance;
+        $wallets = Wallet::where('user_id', $userId)->get();
 
         $pdf = Pdf::loadView('reports.expense_report', [
             'expenses' => $groupedExpenses,
             'filterRange' => $filterRange,
             'reportType' => $type,
-            'accountBalance' => $accountBalance,
-            'cashBalance' => $cashBalance,
-            'totalAmount' => $totalAmount
+            'wallets' => $wallets,
         ])->setPaper('a4', 'portrait');
 
         return $pdf->stream('expense_report_' . now()->format('Ymd_His') . '.pdf');

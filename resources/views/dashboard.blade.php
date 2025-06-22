@@ -16,9 +16,8 @@
             <!-- Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <x-summary-card title="This Month's Income" value="₹{{ number_format($totalIncome, 2) }}" color="green" />
-                <x-summary-card title="This Month's Expense" value="₹{{ number_format($totalExpense, 2) }}"
-                    color="red" />
-                {{-- <x-summary-card title="Net Balance" value="₹{{ number_format($monthlyNetBalance, 2) }}" color="blue" /> --}}
+                <x-summary-card title="This Month's Expense" value="₹{{ number_format($totalExpense, 2) }}" color="red" />
+                <x-summary-card title="Net Balance" value="₹{{ number_format($monthlyNetBalance, 2) }}" color="blue" />
 
                 <div class="p-6 bg-white border-l-4 border-yellow-400 shadow rounded-xl">
                     <div class="flex items-center justify-between">
@@ -36,59 +35,71 @@
                 </div>
             </div>
 
-            <!-- Recent Transactions -->
-            <div class="bg-white shadow rounded-lg p-6 mb-8">
-                <h3 class="text-xl font-semibold mb-4 text-gray-800">Recent Transactions</h3>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full text-sm text-left text-gray-700">
-                        <thead class="bg-gray-100 text-xs text-gray-500 uppercase">
-                            <tr>
-                                <th class="px-4 py-2">#</th>
-                                <th class="px-4 py-2">Date</th>
-                                <th class="px-4 py-2">Type</th>
-                                <th class="px-4 py-2">Payment Method</th>
-                                <th class="px-4 py-2">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($recentExpenses as $expense)
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-2">{{ \Carbon\Carbon::parse($expense->date)->format('d M Y') }}
-                                    </td>
-                                    <td class="px-4 py-2">
-                                        <span
-                                            class="font-semibold {{ $expense->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
-                                            {{ ucfirst($expense->type) }}
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-2">
-                                        @if ($expense->payment_method === 'cash')
-                                            <span class="text-yellow-400">Cash</span>
-                                        @else
-                                            <span class="text-blue-400">Bank</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-2">
-                                        <span
-                                            class="{{ $expense->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
-                                            ₹{{ number_format($expense->amount, 2) }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            @empty
+            {{-- Grid View --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Recent Transactions -->
+                <div class="bg-white shadow rounded-lg p-6 mb-8 sm:col-span-2">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Recent Transactions</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left text-gray-700">
+                            <thead class="bg-gray-100 text-xs text-gray-500 uppercase">
                                 <tr>
-                                    <td colspan="5" class="text-center py-4 text-gray-400">No recent transactions.
-                                    </td>
+                                    <th class="px-4 py-2">#</th>
+                                    <th class="px-4 py-2">Date</th>
+                                    <th class="px-4 py-2">Type</th>
+                                    <th class="px-4 py-2">Payment Method</th>
+                                    <th class="px-4 py-2">Amount</th>
                                 </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @forelse ($recentExpenses as $expense)
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="px-4 py-2">{{ $loop->iteration }}</td>
+                                        <td class="px-4 py-2">
+                                            {{ \Carbon\Carbon::parse($expense->date)->format('d M Y') }}
+                                        </td>
+                                        <td class="px-4 py-2">
+                                            <span
+                                                class="font-semibold {{ $expense->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
+                                                {{ ucfirst($expense->type) }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-2">
+                                            @if ($expense->payment_method === 'cash')
+                                                <span class="text-yellow-400">Cash</span>
+                                            @else
+                                                <span class="text-blue-400">Bank</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-2">
+                                            <span
+                                                class="{{ $expense->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
+                                                ₹{{ number_format($expense->amount, 2) }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4 text-gray-400">No recent
+                                            transactions.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Top Categories (using Bar Chart) -->
+                <div class="bg-white shadow rounded-lg p-6 mb-8 col-span-1">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Top Categories</h3>
+                    <canvas id="topCategoriesChart" height="100"></canvas>
                 </div>
             </div>
 
+
             <!-- Monthly Overview Table -->
-            <div class="bg-white shadow rounded-lg p-6 mt-8">
+            <div class="bg-white shadow rounded-lg p-6 ">
                 <h3 class="text-xl font-semibold mb-4 text-gray-800">Monthly Income vs Expense</h3>
                 <div class="overflow-x-auto">
                     <table class="min-w-full text-sm text-left text-gray-700">
@@ -150,26 +161,65 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx = document.getElementById('incomeExpenseChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
+        const incomeCTX = document.getElementById('incomeExpenseChart').getContext('2d');
+        new Chart(incomeCTX, {
+            type: 'line',
             data: {
                 labels: @json($chartLabels),
                 datasets: [{
                         label: 'Income',
                         data: @json($incomeData),
-                        backgroundColor: 'rgba(34,197,94,0.7)',
+                        backgroundColor: 'rgba(34,197,94,0.2)',
                         borderColor: 'rgba(34,197,94,1)',
-                        borderWidth: 1
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgba(34,197,94,1)'
                     },
                     {
                         label: 'Expense',
                         data: @json($expenseData),
-                        backgroundColor: 'rgba(239,68,68,0.7)',
+                        backgroundColor: 'rgba(239,68,68,0.2)',
                         borderColor: 'rgba(239,68,68,1)',
-                        borderWidth: 1
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgba(239,68,68,1)'
                     }
                 ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        const topCategoriesCTX = document.getElementById('topCategoriesChart').getContext('2d');
+        new Chart(topCategoriesCTX, {
+            type: 'bar',
+            data: {
+                labels: @json($topCategories->pluck('name')),
+                datasets: [{
+                    label: 'Total Amount',
+                    data: @json($topCategories->pluck('total_amount')),
+                    backgroundColor: 'rgba(59,130,246,0.7)',
+                    borderColor: 'rgba(59,130,246,1)',
+                    borderWidth: 1
+                }]
             },
             options: {
                 responsive: true,

@@ -19,13 +19,13 @@ class WalletController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhereHas('walletType', function ($q2) use ($search) {
-                      $q2->where('name', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('currency', function ($q3) use ($search) {
-                      $q3->where('code', 'like', "%{$search}%")
-                         ->orWhere('name', 'like', "%{$search}%");
-                  });
+                    ->orWhereHas('walletType', function ($q2) use ($search) {
+                        $q2->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('currency', function ($q3) use ($search) {
+                        $q3->where('code', 'like', "%{$search}%")
+                            ->orWhere('name', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -58,7 +58,7 @@ class WalletController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        Wallet::create([
+        $wallet = Wallet::create([
             'user_id' => $request->input('user_id'),
             'wallet_type_id' => $request->input('wallet_type_id'),
             'name' => $request->input('name'),
@@ -66,6 +66,13 @@ class WalletController extends Controller
             'currency_id' => $request->input('currency_id'),
             'is_active' => $request->input('is_active', true),
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'wallet' => $wallet
+            ]);
+        }
 
         return redirect()->route('wallets.index')->with('success', 'Wallet created successfully.');
     }

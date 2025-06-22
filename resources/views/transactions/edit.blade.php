@@ -38,7 +38,11 @@
 
                     <!-- Category -->
                     <div class="mb-4">
-                        <label for="category_id" class="block text-sm font-semibold text-gray-700">Category</label>
+                        <div class="flex items-center justify-between">
+                            <label for="category_id" class="block text-sm font-semibold text-gray-700">Category</label>
+                            <button type="button" onclick="openCategoryModal()"
+                                class="text-sm text-blue-600 hover:underline">+ Add New</button>
+                        </div>
                         <select name="category_id" id="category_id"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">None</option>
@@ -56,8 +60,12 @@
 
                     <!-- Expense Person -->
                     <div class="mb-4">
-                        <label for="expense_person_id" class="block text-sm font-semibold text-gray-700">Expense
-                            Person</label>
+                        <div class="flex items-center justify-between">
+                            <label for="expense_person_id" class="block text-sm font-semibold text-gray-700">Expense
+                                Person</label>
+                            <button type="button" onclick="openPersonModal()"
+                                class="text-sm text-blue-600 hover:underline">+ Add New</button>
+                        </div>
                         <select name="expense_person_id" id="expense_person_id"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">None</option>
@@ -85,23 +93,26 @@
                         @enderror
                     </div>
 
-                    <!-- Payment Method -->
+                    <!-- Wallet -->
                     <div class="mb-4">
-                        <label for="payment_method" class="block text-sm font-semibold text-gray-700">Payment
-                            Method</label>
-                        <select name="payment_method" id="payment_method"
+                        <div class="flex items-center justify-between">
+                            <label for="wallet_id" class="block text-sm font-semibold text-gray-700">Wallet</label>
+                            <button type="button" onclick="openWalletModal()"
+                                class="text-sm text-blue-600 hover:underline">+ Add New</button>
+                        </div>
+                        <select name="wallet_id" id="wallet_id"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required>
-                            <option value="">Select Payment Method</option>
+                            <option value="">Select Wallet</option>
                             @foreach ($wallets as $wallet)
                                 <option value="{{ $wallet->id }}"
-                                    {{ old('payment_method') == $wallet->id ? 'selected' : '' }}>
+                                    {{ old('wallet_id') == $wallet->id ? 'selected' : '' }}>
                                     {{ $wallet->name }} ({{ $wallet->currency->symbol }}
                                     {{ number_format($wallet->balance, 2) }})
                                 </option>
                             @endforeach
                         </select>
-                        @error('payment_method')
+                        @error('wallet_id')
                             <span class="text-sm text-red-600">{{ $message }}</span>
                         @enderror
                     </div>
@@ -138,4 +149,204 @@
             </div>
         </div>
     </div>
+
+    <!-- Category Modal -->
+    <div id="categoryModal" class="fixed inset-0 hidden bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg">
+            <h3 class="text-lg font-semibold mb-4">Add New Category</h3>
+            <input type="text" id="newCategoryName"
+                class="w-full p-2 mb-4 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Category name">
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeCategoryModal()" class="px-3 py-1 text-gray-600">Cancel</button>
+                <button onclick="submitNewCategory()" class="px-3 py-1 bg-indigo-600 text-white rounded">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Person Modal -->
+    <div id="personModal" class="fixed inset-0 hidden bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg">
+            <h3 class="text-lg font-semibold mb-4">Add New Person</h3>
+            <input type="text" id="newPersonName"
+                class="w-full p-2 mb-4 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Person name">
+            <div class="flex justify-end space-x-2">
+                <button onclick="closePersonModal()" class="px-3 py-1 text-gray-600">Cancel</button>
+                <button onclick="submitNewPerson()" class="px-3 py-1 bg-indigo-600 text-white rounded">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wallet Modal -->
+    <div id="walletModal" class="fixed inset-0 hidden bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg">
+            <h3 class="text-lg font-semibold mb-4">Add New Wallet</h3>
+            <div class="mb-4">
+                <label for="newWalletType" class="block text-sm font-semibold text-gray-700">Wallet Type</label>
+                <select id="newWalletType"
+                    class="w-full p-2 mt-1 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500">
+                    @foreach ($walletTypes as $type)
+                        <option value="{{ $type->id }}">{{ $type->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <input type="text" id="newWalletName"
+                class="w-full p-2 mb-4 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Wallet name">
+            <input type="text" id="newWalletCurrency"
+                class="w-full p-2 mb-4 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Currency (e.g. USD, EUR)">
+            <input type="number" id="newWalletBalance" value="0"
+                class="w-full p-2 mb-4 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Initial Balance" min="0" step="0.01">
+            <div class="flex justify-end space-x-2">
+                <button onclick="closeWalletModal()" class="px-3 py-1 text-gray-600">Cancel</button>
+                <button onclick="submitNewWallet()" class="px-3 py-1 bg-indigo-600 text-white rounded">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openCategoryModal() {
+            document.getElementById('categoryModal').classList.remove('hidden');
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('categoryModal').classList.add('hidden');
+        }
+
+        function submitNewCategory() {
+            const name = document.getElementById('newCategoryName').value;
+
+            if (!name) return alert("Please enter a category name");
+
+            fetch('{{ route('categories.store') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        name
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const select = document.getElementById('category_id');
+                        const option = document.createElement('option');
+                        option.value = data.category.id;
+                        option.text = data.category.name;
+                        option.selected = true;
+                        select.appendChild(option);
+
+                        closeCategoryModal();
+                        document.getElementById('newCategoryName').value = '';
+                    } else {
+                        alert("Error adding category");
+                    }
+                });
+        }
+
+        // Person Modal
+        function openPersonModal() {
+            document.getElementById('personModal').classList.remove('hidden');
+        }
+
+        function closePersonModal() {
+            document.getElementById('personModal').classList.add('hidden');
+        }
+
+        function submitNewPerson() {
+            const name = document.getElementById('newPersonName').value;
+
+            if (!name) return alert("Please enter a person name");
+
+            fetch('{{ route('expense-people.store') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        name
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const select = document.getElementById('expense_person_id');
+                        const option = document.createElement('option');
+                        option.value = data.person.id;
+                        option.text = data.person.name;
+                        option.selected = true;
+                        select.appendChild(option);
+
+                        closePersonModal();
+                        document.getElementById('newPersonName').value = '';
+                    } else {
+                        alert("Error adding person");
+                    }
+                });
+        }
+
+        // Wallet Modal
+        function openWalletModal() {
+            document.getElementById('walletModal').classList.remove('hidden');
+        }
+
+        function closeWalletModal() {
+            document.getElementById('walletModal').classList.add('hidden');
+        }
+
+        function submitNewWallet() {
+            const walletType = document.getElementById('newWalletType').value;
+            const name = document.getElementById('newWalletName').value;
+            const currency = document.getElementById('newWalletCurrency').value;
+            const balance = document.getElementById('newWalletBalance').value || 0;
+
+            if (!walletType || !name || !currency) {
+                return alert("Please fill in all fields");
+            }
+
+            fetch('{{ route('wallets.store') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        wallet_type_id: walletType,
+                        name,
+                        currency,
+                        balance: parseFloat(balance),
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const select = document.getElementById('wallet_id');
+                        const option = document.createElement('option');
+                        option.value = data.wallet.id;
+                        option.text =
+                            `${data.wallet.name} (${data.wallet.currency.symbol} ${data.wallet.balance.toFixed(2)})`;
+                        option.selected = true;
+                        select.appendChild(option);
+
+                        closeWalletModal();
+                        document.getElementById('newWalletName').value = '';
+                        document.getElementById('newWalletCurrency').value = '';
+                        document.getElementById('newWalletBalance').value = '';
+                        document.getElementById('newWalletType').value = '';
+                    } else {
+                        alert("Error adding wallet");
+                    }
+                });
+        }
+    </script>
+
 </x-app-layout>
