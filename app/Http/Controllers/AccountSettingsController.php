@@ -63,4 +63,18 @@ class AccountSettingsController extends Controller
 
         return redirect('/')->with('status', 'account-deleted');
     }
+
+    /**
+     * Log out from other browser sessions.
+     */
+    public function logoutOtherBrowserSessions(Request $request)
+    {
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
+
+        Auth::logoutOtherDevices($request->password);
+
+        return back()->with('status', 'other-browser-sessions-logged-out');
+    }
 }
