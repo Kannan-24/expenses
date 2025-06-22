@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        $query = Category::where('user_id', auth()->id());
+        $query = Category::where('user_id', Auth::user()->id);
 
         if ($search = request('search')) {
             $query->where('name', 'like', '%' . $search . '%');
@@ -28,12 +29,12 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,NULL,id,user_id,' . auth()->id(),
+            'name' => 'required|string|max:255|unique:categories,name,NULL,id,user_id,' . Auth::user()->id,
         ]);
 
         Category::create([
             'name' => $request->name,
-            'user_id' => auth()->id(),
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('categories.index')->with('success', 'Category added successfully.');
@@ -50,7 +51,7 @@ class CategoryController extends Controller
         $this->authorizeCategory($category);
 
         $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,' . $category->id . ',id,user_id,' . auth()->id(),
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id . ',id,user_id,' . Auth::user()->id,
         ]);
 
         $category->update(['name' => $request->name]);
@@ -58,17 +59,17 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Category updated.');
     }
 
-    public function destroy(Category $ccategory)
+    public function destroy(Category $category)
     {
-        $this->authorizeCategory($ccategory);
+        $this->authorizeCategory($category);
 
-        $ccategory->delete();
+        $category->delete();
         return redirect()->route('categories.index')->with('success', 'Category deleted.');
     }
 
     private function authorizeCategory(Category $category)
     {
-        if ($category->user_id !== auth()->id()) {
+        if ($category->user_id !== Auth::user()->id) {
             abort(403, 'Unauthorized');
         }
     }
