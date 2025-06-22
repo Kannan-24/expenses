@@ -19,6 +19,7 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/logout/other-browser-sessions', [AccountSettingsController::class, 'logoutOtherBrowserSessions'])->name('logout.other-browser-sessions');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
