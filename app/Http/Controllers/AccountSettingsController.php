@@ -16,6 +16,12 @@ class AccountSettingsController extends Controller
         return view('profile.account-settings', ['user' => Auth::user()]);
     }
 
+    public function show()
+    {
+        $sessions = Auth::user()->sessions ?? [];
+        return view('profile.partials.session-activity', compact('sessions'));
+    }
+
     /**
      * Update profile information.
      */
