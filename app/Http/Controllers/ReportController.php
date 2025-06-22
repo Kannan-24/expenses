@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Expense;
+use App\Models\Transaction;
 use App\Models\ExpensePerson;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -17,7 +17,7 @@ class ReportController extends Controller
         $person = $request->input('person');
         $filterRange = $this->getFilterRange($request);
 
-        $query = Expense::with(['category', 'person'])
+        $query = Transaction::with(['category', 'person'])
             ->where('user_id', $request->user()->id);
 
         // Date filters
@@ -55,7 +55,7 @@ class ReportController extends Controller
         $person = $request->input('person');
         $filterRange = $this->getFilterRange($request);
 
-        $query = Expense::with(['category', 'person'])
+        $query = Transaction::with(['category', 'person'])
             ->where('user_id', $request->user()->id);
 
         // Date filters
@@ -89,7 +89,7 @@ class ReportController extends Controller
 
         // Get current account and cash balance from balances table
         $userId = $request->user()->id;
-        $balance = \App\Models\Balance::where('user_id', $userId)->first();
+        $balance = \App\Models\Wallet::where('user_id', $userId)->first();
 
         $accountBalance = $balance ? $balance->bank : 0;
         $cashBalance = $balance ? $balance->cash : 0;

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('People List') }} - {{ config('app.name', 'expenses') }}
+        {{ __('Person List') }} - {{ config('app.name', 'expenses') }}
     </x-slot>
 
     <div class="sm:ml-64">
@@ -8,26 +8,29 @@
             <x-bread-crumb-navigation />
 
             <div class="bg-white p-4 rounded-2xl">
-                <form method="GET" class="mb-8 flex flex-wrap gap-3 items-center sm:flex-row flex-col"
-                    id="people-filter-form">
-                    <div class="relative w-full sm:w-64">
-                        <input type="text" name="search" value="{{ request('search') }}"
+                <form method="GET" class="mb-4 flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center" id="people-filter-form">
+                    <div class="flex-1">
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ request('search') }}"
                             placeholder="Search by name..."
-                            class="border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 w-full focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition pr-10"
-                            id="search-input">
-                        <button type="submit"
-                            class="absolute right-2 top-1/2 -translate-y-1/2 text-blue-600 hover:text-blue-800"
-                            aria-label="Search">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
-                            </svg>
-                        </button>
+                            class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                        >
                     </div>
-                    <div class="flex gap-2 w-full sm:w-auto flex-col sm:flex-row">
-                        <a href="{{ route('expense-people.index') }}"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded text-sm w-full sm:w-auto mt-2 sm:mt-0 text-center">Reset</a>
+                    <div class="flex flex-row gap-2 sm:gap-3">
+                        <button
+                            type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm w-full sm:w-auto transition"
+                        >
+                            Search
+                        </button>
+                        <a
+                            href="{{ route('expense-people.index') }}"
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg text-sm w-full sm:w-auto text-center transition"
+                        >
+                            Reset
+                        </a>
                     </div>
                 </form>
 

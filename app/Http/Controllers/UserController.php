@@ -11,9 +11,19 @@ class UserController extends Controller
     /**
      * Display a listing of the users.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::paginate(15);
+        $query = User::query();
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->paginate(15)->appends(['search' => $search]);
+
         return view('user.index', compact('users'));
     }
 
@@ -57,7 +67,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('user.edit', compact('user'));
+        return view('user.show', compact('user'));
     }
 
     /**

@@ -12,9 +12,25 @@ class WalletController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $wallets = Wallet::with('walletType', 'currency')->paginate(10);
+        $query = Wallet::with('walletType', 'currency');
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhereHas('walletType', function ($q2) use ($search) {
+                      $q2->where('name', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('currency', function ($q3) use ($search) {
+                      $q3->where('code', 'like', "%{$search}%")
+                         ->orWhere('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $wallets = $query->paginate(10)->appends($request->only('search'));
+
         return view('wallets.index', compact('wallets'));
     }
 
@@ -24,7 +40,7 @@ class WalletController extends Controller
     public function create()
     {
         $walletTypes = WalletType::where('is_active', true)->get();
-        $currencies = Currency::where('is_active', true)->get();
+        $currencies = Currency::all();
         return view('wallets.create', compact('walletTypes', 'currencies'));
     }
 
@@ -69,7 +85,7 @@ class WalletController extends Controller
     public function edit(Wallet $wallet)
     {
         $walletTypes = WalletType::where('is_active', true)->get();
-        $currencies = Currency::where('is_active', true)->get();
+        $currencies = Currency::all();
         return view('wallets.edit', compact('wallet', 'walletTypes', 'currencies'));
     }
 

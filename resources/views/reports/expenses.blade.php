@@ -8,7 +8,7 @@
             <x-bread-crumb-navigation />
 
             <div class="bg-white p-4 rounded-2xl">
-                <form method="GET" action="{{ route('reports.expenses') }}" class="mb-8 flex flex-wrap gap-3 items-center sm:flex-row flex-col" id="expense-filter-form">
+                <form method="GET" action="{{ route('reports.expenses') }}" class="mb-4 flex flex-wrap gap-3 items-center sm:flex-row flex-col" id="expense-filter-form">
                     {{-- Report Type --}}
                     <div class="w-full sm:w-48">
                         <select name="type" onchange="this.form.submit()"

@@ -3,17 +3,16 @@
         {{ __('Transactions') }} - {{ config('app.name', 'transactions') }}
     </x-slot>
 
-    <!-- Main Content Section -->
     <div class="sm:ml-64">
         <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8">
             <x-bread-crumb-navigation />
 
-            <div class="bg-white p-4 rounded-2xl">
-                <form method="GET" class="mb-8 flex flex-wrap gap-3 items-center sm:flex-row flex-col" id="expense-filter-form">
+            <div class="bg-white p-4 rounded-2xl shadow">
+                <form method="GET" class="mb-4 flex flex-wrap gap-3 items-center sm:flex-row flex-col" id="expense-filter-form">
                     <div class="relative w-full sm:w-64">
                         <input type="text" name="search" value="{{ request('search') }}"
                             placeholder="Search by person, category, or note..."
-                            class="border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 w-full focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition pr-10"
+                            class="border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 w-full focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition pr-10 h-10"
                             id="search-input">
                         <button type="submit"
                             class="absolute right-2 top-1/2 -translate-y-1/2 text-blue-600 hover:text-blue-800"
@@ -25,7 +24,7 @@
                     </div>
 
                     <select name="filter" onchange="this.form.submit()"
-                        class="bg-white border border-gray-300 text-sm rounded px-3 py-2 text-gray-900 w-full sm:w-auto focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
+                        class="bg-white border border-gray-300 text-sm rounded px-3 py-2 text-gray-900 w-full sm:w-auto focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition h-10">
                         <option value="">All</option>
                         <option value="7days" {{ request('filter') == '7days' ? 'selected' : '' }}>Last 7 Days</option>
                         <option value="15days" {{ request('filter') == '15days' ? 'selected' : '' }}>Last 15 Days
@@ -36,28 +35,28 @@
 
                     <div class="flex items-center gap-2 w-full sm:w-auto flex-col sm:flex-row">
                         <input type="date" name="start_date" value="{{ request('start_date') }}"
-                            class="border border-gray-300 rounded px-3 py-1 text-sm text-gray-800 w-full sm:w-auto">
+                            class="border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 w-full sm:w-auto h-10">
                         <span class="text-gray-500 text-center sm:text-left">to</span>
                         <input type="date" name="end_date" value="{{ request('end_date') }}"
-                            class="border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 w-full sm:w-auto focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition">
+                            class="border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 w-full sm:w-auto focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition h-10">
                     </div>
 
                     <div class="flex gap-2 w-full sm:w-auto flex-col sm:flex-row">
                         <button type="submit"
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm w-full sm:w-auto mt-2 sm:mt-0">Filter</button>
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm w-full sm:w-auto mt-2 sm:mt-0 h-10">Filter</button>
                         <a href="{{ route('transactions.index') }}"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-1 rounded text-sm w-full sm:w-auto mt-2 sm:mt-0 text-center">Reset</a>
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded text-sm w-full sm:w-auto mt-2 sm:mt-0 text-center h-10 flex items-center justify-center">Reset</a>
                     </div>
                 </form>
 
-                <div class="bg-gray-800 rounded-lg shadow p-4 overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-300">
-                        <thead class="text-xs uppercase bg-gray-700 text-gray-400">
+                <div class="rounded-lg shadow overflow-hidden bg-white">
+                    <table class="w-full text-sm text-left text-gray-700 bg-white">
+                        <thead class="text-xs uppercase bg-gray-100 text-gray-600">
                             <tr>
                                 <th class="px-4 py-2">#</th>
                                 <th class="px-4 py-2">Date</th>
                                 <th class="px-4 py-2">Category</th>
-                                <th class="px-4 py-2"> Person</th>
+                                <th class="px-4 py-2">Person</th>
                                 <th class="px-4 py-2">Type</th>
                                 <th class="px-4 py-2">Payment Method</th>
                                 <th class="px-4 py-2">Amount</th>
@@ -66,57 +65,54 @@
                         </thead>
                         <tbody>
                             @forelse ($transactions as $expense)
-                                <tr class="border-b border-gray-700 hover:bg-gray-700">
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
                                     <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-2">{{ \Carbon\Carbon::parse($expense->date)->format('Y-m-d') }}
-                                    </td>
+                                    <td class="px-4 py-2">{{ \Carbon\Carbon::parse($expense->date)->format('Y-m-d') }}</td>
                                     <td class="px-4 py-2">{{ $expense->category->name ?? 'N/A' }}</td>
                                     <td class="px-4 py-2">
                                         @if ($expense->person)
                                             {{ $expense->person->name }}
                                         @else
-                                            <span class="text-gray-500">N/A</span>
+                                            <span class="text-gray-400">N/A</span>
                                         @endif
                                     </td>
                                     <td class="px-4 py-2">
                                         @if ($expense->type === 'income')
-                                            <span class="text-green-400 font-semibold">Income</span>
+                                            <span class="text-green-600 font-semibold">Income</span>
                                         @else
-                                            <span class="text-red-400 font-semibold">Expense</span>
+                                            <span class="text-red-600 font-semibold">Expense</span>
                                         @endif
                                     </td>
                                     <td class="px-4 py-2">
                                         @if ($expense->payment_method === 'cash')
-                                            <span class="text-yellow-400">Cash</span>
+                                            <span class="text-yellow-600">Cash</span>
                                         @else
-                                            <span class="text-blue-400">Bank</span>
+                                            <span class="text-blue-600">Bank</span>
                                         @endif
                                     </td>
-                                    <td class="px-4 py-2 ">
+                                    <td class="px-4 py-2">
                                         @if ($expense->type === 'income')
-                                            <span
-                                                class="text-green-400">₹{{ number_format($expense->amount, 2) }}</span>
+                                            <span class="text-green-600">₹{{ number_format($expense->amount, 2) }}</span>
                                         @else
-                                            <span class="text-red-400">₹{{ number_format($expense->amount, 2) }}</span>
+                                            <span class="text-red-600">₹{{ number_format($expense->amount, 2) }}</span>
                                         @endif
                                     </td>
                                     <td class="px-4 py-2 text-center space-x-2">
                                         <a href="{{ route('transactions.edit', $expense->id) }}"
-                                            class="text-blue-500 ">Edit</a>
+                                            class="text-blue-600 hover:underline">Edit</a>
                                         <a href="{{ route('transactions.show', $expense->id) }}"
-                                            class="text-yellow-400">Show</a>
+                                            class="text-yellow-600 hover:underline">Show</a>
                                         <form action="{{ route('transactions.destroy', $expense->id) }}" method="POST"
                                             class="inline-block" onsubmit="return confirm('Delete this transaction?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="text-red-400 hover:text-red-400">Delete</button>
+                                            <button class="text-red-600 hover:underline">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-4 text-gray-400">No transactions found.
-                                    </td>
+                                    <td colspan="8" class="text-center py-4 text-gray-400">No transactions found.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -127,5 +123,4 @@
             </div>
         </div>
     </div>
-
 </x-app-layout>
