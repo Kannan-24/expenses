@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use App\Models\Category;
-use App\Models\Balance;
-use App\Models\BalanceHistory;
 use App\Models\ExpensePerson;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
@@ -36,10 +34,10 @@ class TransactionController extends Controller
                 $q->whereHas('person', function ($q2) use ($search) {
                     $q2->where('name', 'like', '%' . $search . '%');
                 })
-                ->orWhereHas('category', function ($q2) use ($search) {
-                    $q2->where('name', 'like', '%' . $search . '%');
-                })
-                ->orWhere('note', 'like', '%' . $search . '%');
+                    ->orWhereHas('category', function ($q2) use ($search) {
+                        $q2->where('name', 'like', '%' . $search . '%');
+                    })
+                    ->orWhere('note', 'like', '%' . $search . '%');
             });
         }
 
@@ -67,14 +65,9 @@ class TransactionController extends Controller
         $categories = Category::all();
         $people = ExpensePerson::where('user_id', Auth::id())->get();
 
-        $balance = Balance::firstOrCreate(
-            ['user_id' => Auth::id()],
-            ['cash' => 0, 'bank' => 0]
-        );
-
         $wallets = Wallet::where('user_id', Auth::id())->get();
 
-        return view('transactions.create', compact('categories', 'balance', 'people', 'wallets'));
+        return view('transactions.create', compact('categories', 'people', 'wallets'));
     }
 
     /**
@@ -92,16 +85,19 @@ class TransactionController extends Controller
             'wallet_id'     => 'required|exists:wallets,id',
         ]);
 
-        $balance = Balance::firstOrCreate(
-            ['user_id' => Auth::id()],
-            ['cash' => 0, 'bank' => 0]
-        );
-
+        $wallet = Wallet::where('user_id', Auth::id())
+            ->where('id', $request->wallet_id)
+            ->first();
         if ($request->type === 'expense') {
-            if ($request->amount > $balance->{$request->payment_method}) {
-                return back()->withErrors(['amount' => 'Insufficient ' . ucfirst($request->payment_method) . ' balance.'])->withInput();
+            $balance = $wallet->balance - $request->amount;
+            if ($balance < 0) {
+                return back()->withErrors(['amount' => 'Insufficient wallet balance.'])->withInput();
             }
+            $wallet->balance -= $request->amount;
+        } else if ($request->type === 'income') {
+            $wallet->balance += $request->amount;
         }
+        $wallet->save();
 
         $transaction = Transaction::create([
             'user_id'           => Auth::id(),
@@ -111,27 +107,7 @@ class TransactionController extends Controller
             'date'              => $request->date,
             'note'              => $request->note,
             'type'              => $request->type,
-            'wallet_id'    => $request->payment_method,
-        ]);
-
-        $cashBefore = $balance->cash;
-        $bankBefore = $balance->bank;
-
-        if ($request->type === 'income') {
-            $balance->{$request->payment_method} += $request->amount;
-        } else {
-            $balance->{$request->payment_method} -= $request->amount;
-        }
-
-        $balance->save();
-
-        BalanceHistory::create([
-            'user_id'     => Auth::id(),
-            'updated_by'  => Auth::id(),
-            'cash_before' => $cashBefore,
-            'cash_after'  => $balance->cash,
-            'bank_before' => $bankBefore,
-            'bank_after'  => $balance->bank,
+            'wallet_id'    => $request->wallet_id,
         ]);
 
         return redirect()->route('transactions.index')->with(
@@ -151,14 +127,10 @@ class TransactionController extends Controller
 
         $categories = Category::all();
         $people = ExpensePerson::where('user_id', Auth::id())->get();
-        $balance = Balance::firstOrCreate(
-            ['user_id' => Auth::id()],
-            ['cash' => 0, 'bank' => 0]
-        );
 
         $wallets = Wallet::where('user_id', Auth::id())->get();
 
-        return view('transactions.edit', compact('expense', 'categories', 'balance', 'people', 'wallets'));
+        return view('transactions.edit', compact('expense', 'categories', 'people', 'wallets'));
     }
 
     /**
@@ -180,26 +152,19 @@ class TransactionController extends Controller
             'wallet_id'     => 'required|exists:wallets,id',
         ]);
 
-        $balance = Balance::firstOrCreate(
-            ['user_id' => Auth::id()],
-            ['cash' => 0, 'bank' => 0]
-        );
-
+        $wallet = Wallet::where('user_id', Auth::id())
+            ->where('id', $request->wallet_id)
+            ->first();
         if ($request->type === 'expense') {
-            if ($request->amount > $balance->{$request->payment_method} + $transaction->amount) {
-                return back()->withErrors(['amount' => 'Insufficient ' . ucfirst($request->payment_method) . ' balance.'])->withInput();
+            $balance = $wallet->balance - $request->amount;
+            if ($balance < 0) {
+                return back()->withErrors(['amount' => 'Insufficient wallet balance.'])->withInput();
             }
+            $wallet->balance -= $request->amount;
+        } else if ($request->type === 'income') {
+            $wallet->balance += $request->amount;
         }
-
-        $cashBefore = $balance->cash;
-        $bankBefore = $balance->bank;
-
-        // Reverse previous
-        if ($transaction->type === 'income') {
-            $balance->{$transaction->payment_method} -= $transaction->amount;
-        } else {
-            $balance->{$transaction->payment_method} += $transaction->amount;
-        }
+        $wallet->save();
 
         $transaction->update([
             'category_id'       => $request->category_id,
@@ -209,24 +174,6 @@ class TransactionController extends Controller
             'note'              => $request->note,
             'type'              => $request->type,
             'wallet_id'    => $request->wallet_id,
-        ]);
-
-        // Apply updated
-        if ($request->type === 'income') {
-            $balance->{$request->payment_method} += $request->amount;
-        } else {
-            $balance->{$request->payment_method} -= $request->amount;
-        }
-
-        $balance->save();
-
-        BalanceHistory::create([
-            'user_id'     => Auth::id(),
-            'updated_by'  => Auth::id(),
-            'cash_before' => $cashBefore,
-            'cash_after'  => $balance->cash,
-            'bank_before' => $bankBefore,
-            'bank_after'  => $balance->bank,
         ]);
 
         return redirect()->route('transactions.index')->with(
@@ -256,31 +203,17 @@ class TransactionController extends Controller
             abort(403);
         }
 
-        $balance = Balance::firstOrCreate(
-            ['user_id' => Auth::id()],
-            ['cash' => 0, 'bank' => 0]
-        );
-
-        $cashBefore = $balance->cash;
-        $bankBefore = $balance->bank;
+        $wallet = Wallet::where('user_id', Auth::id())
+            ->where('id', $transaction->wallet_id)
+            ->first();
 
         if ($transaction->type === 'income') {
-            $balance->{$transaction->payment_method} -= $transaction->amount;
-        } else {
-            $balance->{$transaction->payment_method} += $transaction->amount;
+            $wallet->balance -= $transaction->amount;
+        } elseif ($transaction->type === 'expense') {
+            $wallet->balance += $transaction->amount;
         }
-
-        $balance->save();
+        $wallet->save();
         $transaction->delete();
-
-        BalanceHistory::create([
-            'user_id'     => Auth::id(),
-            'updated_by'  => Auth::id(),
-            'cash_before' => $cashBefore,
-            'cash_after'  => $balance->cash,
-            'bank_before' => $bankBefore,
-            'bank_after'  => $balance->bank,
-        ]);
 
         return redirect()->route('transactions.index')->with(
             'success',
