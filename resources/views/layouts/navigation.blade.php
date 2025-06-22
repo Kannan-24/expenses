@@ -19,7 +19,7 @@
                     <a href="{{ route('dashboard') }}" class="flex items-center ml-2 space-x-2 lg:ml-5">
                         <x-application-logo class="w-auto h-8" />
                         <span
-                            class="hidden ml-2 text-3xl font-semibold whitespace-nowrap dark:text-white sm:inline">Expenses</span>
+                            class="hidden ml-2 text-3xl font-semibold whitespace-nowrap dark:text-white sm:inline">Expense Tracker</span>
                     </a>
                 </div>
                 <!-- Right: User Dropdown -->
@@ -101,9 +101,9 @@
 
                 @can('manage transactions')
                     <li>
-                        <a href="{{ route('expenses.index') }}"
+                        <a href="{{ route('transactions.index') }}"
                             class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
-                    {{ request()->routeIs('expenses.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
+                    {{ request()->routeIs('transactions.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
                             <span class="ml-3">Transactions</span>
                         </a>
                     </li>
@@ -130,19 +130,7 @@
                         </a>
                     </li>
                 @endcan
-
-
-                @can('manage balance')
-                    {{-- Balance --}}
-                    <li>
-                        <a href="{{ route('balance.index') }}"
-                            class="flex items-center p-2 rounded-lg transition-transform duration-300 ease-in-out transform 
-                    {{ request()->routeIs('balance.*') ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-500 dark:hover:text-blue-400' }}">
-                            <span class="ml-3">Balance</span>
-                        </a>
-                    </li>
-                @endcan
-
+                
                 @can('manage wallets')
                     {{-- Wallets --}}
                     <li>

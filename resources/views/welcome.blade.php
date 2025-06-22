@@ -39,9 +39,13 @@
             }
         }
     </style>
+
+    <x-google-analytics-head />
 </head>
 
 <body class="bg-white text-gray-800 font-sans">
+    <x-google-analytics-body />
+
     <!-- Navbar -->
     <header id="main-navbar"
         class="flex justify-between items-center p-4 shadow-sm bg-white z-50 transition-all duration-300 fixed top-0 left-0 w-full"
@@ -151,7 +155,7 @@
 
         <!-- Right Image -->
         <div class="flex-1 flex justify-center items-center mt-4 md:mt-0 w-full">
-            <img src="{{ asset('assets/landing.svg') }}" alt="Illustration"
+            <img src="{{ asset('assets/svg/landing.svg') }}" alt="Illustration"
                 class="w-4/5 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
         </div>
     </section>
@@ -167,7 +171,7 @@
                     $features = [
                         [
                             'icon' => 'money-bag.svg',
-                            'color' => 'linear-gradient(135deg, #059669 0%, #34D399 100%)',
+                            'color' => 'linear-gradient(135deg, #34D399 0%, #059669 100%)',
                             'hr' => '#34D399',
                             'title' => 'Track Every Rupee',
                             'desc' => 'Add your daily expenses with category and payment method.',
@@ -215,7 +219,7 @@
                         <div class="items-start w-full">
                             <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded-full mb-4 sm:mb-5"
                                 style="background: {{ $feature['color'] }};">
-                                <img src="{{ asset('assets/' . $feature['icon']) }}" alt="{{ $feature['title'] }}"
+                                <img src="{{ asset('assets/svg/' . $feature['icon']) }}" alt="{{ $feature['title'] }}"
                                     class="w-8 h-8 sm:w-10 sm:h-10">
                             </div>
                             <p class="font-semibold mb-3 sm:mb-5 text-lg sm:text-xl text-gray-900 text-left w-full">
@@ -248,32 +252,32 @@
                 @php
                     $steps = [
                         [
-                            'icon' => 'transaction-icon.svg',
-                            'color' => 'from-green-500 to-emerald-400',
+                            'icon' => 'signup-step.svg',
+                            'color' => 'from-emerald-400 to-emerald-600',
                             'step' => 'STEP 1',
                             'title' => 'Sign Up & Set Up Your Wallets',
                             'desc' =>
                                 'Create your free account and add your cash, bank, or digital wallets like GPay or Paytm.',
                         ],
                         [
-                            'icon' => 'wallet-icon.svg',
-                            'color' => 'from-purple-500 to-violet-400',
+                            'icon' => 'transaction-step.svg',
+                            'color' => 'from-violet-400 to-purple-600',
                             'step' => 'STEP 2',
                             'title' => 'Log Your Income & Spending',
                             'desc' =>
                                 'Enter your daily expenses and incomes by selecting the category, type, and payment method.',
                         ],
                         [
-                            'icon' => 'graph-icon.svg',
-                            'color' => 'from-yellow-400 to-orange-500',
+                            'icon' => 'report-step.svg',
+                            'color' => 'from-amber-400 to-orange-500',
                             'step' => 'STEP 3',
                             'title' => 'Understand Where Your Money Goes',
                             'desc' =>
                                 'Get visual insights with bar charts, monthly summaries, and category-wise breakdowns.',
                         ],
                         [
-                            'icon' => 'alert-icon.svg',
-                            'color' => 'from-blue-400 to-sky-500',
+                            'icon' => 'alert-step.svg',
+                            'color' => 'from-indigo-400 to-indigo-700',
                             'step' => 'STEP 4',
                             'title' => 'Set Budgets and Get Alerts',
                             'desc' =>
@@ -284,8 +288,10 @@
                 @foreach ($steps as $step)
                     <div
                         class="bg-white rounded-3xl shadow-lg p-6 flex flex-col items-start justify-start text-left h-auto sm:h-[330px]">
-                        <div class="bg-gradient-to-br {{ $step['color'] }} p-4 rounded-full mb-4 mt-2 sm:mt-4">
-                            <img src="{{ asset('assets/' . $step['icon']) }}" alt="Icon" class="w-8 h-8" />
+                        <div class="bg-gradient-to-br {{ $step['color'] }} p-4 rounded-full mb-4 mt-2 sm:mt-4"
+                            style="box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.25);">
+                            <img src="{{ asset('assets/svg/' . $step['icon']) }}" alt="Icon" class="w-8 h-8"
+                                style="filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));" />
                         </div>
                         <span
                             class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-full font-semibold mb-3 inline-block">

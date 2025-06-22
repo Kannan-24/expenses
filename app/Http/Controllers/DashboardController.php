@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expense;
-use App\Models\Balance;
+use App\Models\Transaction;
+use App\Models\Wallet;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -18,30 +18,25 @@ class DashboardController extends Controller
         $startOfMonth = Carbon::now()->startOfMonth()->toDateString();
         $endOfMonth = Carbon::now()->endOfMonth()->toDateString();
 
-        $balance = Balance::firstOrNew(['user_id' => $userId], [
-            'cash' => 0,
-            'bank' => 0,
-        ]);
-
-        $totalIncome = Expense::where('user_id', $userId)
+        $totalIncome = Transaction::where('user_id', $userId)
             ->where('type', 'income')
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->sum('amount');
 
-        $totalExpense = Expense::where('user_id', $userId)
+        $totalExpense = Transaction::where('user_id', $userId)
             ->where('type', 'expense')
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->sum('amount');
 
         $monthlyNetBalance = $totalIncome - $totalExpense;
 
-        $recentExpenses = Expense::with('category')
+        $recentExpenses = Transaction::with('category')
             ->where('user_id', $userId)
             ->orderBy('date', 'desc')
             ->take(5)
             ->get();
 
-        $monthlyData = Expense::select(
+        $monthlyData = Transaction::select(
             DB::raw("DATE_FORMAT(date, '%Y-%m') as month"),
             DB::raw("SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as total_income"),
             DB::raw("SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as total_expense")
@@ -51,6 +46,8 @@ class DashboardController extends Controller
             ->orderBy('month', 'asc')
             ->limit(6)
             ->get();
+
+        $wallets = Wallet::where('user_id', $userId)->get();
 
         $chartLabels = $monthlyData->pluck('month')->map(function ($month) {
             return \Carbon\Carbon::createFromFormat('Y-m', $month)->format('M Y');
@@ -63,12 +60,12 @@ class DashboardController extends Controller
             'totalIncome',
             'totalExpense',
             'monthlyNetBalance',
-            'balance',
             'recentExpenses',
             'monthlyData',
             'chartLabels',
             'incomeData',
-            'expenseData'
+            'expenseData',
+            'wallets'
         ));
     }
 }

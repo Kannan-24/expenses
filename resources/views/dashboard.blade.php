@@ -7,7 +7,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             <!-- Welcome Message -->
-            <div class="p-6 mb-6 text-center text-white rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-indigo-600">
+            <div
+                class="p-6 mb-6 text-center text-white rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-indigo-600">
                 <h1 class="text-3xl font-bold">Welcome Back! 👋</h1>
                 <p class="mt-2 text-lg">Here’s your monthly financial summary.</p>
             </div>
@@ -15,18 +16,22 @@
             <!-- Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <x-summary-card title="This Month's Income" value="₹{{ number_format($totalIncome, 2) }}" color="green" />
-                <x-summary-card title="This Month's Expense" value="₹{{ number_format($totalExpense, 2) }}" color="red" />
+                <x-summary-card title="This Month's Expense" value="₹{{ number_format($totalExpense, 2) }}"
+                    color="red" />
                 {{-- <x-summary-card title="Net Balance" value="₹{{ number_format($monthlyNetBalance, 2) }}" color="blue" /> --}}
 
                 <div class="p-6 bg-white border-l-4 border-yellow-400 shadow rounded-xl">
                     <div class="flex items-center justify-between">
-                        <h2 class="text-gray-600 text-lg font-semibold">Cash / Bank</h2>
-                        <a href="{{ route('balance.edit') }}" class="text-sm text-indigo-600 underline hover:text-indigo-800">Edit Balance</a>
+                        <h2 class="text-gray-600 text-lg font-semibold">Wallets</h2>
+                        <a href="{{ route('wallets.index') }}"
+                            class="text-sm text-indigo-600 underline hover:text-indigo-800">Edit Balance</a>
                     </div>
                     <p class="mt-2 text-xl text-gray-700">
-                        💵 Cash: ₹{{ number_format($balance->cash ?? 0, 2) }}<br>
-                        🏦 Bank: ₹{{ number_format($balance->bank ?? 0, 2) }}<br>
-                        <span class="text-lg font-semibold">Total: ₹{{ number_format(($balance->cash ?? 0) + ($balance->bank ?? 0), 2) }}</span>
+                        @foreach ($wallets as $wallet)
+                            <span class="block">{{ $wallet->name }}: ₹{{ number_format($wallet->balance, 2) }}</span>
+                        @endforeach
+                        <span class="text-lg font-semibold">Total:
+                            ₹{{ number_format($wallets->sum('balance'), 2) }}</span>
                     </p>
                 </div>
             </div>
@@ -49,9 +54,11 @@
                             @forelse ($recentExpenses as $expense)
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-2">{{ \Carbon\Carbon::parse($expense->date)->format('d M Y') }}</td>
+                                    <td class="px-4 py-2">{{ \Carbon\Carbon::parse($expense->date)->format('d M Y') }}
+                                    </td>
                                     <td class="px-4 py-2">
-                                        <span class="font-semibold {{ $expense->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
+                                        <span
+                                            class="font-semibold {{ $expense->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
                                             {{ ucfirst($expense->type) }}
                                         </span>
                                     </td>
@@ -63,14 +70,16 @@
                                         @endif
                                     </td>
                                     <td class="px-4 py-2">
-                                        <span class="{{ $expense->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
+                                        <span
+                                            class="{{ $expense->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
                                             ₹{{ number_format($expense->amount, 2) }}
                                         </span>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center py-4 text-gray-400">No recent transactions.</td>
+                                    <td colspan="5" class="text-center py-4 text-gray-400">No recent transactions.
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -95,13 +104,18 @@
                             @forelse ($monthlyData as $month)
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-2">{{ \Carbon\Carbon::createFromFormat('Y-m', $month->month)->format('F Y') }}</td>
-                                    <td class="px-4 py-2 text-green-600 font-semibold">₹{{ number_format($month->total_income, 2) }}</td>
-                                    <td class="px-4 py-2 text-red-600 font-semibold">₹{{ number_format($month->total_expense, 2) }}</td>
+                                    <td class="px-4 py-2">
+                                        {{ \Carbon\Carbon::createFromFormat('Y-m', $month->month)->format('F Y') }}
+                                    </td>
+                                    <td class="px-4 py-2 text-green-600 font-semibold">
+                                        ₹{{ number_format($month->total_income, 2) }}</td>
+                                    <td class="px-4 py-2 text-red-600 font-semibold">
+                                        ₹{{ number_format($month->total_expense, 2) }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center py-4 text-gray-400">No monthly data available.</td>
+                                    <td colspan="3" class="text-center py-4 text-gray-400">No monthly data available.
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -118,6 +132,22 @@
         </div>
     </div>
 
+    @if (session('just_registered'))
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+                event: 'expense_register_success',
+                method: '{{ session('registration_method', 'email') }}'
+            });
+        </script>
+
+        {{-- Clear the session so it only fires once --}}
+        @php
+            session()->forget('just_registered');
+            session()->forget('registration_method');
+        @endphp
+    @endif
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctx = document.getElementById('incomeExpenseChart').getContext('2d');
@@ -125,8 +155,7 @@
             type: 'bar',
             data: {
                 labels: @json($chartLabels),
-                datasets: [
-                    {
+                datasets: [{
                         label: 'Income',
                         data: @json($incomeData),
                         backgroundColor: 'rgba(34,197,94,0.7)',

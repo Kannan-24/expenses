@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('Create Expense / Income') }} - {{ config('app.name', 'expenses') }}
+        {{ __('Add Transaction') }} - {{ config('app.name', 'expenses') }}
     </x-slot>
 
     <div class="sm:ml-64">
@@ -9,11 +9,13 @@
 
             <div class="p-4 sm:p-8 bg-white border border-gray-200 rounded-lg shadow-lg">
                 <div class="mb-4 text-sm text-gray-600">
-                    <strong>Available Cash:</strong> ₹{{ number_format($balance->cash, 2) }}<br>
-                    <strong>Available Bank:</strong> ₹{{ number_format($balance->bank, 2) }}
+                    <strong>Available Wallets: </strong> {{ $wallets->count() > 0 ? '' : 'None' }}<br>
+                    @foreach ($wallets as $wallet)
+                        <strong>{{ $wallet->name }}:</strong> ₹{{ number_format($wallet->balance, 2) }}<br>
+                    @endforeach
                 </div>
 
-                <form action="{{ route('expenses.store') }}" method="POST">
+                <form action="{{ route('transactions.store') }}" method="POST">
                     @csrf
 
                     <!-- Type -->
@@ -50,10 +52,8 @@
 
                     <!-- Expense Person -->
                     <div class="mb-4">
-                        <label for="expense_person_id" class="block text-sm font-semibold text-gray-700">Expense
-                            Person</label>
-                        <select name="expense_person_id" id="expense_person_id"
-                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <label for="expense_person_id" class="block text-sm font-semibold text-gray-700">Expense Person</label>
+                        <select name="expense_person_id" id="expense_person_id" class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">None</option>
                             @foreach ($people as $person)
                                 <option value="{{ $person->id }}"
