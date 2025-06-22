@@ -89,7 +89,7 @@ class TransactionController extends Controller
             'date'               => 'required|date',
             'note'               => 'nullable|string',
             'type'               => 'required|in:income,expense',
-            'payment_method'     => 'required|in:cash,bank',
+            'wallet_id'     => 'required|exists:wallets,id',
         ]);
 
         $balance = Balance::firstOrCreate(
@@ -111,7 +111,7 @@ class TransactionController extends Controller
             'date'              => $request->date,
             'note'              => $request->note,
             'type'              => $request->type,
-            'payment_method'    => $request->payment_method,
+            'wallet_id'    => $request->payment_method,
         ]);
 
         $cashBefore = $balance->cash;
@@ -177,7 +177,7 @@ class TransactionController extends Controller
             'date'               => 'required|date',
             'note'               => 'nullable|string',
             'type'               => 'required|in:income,expense',
-            'payment_method'     => 'required|in:cash,bank',
+            'wallet_id'     => 'required|exists:wallets,id',
         ]);
 
         $balance = Balance::firstOrCreate(
@@ -208,7 +208,7 @@ class TransactionController extends Controller
             'date'              => $request->date,
             'note'              => $request->note,
             'type'              => $request->type,
-            'payment_method'    => $request->payment_method,
+            'wallet_id'    => $request->wallet_id,
         ]);
 
         // Apply updated

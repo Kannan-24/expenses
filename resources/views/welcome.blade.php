@@ -8,34 +8,35 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>
+        .nav-link {
+            position: relative;
+        }
+
         .nav-link::after {
             content: '';
             display: block;
             height: 2px;
-            width: 60%;
+            width: 0;
             margin: 0 auto;
+            position: absolute;
+            bottom: -2px;
             background: #2563eb;
-            transform: scaleX(0);
-            transition: transform 0.3s;
-            transform-origin: center;
+            transition: width 0.3s ease-in-out;
         }
 
         .nav-link:hover::after,
         .nav-link.text-blue-600::after {
-            transform: scaleX(1);
+            width: 20px;
         }
 
         @media (max-width: 768px) {
             .nav-link::after {
-                width: 70%;
+                width: 20px;
                 height: 1.5px;
                 margin: 0;
-                /* Remove auto margin */
                 margin-left: 0;
-                /* Align to left */
                 left: 0;
                 right: auto;
-                transform-origin: left;
             }
         }
     </style>

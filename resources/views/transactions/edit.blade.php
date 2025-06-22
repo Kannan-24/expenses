@@ -9,8 +9,11 @@
 
             <div class="p-4 sm:p-8 bg-white border border-gray-200 rounded-lg shadow-lg">
                 <div class="mb-4 text-sm text-gray-600">
-                    <strong>Available Cash:</strong> ₹{{ number_format($balance->cash, 2) }}<br>
-                    <strong>Available Bank:</strong> ₹{{ number_format($balance->bank, 2) }}
+                    <strong>Available Wallets: </strong> {{ $wallets->count() > 0 ? '' : 'None' }}<br>
+                    @foreach ($wallets as $wallet)
+                        <strong>{{ $wallet->name }}:</strong> {{ $wallet->currency->symbol }}
+                        {{ number_format($wallet->balance, 2) }}<br>
+                    @endforeach
                 </div>
 
                 <form action="{{ route('transactions.update', $expense->id) }}" method="POST">
@@ -23,8 +26,10 @@
                         <select name="type" id="type"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required>
-                            <option value="expense" {{ old('type', $expense->type) === 'expense' ? 'selected' : '' }}>Expense</option>
-                            <option value="income" {{ old('type', $expense->type) === 'income' ? 'selected' : '' }}>Income</option>
+                            <option value="expense" {{ old('type', $expense->type) === 'expense' ? 'selected' : '' }}>
+                                Expense</option>
+                            <option value="income" {{ old('type', $expense->type) === 'income' ? 'selected' : '' }}>
+                                Income</option>
                         </select>
                         @error('type')
                             <span class="text-sm text-red-600">{{ $message }}</span>
@@ -51,7 +56,8 @@
 
                     <!-- Expense Person -->
                     <div class="mb-4">
-                        <label for="expense_person_id" class="block text-sm font-semibold text-gray-700">Expense Person</label>
+                        <label for="expense_person_id" class="block text-sm font-semibold text-gray-700">Expense
+                            Person</label>
                         <select name="expense_person_id" id="expense_person_id"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">None</option>
@@ -70,7 +76,8 @@
                     <!-- Amount -->
                     <div class="mb-4">
                         <label for="amount" class="block text-sm font-semibold text-gray-700">Amount</label>
-                        <input type="number" name="amount" id="amount" value="{{ old('amount', $expense->amount) }}"
+                        <input type="number" name="amount" id="amount"
+                            value="{{ old('amount', $expense->amount) }}"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             min="0" step="0.01" required>
                         @error('amount')
@@ -80,12 +87,19 @@
 
                     <!-- Payment Method -->
                     <div class="mb-4">
-                        <label for="payment_method" class="block text-sm font-semibold text-gray-700">Payment Method</label>
+                        <label for="payment_method" class="block text-sm font-semibold text-gray-700">Payment
+                            Method</label>
                         <select name="payment_method" id="payment_method"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required>
-                            <option value="cash" {{ old('payment_method', $expense->payment_method) === 'cash' ? 'selected' : '' }}>Cash</option>
-                            <option value="bank" {{ old('payment_method', $expense->payment_method) === 'bank' ? 'selected' : '' }}>Bank</option>
+                            <option value="">Select Payment Method</option>
+                            @foreach ($wallets as $wallet)
+                                <option value="{{ $wallet->id }}"
+                                    {{ old('payment_method') == $wallet->id ? 'selected' : '' }}>
+                                    {{ $wallet->name }} ({{ $wallet->currency->symbol }}
+                                    {{ number_format($wallet->balance, 2) }})
+                                </option>
+                            @endforeach
                         </select>
                         @error('payment_method')
                             <span class="text-sm text-red-600">{{ $message }}</span>

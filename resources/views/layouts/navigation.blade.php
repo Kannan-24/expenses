@@ -195,9 +195,7 @@
                             <span class="ml-3">Roles</span>
                         </a>
                     </li>
-                @endcan
-
-                
+                @endcan                
             </ul>
         </div>
     </aside>

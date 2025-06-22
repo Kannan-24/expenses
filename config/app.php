@@ -123,4 +123,12 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'onboarding' => [
+        'steps' => [
+            'wallets',
+            'categories',
+            'expense-people',
+            'user-preferences',
+        ],
+    ],
 ];

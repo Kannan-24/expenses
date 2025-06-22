@@ -11,7 +11,7 @@
                 <div class="mb-4 text-sm text-gray-600">
                     <strong>Available Wallets: </strong> {{ $wallets->count() > 0 ? '' : 'None' }}<br>
                     @foreach ($wallets as $wallet)
-                        <strong>{{ $wallet->name }}:</strong> ₹{{ number_format($wallet->balance, 2) }}<br>
+                        <strong>{{ $wallet->name }}:</strong> {{ $wallet->currency->symbol }} {{ number_format($wallet->balance, 2) }}<br>
                     @endforeach
                 </div>
 
@@ -52,8 +52,10 @@
 
                     <!-- Expense Person -->
                     <div class="mb-4">
-                        <label for="expense_person_id" class="block text-sm font-semibold text-gray-700">Expense Person</label>
-                        <select name="expense_person_id" id="expense_person_id" class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <label for="expense_person_id" class="block text-sm font-semibold text-gray-700">Expense
+                            Person</label>
+                        <select name="expense_person_id" id="expense_person_id"
+                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">None</option>
                             @foreach ($people as $person)
                                 <option value="{{ $person->id }}"
@@ -85,10 +87,13 @@
                         <select name="payment_method" id="payment_method"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required>
-                            <option value="cash" {{ old('payment_method') === 'cash' ? 'selected' : '' }}>Cash
-                            </option>
-                            <option value="bank" {{ old('payment_method') === 'bank' ? 'selected' : '' }}>Bank
-                            </option>
+                            <option value="">Select Payment Method</option>
+                            @foreach ($wallets as $wallet)
+                                <option value="{{ $wallet->id }}"
+                                    {{ old('payment_method') == $wallet->id ? 'selected' : '' }}>
+                                    {{ $wallet->name }} ({{ $wallet->currency->symbol }} {{ number_format($wallet->balance, 2) }})
+                                </option>
+                            @endforeach
                         </select>
                         @error('payment_method')
                             <span class="text-sm text-red-600">{{ $message }}</span>
