@@ -32,10 +32,17 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255|unique:categories,name,NULL,id,user_id,' . Auth::user()->id,
         ]);
 
-        Category::create([
+        $category = Category::create([
             'name' => $request->name,
             'user_id' => Auth::user()->id,
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'category' => $category
+            ]);
+        }
 
         return redirect()->route('categories.index')->with('success', 'Category added successfully.');
     }

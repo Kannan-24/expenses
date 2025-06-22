@@ -32,10 +32,17 @@ class ExpensePersonController extends Controller
             'name' => 'required|string|max:255'
         ]);
 
-        ExpensePerson::create([
+        $expensePerson = ExpensePerson::create([
             'user_id' => Auth::id(),
             'name' => $request->name
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'person' => $expensePerson,
+            ]);
+        }
 
         return redirect()->route('expense-people.index')->with('success', 'Person added successfully.');
     }

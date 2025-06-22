@@ -6,6 +6,7 @@ use App\Models\Transaction;
 use App\Models\Category;
 use App\Models\ExpensePerson;
 use App\Models\Wallet;
+use App\Models\WalletType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -66,8 +67,9 @@ class TransactionController extends Controller
         $people = ExpensePerson::where('user_id', Auth::id())->get();
 
         $wallets = Wallet::where('user_id', Auth::id())->get();
+        $walletTypes = WalletType::get();
 
-        return view('transactions.create', compact('categories', 'people', 'wallets'));
+        return view('transactions.create', compact('categories', 'people', 'wallets', 'walletTypes'));
     }
 
     /**
@@ -129,8 +131,9 @@ class TransactionController extends Controller
         $people = ExpensePerson::where('user_id', Auth::id())->get();
 
         $wallets = Wallet::where('user_id', Auth::id())->get();
+        $walletTypes = WalletType::get();
 
-        return view('transactions.edit', compact('expense', 'categories', 'people', 'wallets'));
+        return view('transactions.edit', compact('expense', 'categories', 'people', 'wallets', 'walletTypes'));
     }
 
     /**
