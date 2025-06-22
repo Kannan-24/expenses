@@ -16,6 +16,21 @@ class ExpenseController extends Controller
     {
         $query = Expense::with(['category', 'person'])->where('user_id', Auth::id());
 
+        // Search by person, category, or note
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('person', function ($q2) use ($search) {
+                    $q2->where('name', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('category', function ($q2) use ($search) {
+                    $q2->where('name', 'like', '%' . $search . '%');
+                })
+                ->orWhere('note', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Date filters
         if ($request->filter === '7days') {
             $query->where('date', '>=', now()->subDays(7));
         } elseif ($request->filter === '15days') {
@@ -26,7 +41,7 @@ class ExpenseController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        $expenses = $query->orderBy('date', 'desc')->paginate(9);
+        $expenses = $query->orderBy('date', 'desc')->paginate(9)->appends($request->all());
 
         return view('expenses.index', compact('expenses'));
     }

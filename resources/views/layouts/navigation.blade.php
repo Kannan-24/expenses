@@ -39,7 +39,7 @@
                             @endif
                             <div class="text-left">
                                 <p class="text-sm font-medium">{{ Auth::user()->name }}</p>
-                                <p class="text-xs text-gray-300">{{ Auth::user()->email }}</p>
+                                {{-- <p class="text-xs text-gray-300">{{ Auth::user()->email }}</p> --}}
                             </div>
                             <svg class="w-4 h-4 text-gray-300 transition-transform duration-200 transform"
                                 :class="userDropdown ? 'rotate-180' : 'rotate-0'" fill="none" stroke="currentColor"
@@ -208,6 +208,8 @@
                         </a>
                     </li>
                 @endcan
+
+                
             </ul>
         </div>
     </aside>

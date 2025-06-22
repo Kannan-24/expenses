@@ -9,9 +9,13 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::where('user_id', auth()->id())
-            ->latest()
-            ->paginate(10);
+        $query = Category::where('user_id', auth()->id());
+
+        if ($search = request('search')) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        $categories = $query->latest()->paginate(10);
 
         return view('categories.index', compact('categories'));
     }
@@ -56,9 +60,9 @@ class CategoryController extends Controller
 
     public function destroy(Category $ccategory)
     {
-        $this->authorizeCategory($category);
+        $this->authorizeCategory($ccategory);
 
-        $category->delete();
+        $ccategory->delete();
         return redirect()->route('categories.index')->with('success', 'Category deleted.');
     }
 

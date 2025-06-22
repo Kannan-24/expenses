@@ -8,9 +8,16 @@ use Illuminate\Support\Facades\Auth;
 
 class ExpensePersonController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $people = ExpensePerson::where('user_id', Auth::id())->paginate(10);
+        $query = ExpensePerson::where('user_id', Auth::id());
+
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        $people = $query->paginate(10)->appends($request->only('search'));
+
         return view('expense_people.index', compact('people'));
     }
 
