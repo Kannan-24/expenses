@@ -20,7 +20,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/account-settings/sessions', [AccountSettingsController::class, 'sessions'])->name('account.sessions');
-    Route::post('/logout/other-browser-sessions', [AccountSettingsController::class, 'logoutOtherDevices'])->name('logout.other-browser-sessions');
+    Route::post('/logout/other-browser-sessions', [AccountSettingsController::class, 'logoutOtherDevices'])->name('profile.logoutOtherDevices');
     Route::delete('/logout/device/{sessionId}', [AccountSettingsController::class, 'logoutOtherDevice'])->name('logout.device');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
