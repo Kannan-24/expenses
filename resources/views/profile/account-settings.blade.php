@@ -20,13 +20,6 @@
                     @include('profile.partials.delete-user-form')
                 </div>
             </div>
-
-            <!-- Session Activity -->
-            <div class="p-8 mt-6 bg-white border border-gray-200 rounded-lg shadow-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.session-activity')
-                </div>
-            </div>
         </div>
     </div>
 </x-app-layout>
