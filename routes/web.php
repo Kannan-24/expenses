@@ -5,7 +5,6 @@ use App\Http\Controllers\AccountSettingsController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ExpensePersonController;
@@ -36,9 +35,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('expense-people', ExpensePersonController::class);
     Route::resource('wallets', WalletController::class);
 
-    Route::get('balance', [BalanceController::class, 'index'])->name('balance.index');
-    Route::get('/balance/edit', [BalanceController::class, 'edit'])->name('balance.edit');
-    Route::put('/balance/update', [BalanceController::class, 'update'])->name('balance.update');
     Route::get('/reports/expenses', [ReportController::class, 'expenses'])->name('reports.expenses');
     Route::get('/reports/expenses/pdf', [ReportController::class, 'expensesPdf'])->name('reports.expenses_report');
 
