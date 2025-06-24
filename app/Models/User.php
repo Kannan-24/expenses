@@ -79,7 +79,13 @@ class User extends Authenticatable
      */
     public function hasCompletedAllOnboardingSteps(): bool
     {
-        $onboardingSteps = config('app.onboarding.steps', []);
+        $onboardingSteps = config('app.onboarding.steps', [
+            'wallets',
+            'categories',
+            'expense-people',
+            'user-preferences',
+        ]);
+
         foreach ($onboardingSteps as $step) {
             if (!$this->hasCompletedOnboardingStep($step)) {
                 return false;

@@ -32,6 +32,7 @@
         <h2 class="text-3xl font-bold text-center text-gray-800 mb-10">Welcome! Let's Set Things Up</h2>
 
         <div x-data="{ step: {{ $step ?? 1 }}, next() { if (this.step < 4) this.step++ }, prev() { if (this.step > 1) this.step-- }, complete() { document.getElementById('onboardingForm').submit(); } }" class="bg-white rounded-xl shadow-lg p-8">
+
             <!-- Step Indicators -->
             <div class="relative flex items-center justify-between mb-10">
                 <!-- Connecting Lines -->
@@ -62,6 +63,17 @@
                 </template>
             </div>
 
+            {{-- Error --}}
+            @if ($errors->any())
+                <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-lg">
+                    <h3 class="font-semibold">Please fix the following errors:</h3>
+                    <ul class="list-disc pl-5 mt-2">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <form id="onboardingForm" method="POST" action="{{ route('onboarding.complete') }}">
                 @csrf
@@ -160,7 +172,8 @@
                 <div x-show="step === 4">
                     <h3 class="text-xl font-semibold mb-6">Step 4: Preferences</h3>
                     <div class="mb-4">
-                        <label for="default_currency_id" class="block text-sm font-medium text-gray-700">Default Currency</label>
+                        <label for="default_currency_id" class="block text-sm font-medium text-gray-700">Default
+                            Currency</label>
                         <select name="default_currency_id" id="default_currency_id" required
                             class="w-full mt-1 p-2 border border-gray-300 rounded-lg">
                             <option value="">Select Default Currency</option>
@@ -175,16 +188,17 @@
                         @enderror
                     </div>
                     <div class="mb-4">
-                        <label for="timezone" class="block text-sm font-medium text-gray-700">Timezone</label>
-                        <select name="timezone" id="timezone" required
+                        <label for="default_timezone" class="block text-sm font-medium text-gray-700">Timezone</label>
+                        <select name="default_timezone" id="default_timezone" required
                             class="w-full mt-1 p-2 border border-gray-300 rounded-lg">
                             <option value="">Select Timezone</option>
                             @foreach ($timezones as $timezone)
                                 <option value="{{ $timezone }}"
-                                    {{ old('timezone') == $timezone ? 'selected' : '' }}>{{ $timezone }}</option>
+                                    {{ old('default_timezone') == $timezone ? 'selected' : '' }}>{{ $timezone }}
+                                </option>
                             @endforeach
                         </select>
-                        @error('timezone')
+                        @error('default_timezone')
                             <span class="text-sm text-red-600">{{ $message }}</span>
                         @enderror
                     </div>

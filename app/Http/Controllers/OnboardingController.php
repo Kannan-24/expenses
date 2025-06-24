@@ -20,24 +20,14 @@ class OnboardingController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index(Request $request)
+    public function index()
     {
-        $step = 1;
-
-        if ($request->old('categories')) {
-            $step = 2;
-        } elseif ($request->old('expense_people')) {
-            $step = 3;
-        } elseif ($request->old('currency')) {
-            $step = 4;
-        }
-
         $walletTypes = WalletType::all();
         $currencies = Currency::all();
 
         $timezones = DateTimeZone::listIdentifiers();
 
-        return view('onboarding.index', compact('step', 'walletTypes', 'currencies', 'timezones'));
+        return view('onboarding.index', compact('walletTypes', 'currencies', 'timezones'));
     }
 
     /**
@@ -66,6 +56,7 @@ class OnboardingController extends Controller
             'name' => $request->wallet_name,
             'balance' => $request->balance,
             'currency_id' => $request->currency_id,
+            'user_id' => Auth::id(),
         ]);
 
         // Create the category
@@ -87,7 +78,7 @@ class OnboardingController extends Controller
                 'default_currency_id' => $request->default_currency_id,
                 'default_wallet_id' => $wallet->id,
                 'timezone' => $request->default_timezone,
-                'dark_mode' => $request->dark_mode,
+                'dark_mode' => $request->dark_mode ?? false,
             ]
         );
 
@@ -101,7 +92,7 @@ class OnboardingController extends Controller
         foreach ($onboardingSteps as $step) {
             Onboarding::updateOrCreate(
                 ['user_id' => Auth::id(), 'step_key' => $step],
-                ['completed' => true, 'completed_at' => now()]
+                ['completed' => 1, 'completed_at' => now()]
             );
         }
 
