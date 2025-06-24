@@ -9,7 +9,7 @@
             <!-- Welcome Message -->
             <div
                 class="p-6 mb-6 text-center text-white rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-indigo-600">
-                <h1 class="text-3xl font-bold">Welcome Back! 👋</h1>
+                <h1 class="text-3xl font-bold">Welcome Back <strong>{{ Auth::user()->name }}</strong>! </h1>
                 <p class="mt-2 text-lg">Here’s your monthly financial summary.</p>
             </div>
 

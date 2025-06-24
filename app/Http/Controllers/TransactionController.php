@@ -194,7 +194,7 @@ class TransactionController extends Controller
             abort(403);
         }
 
-        return view('transactions.show', compact('expense'));
+        return view('transactions.show', compact('transaction'));
     }
 
     /**

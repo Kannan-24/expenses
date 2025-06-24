@@ -27,8 +27,8 @@
 
 <body class="font-sans antialiased bg-blue-200 min-h-screen">
     <x-google-analytics-body />
-    
-    <div class="min-h-[calc(100vh-80px)] mt-20 bg-blue-200">
+
+    <div class="pt-16 bg-blue-200">
         @if (Route::currentRouteName() !== 'welcome')
             @include('layouts.navigation')
         @endif
@@ -85,7 +85,7 @@
         @endisset
 
         <!-- Page Content -->
-        <main class="px-3 py-4 sm:px-0">
+        <main class="px-4 sm:px-6 lg:px-4">
             {{ $slot }}
         </main>
     </div>
