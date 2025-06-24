@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use App\Models\Category;
+use App\Models\Currency;
 use App\Models\ExpensePerson;
 use App\Models\Wallet;
 use App\Models\WalletType;
@@ -68,8 +69,9 @@ class TransactionController extends Controller
 
         $wallets = Wallet::where('user_id', Auth::id())->get();
         $walletTypes = WalletType::get();
+        $currencies = Currency::get();
 
-        return view('transactions.create', compact('categories', 'people', 'wallets', 'walletTypes'));
+        return view('transactions.create', compact('categories', 'people', 'wallets', 'walletTypes', 'currencies'));
     }
 
     /**
@@ -109,7 +111,7 @@ class TransactionController extends Controller
             'date'              => $request->date,
             'note'              => $request->note,
             'type'              => $request->type,
-            'wallet_id'    => $request->wallet_id,
+            'wallet_id'         => $request->wallet_id,
         ]);
 
         return redirect()->route('transactions.index')->with(
@@ -133,7 +135,7 @@ class TransactionController extends Controller
         $wallets = Wallet::where('user_id', Auth::id())->get();
         $walletTypes = WalletType::get();
 
-        return view('transactions.edit', compact('expense', 'categories', 'people', 'wallets', 'walletTypes'));
+        return view('transactions.edit', compact('transaction', 'categories', 'people', 'wallets', 'walletTypes'));
     }
 
     /**

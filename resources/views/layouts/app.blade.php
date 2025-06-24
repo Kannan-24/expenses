@@ -13,10 +13,6 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTqe75FO2hSi_RMgpZ5ULQ60-hKIGulio&libraries=places,marker&loading=async">
-    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Scripts -->
@@ -37,27 +33,16 @@
             class="fixed inset-x-2 bottom-5 right-2 left-2 sm:inset-x-0 sm:right-5 sm:left-auto z-50 transition-all ease-in-out duration-300 message-alert">
             <!-- Message Alert -->
             @if (session()->has('response'))
-                <?php
-                $message = session()->get('response') ?? [];
-                $status = $message['status'];
-                switch ($status) {
-                    case 'success':
-                        $status = 'green';
-                        break;
-                    case 'error':
-                        $status = 'red';
-                        break;
-                    case 'warning':
-                        $status = 'yellow';
-                        break;
-                    case 'info':
-                        $status = 'blue';
-                        break;
-                    default:
-                        $status = 'gray';
-                        break;
-                }
-                ?>
+                @php
+                    $message = session()->get('response') ?? [];
+                    $status = match ($message['status'] ?? 'info') {
+                        'success' => 'green',
+                        'error' => 'red',
+                        'warning' => 'yellow',
+                        'info' => 'blue',
+                        default => 'gray',
+                    };
+                @endphp
 
                 <div class="bg-{{ $status }}-100 border border-{{ $status }}-400 text-{{ $status }}-700 px-3 py-2 rounded relative w-full sm:w-72 ms-auto my-1 flex items-center text-sm sm:text-base"
                     role="alert">
@@ -75,17 +60,18 @@
             @endif
         </div>
 
-        <!-- Page Heading -->
         @isset($header)
+            <!-- Page Heading -->
             <header class="bg-white shadow">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 py-4 sm:py-6 w-full sm:px-6 lg:px-8">
+                <div
+                    class="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 py-4 sm:py-6 w-full sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
             </header>
         @endisset
 
         <!-- Page Content -->
-        <main class="px-4 sm:px-6 lg:px-4">
+        <main class="px-4 sm:px-6 lg:px-4 py-4">
             {{ $slot }}
         </main>
     </div>

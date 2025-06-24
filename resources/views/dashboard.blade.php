@@ -3,8 +3,8 @@
         {{ __('Dashboard') }} - {{ config('app.name', 'ExpenseTracker') }}
     </x-slot>
 
-    <div class="sm:ml-64 sm:me-4 lg:me-0">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="sm:ml-64">
+        <div class="w-full mx-auto max-w-7xl rounded-2xl m-4 flex flex-col justify-between">
 
             <!-- Welcome Message -->
             <div
@@ -23,20 +23,6 @@
                 <x-summary-card title="Net Balance" value="₹{{ number_format($monthlyNetBalance, 2) }}"
                     color="blue" />
 
-                <div class="p-6 bg-white border-l-4 border-yellow-400 shadow rounded-xl">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-gray-600 text-lg font-semibold">Wallets</h2>
-                        <a href="{{ route('wallets.index') }}"
-                            class="text-sm text-indigo-600 underline hover:text-indigo-800">Edit Balance</a>
-                    </div>
-                    <p class="mt-2 text-xl text-gray-700">
-                        @foreach ($wallets as $wallet)
-                            <span class="block">{{ $wallet->name }}: ₹{{ number_format($wallet->balance, 2) }}</span>
-                        @endforeach
-                        <span class="text-lg font-semibold">Total:
-                            ₹{{ number_format($wallets->sum('balance'), 2) }}</span>
-                    </p>
-                </div>
             </div>
 
             {{-- Grid View --}}
@@ -94,13 +80,37 @@
                     </div>
                 </div>
 
-                <!-- Top Categories (using Bar Chart) -->
-                <div class="bg-white shadow rounded-lg p-6 mb-8 col-span-1">
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Top Categories</h3>
-                    <canvas id="topCategoriesChart" height="100"></canvas>
+                <!-- Wallets -->
+                <div class="p-6 bg-white rounded-2xl shadow-lg mb-8 sm:col-span-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-gray-800 text-xl font-bold">Wallets</h2>
+                        <a href="{{ route('wallets.index') }}"
+                            class="text-sm text-indigo-600 hover:text-indigo-800 transition font-medium">
+                            Edit Balance
+                        </a>
+                    </div>
+
+                    <div class="space-y-2">
+                        @foreach ($wallets as $wallet)
+                            <div class="flex items-center justify-between text-gray-700">
+                                <span class="font-medium">{{ $wallet->name }}</span>
+                                <span class="text-right font-semibold">₹{{ number_format($wallet->balance, 2) }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mt-4 border-t pt-4 flex items-center justify-between text-gray-900 text-lg font-bold">
+                        <span>Total Balance</span>
+                        <span>₹{{ number_format($wallets->sum('balance'), 2) }}</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- Top Categories (using Bar Chart) -->
+            <div class="bg-white shadow rounded-lg p-6 mb-8 col-span-1">
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">Top Categories</h3>
+                <canvas id="topCategoriesChart" height="100"></canvas>
+            </div>
 
             <!-- Monthly Overview Table -->
             <div class="bg-white shadow rounded-lg p-6 ">
@@ -165,6 +175,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        console.log(@json($expenseData));
+        console.log(@json($incomeData));
+        
         const incomeCTX = document.getElementById('incomeExpenseChart').getContext('2d');
         new Chart(incomeCTX, {
             type: 'line',

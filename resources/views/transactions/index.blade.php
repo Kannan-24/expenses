@@ -41,7 +41,7 @@
             </div>
 
             <!-- Filters -->
-            <form method="GET" class="mb-5 flex flex-wrap gap-3 items-end" id="expense-filter-form">
+            <form method="GET" class="mb-5 flex flex-wrap gap-3 items-end" id="transaction-filter-form">
                 <!-- Search -->
                 <div class="relative flex-1 min-w-[180px]">
                     <label class="text-sm text-gray-600 block mb-1">Search</label>
@@ -114,44 +114,40 @@
                             <th class="px-4 py-2">Category</th>
                             <th class="px-4 py-2">Person</th>
                             <th class="px-4 py-2">Type</th>
-                            <th class="px-4 py-2">Payment Method</th>
+                            <th class="px-4 py-2">Wallet</th>
                             <th class="px-4 py-2">Amount</th>
                             <th class="px-4 py-2 text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($transactions as $expense)
+                        @forelse ($transactions as $transaction)
                             <tr class="border-b border-gray-200 hover:bg-gray-50">
                                 <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                                <td class="px-4 py-2">{{ \Carbon\Carbon::parse($expense->date)->format('Y-m-d') }}</td>
-                                <td class="px-4 py-2">{{ $expense->category->name ?? 'N/A' }}</td>
-                                <td class="px-4 py-2">{{ $expense->person->name ?? '-' }}</td>
+                                <td class="px-4 py-2">{{ \Carbon\Carbon::parse($transaction->date)->format('Y-m-d') }}</td>
+                                <td class="px-4 py-2">{{ $transaction->category->name ?? 'N/A' }}</td>
+                                <td class="px-4 py-2">{{ $transaction->person->name ?? '-' }}</td>
                                 <td class="px-4 py-2">
-                                    @if ($expense->type === 'income')
+                                    @if ($transaction->type === 'income')
                                         <span class="text-green-600 font-semibold">Income</span>
                                     @else
-                                        <span class="text-red-600 font-semibold">Expense</span>
+                                        <span class="text-red-600 font-semibold">Transaction</span>
                                     @endif
                                 </td>
                                 <td class="px-4 py-2">
-                                    @if ($expense->payment_method === 'cash')
-                                        <span class="text-yellow-600">Cash</span>
-                                    @else
-                                        <span class="text-blue-600">Bank</span>
-                                    @endif
+                                    {{ $transaction->wallet->name ?? 'N/A' }}
                                 </td>
                                 <td class="px-4 py-2">
                                     <span
-                                        class="{{ $expense->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
-                                        ₹{{ number_format($expense->amount, 2) }}
+                                        class="{{ $transaction->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
+                                        ₹{{ number_format($transaction->amount, 2) }}
                                     </span>
                                 </td>
                                 <td class="px-4 py-2 text-center space-x-2">
-                                    <a href="{{ route('transactions.edit', $expense->id) }}"
+                                    <a href="{{ route('transactions.edit', $transaction->id) }}"
                                         class="text-blue-600 hover:underline">Edit</a>
-                                    <a href="{{ route('transactions.show', $expense->id) }}"
+                                    <a href="{{ route('transactions.show', $transaction->id) }}"
                                         class="text-yellow-600 hover:underline">Show</a>
-                                    <form action="{{ route('transactions.destroy', $expense->id) }}" method="POST"
+                                    <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST"
                                         class="inline-block" onsubmit="return confirm('Delete this transaction?')">
                                         @csrf
                                         @method('DELETE')

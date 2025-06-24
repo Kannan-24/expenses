@@ -16,7 +16,7 @@
                     @endforeach
                 </div>
 
-                <form action="{{ route('transactions.update', $expense->id) }}" method="POST">
+                <form action="{{ route('transactions.update', $transaction->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -26,9 +26,10 @@
                         <select name="type" id="type"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required>
-                            <option value="expense" {{ old('type', $expense->type) === 'expense' ? 'selected' : '' }}>
+                            <option value="expense"
+                                {{ old('type', $transaction->type) === 'expense' ? 'selected' : '' }}>
                                 Expense</option>
-                            <option value="income" {{ old('type', $expense->type) === 'income' ? 'selected' : '' }}>
+                            <option value="income" {{ old('type', $transaction->type) === 'income' ? 'selected' : '' }}>
                                 Income</option>
                         </select>
                         @error('type')
@@ -48,7 +49,7 @@
                             <option value="">None</option>
                             @foreach ($categories->where('user_id', auth()->id()) as $category)
                                 <option value="{{ $category->id }}"
-                                    {{ old('category_id', $expense->category_id) == $category->id ? 'selected' : '' }}>
+                                    {{ old('category_id', $transaction->category_id) == $category->id ? 'selected' : '' }}>
                                     {{ $category->name }}
                                 </option>
                             @endforeach
@@ -71,7 +72,7 @@
                             <option value="">None</option>
                             @foreach ($people as $person)
                                 <option value="{{ $person->id }}"
-                                    {{ old('expense_person_id', $expense->expense_person_id) == $person->id ? 'selected' : '' }}>
+                                    {{ old('expense_person_id', $transaction->expense_person_id) == $person->id ? 'selected' : '' }}>
                                     {{ $person->name }}
                                 </option>
                             @endforeach
@@ -85,7 +86,7 @@
                     <div class="mb-4">
                         <label for="amount" class="block text-sm font-semibold text-gray-700">Amount</label>
                         <input type="number" name="amount" id="amount"
-                            value="{{ old('amount', $expense->amount) }}"
+                            value="{{ old('amount', $transaction->amount) }}"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             min="0" step="0.01" required>
                         @error('amount')
@@ -106,7 +107,7 @@
                             <option value="">Select Wallet</option>
                             @foreach ($wallets as $wallet)
                                 <option value="{{ $wallet->id }}"
-                                    {{ old('wallet_id') == $wallet->id ? 'selected' : '' }}>
+                                    {{ old('wallet_id') == $wallet->id || $transaction->wallet_id == $wallet->id ? 'selected' : '' }}>
                                     {{ $wallet->name }} ({{ $wallet->currency->symbol }}
                                     {{ number_format($wallet->balance, 2) }})
                                 </option>
@@ -121,7 +122,7 @@
                     <div class="mb-4">
                         <label for="date" class="block text-sm font-semibold text-gray-700">Date</label>
                         <input type="date" name="date" id="date"
-                            value="{{ old('date', $expense->date ? \Carbon\Carbon::parse($expense->date)->format('Y-m-d') : '') }}"
+                            value="{{ old('date', $transaction->date ? \Carbon\Carbon::parse($transaction->date)->format('Y-m-d') : '') }}"
                             class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             required>
                         @error('date')
@@ -133,7 +134,7 @@
                     <div class="mb-4">
                         <label for="note" class="block text-sm font-semibold text-gray-700">Note</label>
                         <textarea name="note" id="note" rows="3"
-                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">{{ old('note', $expense->note) }}</textarea>
+                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">{{ old('note', $transaction->note) }}</textarea>
                         @error('note')
                             <span class="text-sm text-red-600">{{ $message }}</span>
                         @enderror
@@ -191,15 +192,31 @@
                     @endforeach
                 </select>
             </div>
-            <input type="text" id="newWalletName"
-                class="w-full p-2 mb-4 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Wallet name">
-            <input type="text" id="newWalletCurrency"
-                class="w-full p-2 mb-4 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Currency (e.g. USD, EUR)">
-            <input type="number" id="newWalletBalance" value="0"
-                class="w-full p-2 mb-4 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Initial Balance" min="0" step="0.01">
+            <div class="mb-4">
+                <label for="newWalletName" class="block text-sm font-semibold text-gray-700">Wallet Name</label>
+                <input type="text" id="newWalletName"
+                    class="w-full p-2 mt-1 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Wallet name" required>
+            </div>
+            @if ($currencies->count() > 0)
+                <div class="mb-4">
+                    <label for="newWalletCurrency" class="block text-sm font-semibold text-gray-700">Currency</label>
+                    <select id="newWalletCurrency"
+                        class="w-full p-2 mt-1 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500">
+                        @foreach ($currencies as $currency)
+                            <option value="{{ $currency->id }}">{{ $currency->name }} ({{ $currency->symbol }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
+            <div class="mb-4">
+                <label for="newWalletBalance" class="block text-sm font-semibold text-gray-700">Initial
+                    Balance</label>
+                <input type="number" id="newWalletBalance" value="0"
+                    class="w-full p-2 mt-1 border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Initial Balance" min="0" step="0.01">
+            </div>
             <div class="flex justify-end space-x-2">
                 <button onclick="closeWalletModal()" class="px-3 py-1 text-gray-600">Cancel</button>
                 <button onclick="submitNewWallet()" class="px-3 py-1 bg-indigo-600 text-white rounded">Add</button>
@@ -321,8 +338,8 @@
                     },
                     body: JSON.stringify({
                         wallet_type_id: walletType,
+                        currency_id: currency,
                         name,
-                        currency,
                         balance: parseFloat(balance),
                     })
                 })
@@ -333,7 +350,7 @@
                         const option = document.createElement('option');
                         option.value = data.wallet.id;
                         option.text =
-                            `${data.wallet.name} (${data.wallet.currency.symbol} ${data.wallet.balance.toFixed(2)})`;
+                            `${data.wallet.name} (${data.wallet.currency.symbol} ${Number(data.wallet.balance).toFixed(2)})`;
                         option.selected = true;
                         select.appendChild(option);
 

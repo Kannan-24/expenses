@@ -13,9 +13,9 @@ class Transaction extends Model
         'user_id',
         'category_id',
         'expense_person_id',
+        'wallet_id',
         'amount',
         'type',
-        'payment_method',
         'date',
         'note',
     ];
@@ -35,5 +35,10 @@ class Transaction extends Model
     public function person()
     {
         return $this->belongsTo(\App\Models\ExpensePerson::class, 'expense_person_id');
+    }
+
+    public function wallet()
+    {
+        return $this->belongsTo(Wallet::class);
     }
 }

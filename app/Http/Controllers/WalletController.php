@@ -6,6 +6,7 @@ use App\Models\Currency;
 use App\Models\Wallet;
 use App\Models\WalletType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WalletController extends Controller
 {
@@ -14,7 +15,7 @@ class WalletController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Wallet::with('walletType', 'currency');
+        $query = Wallet::with('walletType', 'currency')->where('user_id', Auth::id());
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
@@ -50,7 +51,6 @@ class WalletController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
             'wallet_type_id' => 'required|exists:wallet_types,id',
             'name' => 'required|string|max:255|unique:wallets,name,NULL,id,user_id,' . $request->user_id . ',wallet_type_id,' . $request->wallet_type_id,
             'balance' => 'required|numeric|min:0',
@@ -59,7 +59,7 @@ class WalletController extends Controller
         ]);
 
         $wallet = Wallet::create([
-            'user_id' => $request->input('user_id'),
+            'user_id' => Auth::id(),
             'wallet_type_id' => $request->input('wallet_type_id'),
             'name' => $request->input('name'),
             'balance' => $request->input('balance'),
@@ -70,7 +70,7 @@ class WalletController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
-                'wallet' => $wallet
+                'wallet' => $wallet->load('walletType', 'currency'),
             ]);
         }
 
@@ -82,6 +82,8 @@ class WalletController extends Controller
      */
     public function show(Wallet $wallet)
     {
+        $this->authorizeWallet($wallet);
+
         $wallet->load('walletType', 'currency');
         return view('wallets.show', compact('wallet'));
     }
@@ -91,6 +93,8 @@ class WalletController extends Controller
      */
     public function edit(Wallet $wallet)
     {
+        $this->authorizeWallet($wallet);
+
         $walletTypes = WalletType::where('is_active', true)->get();
         $currencies = Currency::all();
         return view('wallets.edit', compact('wallet', 'walletTypes', 'currencies'));
@@ -101,6 +105,8 @@ class WalletController extends Controller
      */
     public function update(Request $request, Wallet $wallet)
     {
+        $this->authorizeWallet($wallet);
+
         $request->validate([
             'wallet_type_id' => 'required|exists:wallet_types,id',
             'name' => 'required|string|max:255|unique:wallets,name,' . $wallet->id . ',id,user_id,' . $wallet->user_id . ',wallet_type_id,' . $request->wallet_type_id,
@@ -108,6 +114,7 @@ class WalletController extends Controller
             'currency_id' => 'required|exists:currencies,id',
             'is_active' => 'boolean',
         ]);
+
 
         $wallet->update([
             'wallet_type_id' => $request->input('wallet_type_id'),
@@ -125,7 +132,16 @@ class WalletController extends Controller
      */
     public function destroy(Wallet $wallet)
     {
+        $this->authorizeWallet($wallet);
+
         $wallet->delete();
         return redirect()->route('wallets.index')->with('success', 'Wallet deleted successfully.');
+    }
+
+    public function authorizeWallet(Wallet $wallet)
+    {
+        if ($wallet->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
     }
 }
