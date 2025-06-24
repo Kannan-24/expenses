@@ -92,7 +92,7 @@ class OnboardingController extends Controller
         foreach ($onboardingSteps as $step) {
             Onboarding::updateOrCreate(
                 ['user_id' => Auth::id(), 'step_key' => $step],
-                ['completed' => 1, 'completed_at' => now()]
+                ['is_completed' => true, 'completed_at' => now()]
             );
         }
 
