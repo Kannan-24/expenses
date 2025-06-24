@@ -93,4 +93,83 @@ class DashboardController extends Controller
             'topCategories'
         ));
     }
+
+    public function getChartData(Request $request)
+    {
+        $userId = Auth::id();
+        $range = $request->input('range', '30d'); // default 30 days
+        $now = CarbonImmutable::now();
+        $start = $now;
+        $end = $now;
+
+        switch ($range) {
+            case 'today':
+                $start = $now->startOfDay();
+                $end = $now->endOfDay();
+                $interval = 'hour';
+                break;
+            case 'yesterday':
+                $start = $now->subDay()->startOfDay();
+                $end = $now->subDay()->endOfDay();
+                $interval = 'hour';
+                break;
+            case '7d':
+                $start = $now->subDays(6)->startOfDay();
+                $end = $now->endOfDay();
+                $interval = 'day';
+                break;
+            case '30d':
+                $start = $now->subDays(29)->startOfDay();
+                $end = $now->endOfDay();
+                $interval = 'day';
+                break;
+            case '3m':
+                $start = $now->subMonths(2)->startOfMonth();
+                $end = $now->endOfMonth();
+                $interval = 'week';
+                break;
+            case '6m':
+                $start = $now->subMonths(5)->startOfMonth();
+                $end = $now->endOfMonth();
+                $interval = 'month';
+                break;
+            default:
+                abort(400, 'Invalid range');
+        }
+
+        // Adjust formatting based on interval
+        $format = match ($interval) {
+            'hour' => '%Y-%m-%d %H',
+            'day' => '%Y-%m-%d',
+            'week' => '%x-%v', // ISO year-week
+            'month' => '%Y-%m',
+        };
+
+        $data = Transaction::selectRaw("
+            DATE_FORMAT(date, '{$format}') as label,
+            SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as total_income,
+            SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as total_expense
+        ")
+            ->where('user_id', $userId)
+            ->whereBetween('date', [$start, $end])
+            ->groupBy('label')
+            ->orderBy('label', 'asc')
+            ->get();
+
+        // Map label for user-friendly display
+        $chartLabels = $data->pluck('label')->map(function ($label) use ($interval) {
+            return match ($interval) {
+                'hour' => Carbon::createFromFormat('Y-m-d H', $label)->format('H:i'),
+                'day' => Carbon::createFromFormat('Y-m-d', $label)->format('d M'),
+                'week' => 'Week ' . explode('-', $label)[1],
+                'month' => Carbon::createFromFormat('Y-m', $label)->format('M Y'),
+            };
+        });
+
+        return response()->json([
+            'labels' => $chartLabels,
+            'income' => $data->pluck('total_income'),
+            'expense' => $data->pluck('total_expense'),
+        ]);
+    }
 }

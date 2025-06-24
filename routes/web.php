@@ -27,6 +27,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/chart-data', [DashboardController::class, 'getChartData'])->name('chart.data');
 
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('password.confirm');

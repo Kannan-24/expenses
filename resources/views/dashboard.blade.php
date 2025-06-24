@@ -150,7 +150,18 @@
 
             <!-- Chart Section -->
             <div class="bg-white shadow rounded-lg p-6 mt-8">
-                <h3 class="text-xl font-semibold mb-4 text-gray-800">Graphical View: Monthly Income vs Expense</h3>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Graphical View: Monthly Income vs Expense</h3>
+                    <select id="dateRangeSelector"
+                        class="border border-gray-300 rounded-md p-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="today">Today</option>
+                        <option value="yesterday">Yesterday</option>
+                        <option value="7d" selected>Last 7 Days</option>
+                        <option value="30d">Last 30 Days</option>
+                        <option value="3m">Last 3 Months</option>
+                        <option value="6m">Last 6 Months</option>
+                    </select>
+                </div>
                 <canvas id="incomeExpenseChart" height="100"></canvas>
             </div>
 
@@ -175,54 +186,73 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        console.log(@json($expenseData));
-        console.log(@json($incomeData));
-        
-        const incomeCTX = document.getElementById('incomeExpenseChart').getContext('2d');
-        new Chart(incomeCTX, {
-            type: 'line',
-            data: {
-                labels: @json($chartLabels),
-                datasets: [{
-                        label: 'Income',
-                        data: @json($incomeData),
-                        backgroundColor: 'rgba(34,197,94,0.2)',
-                        borderColor: 'rgba(34,197,94,1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: 'rgba(34,197,94,1)'
+        let incomeExpenseChart;
+
+        async function loadChart(range = '7d') {
+            try {
+                const response = await fetch(`{{ route('chart.data') }}?range=${range}`);
+                const res = await response.json();
+
+                const ctx = document.getElementById('incomeExpenseChart').getContext('2d');
+
+                if (incomeExpenseChart) {
+                    incomeExpenseChart.destroy();
+                }
+
+                incomeExpenseChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: res.labels,
+                        datasets: [{
+                                label: 'Income',
+                                data: res.income,
+                                backgroundColor: 'rgba(34,197,94,0.2)',
+                                borderColor: 'rgba(34,197,94,1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                pointBackgroundColor: 'rgba(34,197,94,1)'
+                            },
+                            {
+                                label: 'Expense',
+                                data: res.expense,
+                                backgroundColor: 'rgba(239,68,68,0.2)',
+                                borderColor: 'rgba(239,68,68,1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                                pointBackgroundColor: 'rgba(239,68,68,1)'
+                            }
+                        ]
                     },
-                    {
-                        label: 'Expense',
-                        data: @json($expenseData),
-                        backgroundColor: 'rgba(239,68,68,0.2)',
-                        borderColor: 'rgba(239,68,68,1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: 'rgba(239,68,68,1)'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '₹' + value.toLocaleString();
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: value => '₹' + value.toLocaleString()
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
                             }
                         }
                     }
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
+                });
+            } catch (error) {
+                console.error('Error loading chart data:', error);
             }
+        }
+
+        document.getElementById('dateRangeSelector').addEventListener('change', function() {
+            loadChart(this.value);
+        });
+
+        window.addEventListener('load', () => {
+            loadChart();
         });
 
         const topCategoriesCTX = document.getElementById('topCategoriesChart').getContext('2d');

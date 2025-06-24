@@ -134,8 +134,9 @@ class TransactionController extends Controller
 
         $wallets = Wallet::where('user_id', Auth::id())->get();
         $walletTypes = WalletType::get();
+        $currencies = Currency::get();
 
-        return view('transactions.edit', compact('transaction', 'categories', 'people', 'wallets', 'walletTypes'));
+        return view('transactions.edit', compact('transaction', 'categories', 'people', 'wallets', 'walletTypes', 'currencies'));
     }
 
     /**
