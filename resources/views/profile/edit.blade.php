@@ -36,59 +36,10 @@
                         <textarea name="address" class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200">{{ old('address', $user->address) }}</textarea>
                     </div>
 
-                    <!-- Show Student Fields -->
-                    @if ($user->user_type == 'student')
-                        <div class="mb-4">
-                            <label class="block mb-2 font-bold">Department:</label>
-                            <input type="text" name="department"
-                                value="{{ old('department', $user->student->department ?? '') }}"
-                                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200">
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block mb-2 font-bold">Batch:</label>
-                            <input type="text" name="batch" value="{{ old('batch', $user->student->batch ?? '') }}"
-                                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200">
-                        </div>
-                    @endif
-
-                    <!-- Show Faculty Fields -->
-                    @if ($user->user_type == 'faculty')
-                        <div class="mb-4">
-                            <label class="block mb-2 font-bold">Subject:</label>
-                            <input type="text" name="subject"
-                                value="{{ old('subject', $user->faculty->subject ?? '') }}"
-                                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200">
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block mb-2 font-bold">Experience (Years):</label>
-                            <input type="number" name="experience"
-                                value="{{ old('experience', $user->faculty->experience ?? '') }}"
-                                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200">
-                        </div>
-                    @endif
-
-                    <!-- Show Driver Fields -->
-                    @if ($user->user_type == 'driver')
-                        <div class="mb-4">
-                            <label class="block mb-2 font-bold">License Number:</label>
-                            <input type="text" name="license_number"
-                                value="{{ old('license_number', $user->driver->license_number ?? '') }}"
-                                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200">
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block mb-2 font-bold">Experience (Years):</label>
-                            <input type="number" name="experience"
-                                value="{{ old('experience', $user->driver->experience ?? '') }}"
-                                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200">
-                        </div>
-                    @endif
-
                     <!-- Submit Button -->
                     <div class="flex justify-end">
-                        <button type="submit" class="w-full sm:w-auto px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">
+                        <button type="submit"
+                            class="w-full sm:w-auto px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">
                             Save Changes
                         </button>
                     </div>

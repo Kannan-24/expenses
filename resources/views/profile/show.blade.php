@@ -27,19 +27,19 @@
                     </div>
                     <div class="space-y-4 mt-6">
                         <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                            <span class="text-gray-600">👤 Name:</span>
+                            <span class="text-gray-600">Name:</span>
                             <span class="font-semibold text-gray-800">{{ $user->name }}</span>
                         </div>
                         <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                            <span class="text-gray-600">📧 Email:</span>
+                            <span class="text-gray-600">Email:</span>
                             <span class="font-semibold text-gray-800">{{ $user->email }}</span>
                         </div>
                         <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                            <span class="text-gray-600">📞 Phone:</span>
+                            <span class="text-gray-600">Phone:</span>
                             <span class="font-semibold text-gray-800">{{ $user->phone }}</span>
                         </div>
                         <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                            <span class="text-gray-600">🏠 Address:</span>
+                            <span class="text-gray-600">Address:</span>
                             <span class="font-semibold text-gray-800">{{ $user->address }}</span>
                         </div>
                     </div>

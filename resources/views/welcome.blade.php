@@ -430,7 +430,7 @@
                             d="M25 5C27.0711 5 28.75 6.67894 28.75 8.75V21.25C28.75 23.3211 27.0711 25 25 25H5C2.92894 25 1.25 23.3211 1.25 21.25V8.75C1.25 6.67894 2.92894 5 5 5H25ZM24.0661 7.5H5.93398L14.2255 14.0459C14.6796 14.4045 15.3204 14.4045 15.7746 14.0459L24.0661 7.5ZM3.75 8.961V21.25C3.75 21.9404 4.30965 22.5 5 22.5H25C25.6904 22.5 26.25 21.9404 26.25 21.25V8.96102L17.3236 16.0081C15.9613 17.0838 14.0387 17.0838 12.6764 16.0081L3.75 8.961Z"
                             fill="white" />
                     </svg>
-                    <span class="break-all">contact@duodev.in</span>
+                    <a href="mailto:support@duodev.in" class="break-all hover:underline">support@duodev.in</a>
                 </div>
             </div>
 
@@ -451,7 +451,7 @@
         <!-- Bottom Text -->
         <div class="text-center text-sm text-gray-400 mt-10 px-4">
             <strong class="text-white">Expense Tracker</strong> — A personal finance management product by
-            <strong class="text-white">Duo Dev Technologies</strong>.
+            <a href="https://duodev.in" target="_blank" rel="noopener" class="text-white font-bold hover:underline">Duo Dev Technologies</a>.
         </div>
     </footer>
 
