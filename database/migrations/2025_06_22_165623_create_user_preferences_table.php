@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('onboardings', function (Blueprint $table) {
+        Schema::create('user_preferences', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('step_key');
-            $table->boolean('is_completed')->default(false);
-            $table->timestamp('completed_at')->nullable();
+            $table->foreignId('default_currency_id')->nullable()->constrained('currencies')->nullOnDelete();
+            $table->foreignId('default_wallet_id')->nullable()->constrained('wallets')->nullOnDelete();
+            $table->string('timezone')->default('Asia/Kolkata');
+            $table->boolean('dark_mode')->default(false);
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('onboardings');
+        Schema::dropIfExists('user_preferences');
     }
 };

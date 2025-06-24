@@ -49,4 +49,43 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the onboardings for the user.
+     */
+    public function onboardings(): HasMany
+    {
+        return $this->hasMany(Onboarding::class);
+    }
+
+    /**
+     * Check if the user has completed a specific onboarding step.
+     *
+     * @param string $stepKey
+     * @return bool
+     */
+    public function hasCompletedOnboardingStep(string $stepKey): bool
+    {
+        return $this->onboardings()
+            ->where('step_key', $stepKey)
+            ->where('is_completed', true)
+            ->exists();
+    }
+
+    /**
+     * Check if the user has completed all onboarding steps.
+     *
+     * @return bool
+     */
+    public function hasCompletedAllOnboardingSteps(): bool
+    {
+        $onboardingSteps = config('app.onboarding.steps', []);
+        foreach ($onboardingSteps as $step) {
+            if (!$this->hasCompletedOnboardingStep($step)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

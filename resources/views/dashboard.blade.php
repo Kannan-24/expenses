@@ -9,15 +9,19 @@
             <!-- Welcome Message -->
             <div
                 class="p-6 mb-6 text-center text-white rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-indigo-600">
-                <h1 class="text-3xl font-bold">Welcome Back! 👋</h1>
+                <h1 class="text-3xl font-bold">
+                    Welcome Back! {{ auth()->user()->name }}!
+                </h1>
                 <p class="mt-2 text-lg">Here’s your monthly financial summary.</p>
             </div>
 
             <!-- Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <x-summary-card title="This Month's Income" value="₹{{ number_format($totalIncome, 2) }}" color="green" />
-                <x-summary-card title="This Month's Expense" value="₹{{ number_format($totalExpense, 2) }}" color="red" />
-                <x-summary-card title="Net Balance" value="₹{{ number_format($monthlyNetBalance, 2) }}" color="blue" />
+                <x-summary-card title="This Month's Expense" value="₹{{ number_format($totalExpense, 2) }}"
+                    color="red" />
+                <x-summary-card title="Net Balance" value="₹{{ number_format($monthlyNetBalance, 2) }}"
+                    color="blue" />
 
                 <div class="p-6 bg-white border-l-4 border-yellow-400 shadow rounded-xl">
                     <div class="flex items-center justify-between">
