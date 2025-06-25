@@ -17,7 +17,7 @@ class Category extends Model
     // A category has many expenses
     public function expenses()
     {
-        return $this->hasMany(Expense::class);
+        return $this->hasMany(Transaction::class);
     }
 
     public function user()
