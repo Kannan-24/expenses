@@ -91,7 +91,7 @@
         <aside id="logo-sidebar" x-show="sidebarOpen || window.innerWidth >= 640"
             @keydown.window.escape="sidebarOpen = false" @click.away="sidebarOpen = false"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-            class="fixed top-0 left-0 z-40 w-64 h-screen pt-0 transition-transform bg-white border-r border-gray-200
+            class="fixed top-0 left-0 z-40 w-64 h-screen pt-0 pb-24 transition-transform bg-white border-r border-gray-200
             transform sm:translate-x-0 sm:static sm:inset-0"
             aria-label="Sidebar" x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
@@ -202,15 +202,7 @@
                 @endcan
             </ul>
 
-            <div>
-                <a href=""
-                    class="w-full flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 transition font-medium">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M18.364 5.636a9 9 0 11-12.728 0M12 9v2m0 4h.01" />
-                    </svg>
-                    Support
-                </a>
+            <div class="absolute bottom-0 left-0 w-full">
                 <form id="sidebar-logout-form" action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit"
@@ -226,5 +218,4 @@
             </div>
         </aside>
     </div>
-</div>
 </div>
