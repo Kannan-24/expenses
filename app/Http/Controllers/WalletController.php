@@ -108,9 +108,14 @@ class WalletController extends Controller
     {
         $this->authorizeWallet($wallet);
 
-        $wallet->load('walletType', 'currency');
-        return view('wallets.show', compact('wallet'));
+        $wallet->load('walletType', 'currency', 'transactions.category'); // eager load category if needed
+
+        // Optionally, paginate transactions
+        $transactions = $wallet->transactions()->latest()->paginate(10);
+
+        return view('wallets.show', compact('wallet', 'transactions'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -161,7 +166,7 @@ class WalletController extends Controller
         $wallet->delete();
         return redirect()->route('wallets.index')->with('success', 'Wallet deleted successfully.');
     }
-
+    
     public function authorizeWallet(Wallet $wallet)
     {
         if ($wallet->user_id !== Auth::id()) {
