@@ -71,7 +71,7 @@
         @endisset
 
         <!-- Page Content -->
-        <main class="px-4 sm:px-6 lg:px-4 py-4">
+        <main class="px-4 sm:px-6 lg:px-4">
             {{ $slot }}
         </main>
     </div>
