@@ -261,6 +261,10 @@ class TransactionController extends Controller
             $wallet->balance -= $transaction->amount;
         } elseif ($transaction->type === 'expense') {
             $wallet->balance += $transaction->amount;
+
+            if ($transaction->category_id) {
+                $this->updateBudgetHistory($transaction->category_id, -$transaction->amount, $transaction->date);
+            }
         }
         $wallet->save();
         $transaction->delete();
