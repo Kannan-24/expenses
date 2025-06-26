@@ -91,6 +91,7 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">#</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Start Date</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">End Date</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Alloted Amount</th>
@@ -101,6 +102,9 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @forelse ($histories->sortByDesc('end_date') as $history)
                                 <tr>
+                                    <td class="px-4 py-2 whitespace-nowrap">
+                                        {{ $loop->iteration }}
+                                    </td>
                                     <td class="px-4 py-2 whitespace-nowrap">
                                         {{ \Carbon\Carbon::parse($history->start_date)->format('d M, Y') }}
                                     </td>
