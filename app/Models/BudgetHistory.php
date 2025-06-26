@@ -8,7 +8,7 @@ class BudgetHistory extends Model
 {
     protected $fillable = [
         'budget_id',
-        'allotted_amount',
+        'allocated_amount',
         'roll_over_amount',
         'spent_amount',
         'start_date',

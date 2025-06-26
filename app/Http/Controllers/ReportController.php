@@ -64,7 +64,7 @@ class ReportController extends Controller
             });
         }
 
-        $expenses = $query->orderBy('date', 'desc')->paginate(50);
+        $expenses = $query->orderBy('date', 'desc')->paginate(12);
 
         $people = ExpensePerson::where('user_id', $request->user()->id)
             ->select('id', 'name')->distinct()->orderBy('name')->get();

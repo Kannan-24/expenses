@@ -16,7 +16,7 @@ class ExpensePersonController extends Controller
             $query->where('name', 'like', '%' . $search . '%');
         }
 
-        $people = $query->paginate(10)->appends($request->only('search'));
+        $people = $query->paginate(12)->appends($request->only('search'));
 
         return view('expense_people.index', compact('people'));
     }

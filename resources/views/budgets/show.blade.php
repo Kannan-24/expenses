@@ -13,23 +13,25 @@
                         <li class="inline-flex items-center">
                             <a href="{{ route('dashboard') }}" class="inline-flex items-center hover:text-blue-600">
                                 <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10 2a1 1 0 01.7.3l7 7a1 1 0 01-1.4 1.4L16 10.42V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3H9v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6.58l-.3.28a1 1 0 01-1.4-1.44l7-7A1 1 0 0110 2z" />
+                                    <path
+                                        d="M10 2a1 1 0 01.7.3l7 7a1 1 0 01-1.4 1.4L16 10.42V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3H9v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6.58l-.3.28a1 1 0 01-1.4-1.44l7-7A1 1 0 0110 2z" />
                                 </svg>
                                 Dashboard
                             </a>
                         </li>
                         <li class="flex items-center">
-                            <a href="{{ route('budgets.index') }}"
-                                class="inline-flex items-center hover:text-blue-600">
+                            <a href="{{ route('budgets.index') }}" class="inline-flex items-center hover:text-blue-600">
                                 <svg class="w-4 h-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
+                                    <path
+                                        d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
                                 </svg>
                                 Budgets
                             </a>
                         </li>
                         <li class="flex items-center">
                             <svg class="w-4 h-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
+                                <path
+                                    d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
                             </svg>
                             <span class="text-gray-700">Budget Details</span>
                         </li>
@@ -90,30 +92,46 @@
                         <thead>
                             <tr>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Note</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Start Date</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">End Date</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Alloted Amount</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Spent Amount</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Remaining Amount</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse ($histories as $history)
+                            @forelse ($histories->sortByDesc('end_date') as $history)
                                 <tr>
                                     <td class="px-4 py-2 whitespace-nowrap">
                                         {{ $loop->iteration }}
                                     </td>
                                     <td class="px-4 py-2 whitespace-nowrap">
-                                        {{ \Carbon\Carbon::parse($history->created_at)->format('d M, Y') }}
+                                        {{ \Carbon\Carbon::parse($history->start_date)->format('d M, Y') }}
                                     </td>
                                     <td class="px-4 py-2 whitespace-nowrap">
-                                        {{ number_format($history->amount, 2) }}
+                                        {{ \Carbon\Carbon::parse($history->end_date)->format('d M, Y') }}
                                     </td>
                                     <td class="px-4 py-2 whitespace-nowrap">
-                                        {{ $history->note ?? '-' }}
+                                        @php
+                                            $allocatedAmount = $history->allocated_amount + ($history->roll_over_amount ?? 0);
+                                        @endphp
+                                        {{ number_format($allocatedAmount, 2) }}
                                     </td>
+                                    <td class="px-4 py-2 whitespace-nowrap">
+                                        {{ number_format($history->spent_amount, 2) }}
+                                    </td>
+                                    <td class="px-4 py-2 whitespace-nowrap">
+                                        @php 
+                                            $remaining =  $allocatedAmount - $history->spent_amount;
+                                        @endphp
+                                        {{ number_format($remaining, 2) }}
+                                    </td>
+
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="px-4 py-2 text-center text-gray-500">No histories found.</td>
+                                    <td colspan="3" class="px-4 py-2 text-center text-gray-500">No histories found.
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
