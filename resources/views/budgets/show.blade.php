@@ -102,9 +102,6 @@
                             @forelse ($histories->sortByDesc('end_date') as $history)
                                 <tr>
                                     <td class="px-4 py-2 whitespace-nowrap">
-                                        {{ $loop->iteration }}
-                                    </td>
-                                    <td class="px-4 py-2 whitespace-nowrap">
                                         {{ \Carbon\Carbon::parse($history->start_date)->format('d M, Y') }}
                                     </td>
                                     <td class="px-4 py-2 whitespace-nowrap">
