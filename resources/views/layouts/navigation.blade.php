@@ -209,6 +209,7 @@
                         </a>
                     </li>
                 @endcan
+
             </ul>
 
             <div class="absolute bottom-0 left-0 w-full">

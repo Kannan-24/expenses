@@ -11,14 +11,61 @@ class BudgetController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $budgets = Budget::where('user_id', Auth::id())
-            ->orderBy('start_date', 'desc')
-            ->with(['category', 'histories'])
-            ->paginate(10);
+        $query = Budget::where('user_id', Auth::id())->with(['category', 'histories']);
 
-        return view('budgets.index', compact('budgets'));
+        // Search by keyword (searches category name and amount)
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('category', function ($cat) use ($search) {
+                    $cat->where('name', 'like', '%' . $search . '%');
+                })
+                ->orWhere('amount', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Quick filter: active or expired
+        if ($request->filled('filter')) {
+            if ($request->filter === 'active') {
+                $query->where('end_date', '>=', now());
+            } elseif ($request->filter === 'expired') {
+                $query->where('end_date', '<', now());
+            }
+        }
+
+        // Start date filter
+        if ($request->filled('start_date')) {
+            $query->where('start_date', '>=', $request->start_date);
+        }
+
+        // End date filter
+        if ($request->filled('end_date')) {
+            $query->where('end_date', '<=', $request->end_date);
+        }
+
+        // Category filter
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // Frequency filter
+        if ($request->filled('frequency')) {
+            $query->where('frequency', $request->frequency);
+        }
+
+        // Roll over filter
+        if ($request->has('roll_over') && $request->roll_over !== '') {
+            $query->where('roll_over', $request->roll_over);
+        }
+
+        $budgets = $query->orderBy('start_date', 'desc')->paginate(10);
+
+        // For the filter dropdowns
+        $categories = Auth::user()->categories()->get();
+
+        return view('budgets.index', compact('budgets', 'categories'));
     }
 
     /**
