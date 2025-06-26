@@ -42,7 +42,8 @@
 
             <!-- Search & Advanced Filter -->
             <div>
-                <form method="GET" class="relative w-full sm:w-1/2 mb-4 mx-auto flex items-center" x-data="{ showModal: false }">
+                <form method="GET" class="relative w-full sm:w-1/2 mb-4 mx-auto flex items-center"
+                    x-data="{ showModal: false }">
                     <!-- Lens Icon (left) -->
                     <span class="absolute left-4 text-gray-500 pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -55,7 +56,14 @@
                         class="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-12 pr-10 text-l text-gray-900 shadow-sm focus:ring-blue-100 focus:border-blue-400"
                         id="searchInput" autocomplete="off" />
                     @php
-                        $hasFilters = request('search') || request('filter') || request('start_date') || request('end_date') || request('category') || request('frequency') || request('roll_over');
+                        $hasFilters =
+                            request('search') ||
+                            request('filter') ||
+                            request('start_date') ||
+                            request('end_date') ||
+                            request('category') ||
+                            request('frequency') ||
+                            request('roll_over');
                     @endphp
                     <a href="{{ route('budgets.index') }}"
                         class="absolute right-12 top-1.5 text-gray-400 hover:bg-gray-200 rounded-full p-1 hover:text-red-500 cursor-pointer
@@ -113,8 +121,10 @@
                                         <select name="filter"
                                             class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-800 focus:ring-blue-100 focus:border-blue-500">
                                             <option value="">All</option>
-                                            <option value="active" {{ request('filter') == 'active' ? 'selected' : '' }}>Active</option>
-                                            <option value="expired" {{ request('filter') == 'expired' ? 'selected' : '' }}>Expired</option>
+                                            <option value="active"
+                                                {{ request('filter') == 'active' ? 'selected' : '' }}>Active</option>
+                                            <option value="expired"
+                                                {{ request('filter') == 'expired' ? 'selected' : '' }}>Expired</option>
                                         </select>
                                     </div>
 
@@ -153,9 +163,15 @@
                                         <select name="frequency"
                                             class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-800 focus:ring-blue-100 focus:border-blue-500">
                                             <option value="">All</option>
-                                            <option value="monthly" {{ request('frequency') == 'monthly' ? 'selected' : '' }}>Monthly</option>
-                                            <option value="weekly" {{ request('frequency') == 'weekly' ? 'selected' : '' }}>Weekly</option>
-                                            <option value="yearly" {{ request('frequency') == 'yearly' ? 'selected' : '' }}>Yearly</option>
+                                            <option value="monthly"
+                                                {{ request('frequency') == 'monthly' ? 'selected' : '' }}>Monthly
+                                            </option>
+                                            <option value="weekly"
+                                                {{ request('frequency') == 'weekly' ? 'selected' : '' }}>Weekly
+                                            </option>
+                                            <option value="yearly"
+                                                {{ request('frequency') == 'yearly' ? 'selected' : '' }}>Yearly
+                                            </option>
                                         </select>
                                     </div>
 
@@ -165,8 +181,10 @@
                                         <select name="roll_over"
                                             class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-800 focus:ring-blue-100 focus:border-blue-500">
                                             <option value="">All</option>
-                                            <option value="1" {{ request('roll_over') === '1' ? 'selected' : '' }}>Yes</option>
-                                            <option value="0" {{ request('roll_over') === '0' ? 'selected' : '' }}>No</option>
+                                            <option value="1"
+                                                {{ request('roll_over') === '1' ? 'selected' : '' }}>Yes</option>
+                                            <option value="0"
+                                                {{ request('roll_over') === '0' ? 'selected' : '' }}>No</option>
                                         </select>
                                     </div>
 
@@ -196,9 +214,6 @@
                             <th class="px-4 py-2">Amount</th>
                             <th class="px-4 py-2">Start Date</th>
                             <th class="px-4 py-2">End Date</th>
-                            <th class="px-4 py-2">Frequency</th>
-                            <th class="px-4 py-2">Roll Over</th>
-                            <th class="px-4 py-2">Histories</th>
                             <th class="px-4 py-2 text-center">Actions</th>
                         </tr>
                     </thead>
@@ -208,27 +223,17 @@
                                 <td class="px-4 py-2">{{ $loop->iteration }}</td>
                                 <td class="px-4 py-2">{{ $budget->category->name ?? 'N/A' }}</td>
                                 <td class="px-4 py-2">₹{{ number_format($budget->amount, 2) }}</td>
-                                <td class="px-4 py-2">{{ \Carbon\Carbon::parse($budget->start_date)->format('Y-m-d') }}</td>
-                                <td class="px-4 py-2">{{ \Carbon\Carbon::parse($budget->end_date)->format('Y-m-d') }}</td>
-                                <td class="px-4 py-2 capitalize">{{ $budget->frequency }}</td>
                                 <td class="px-4 py-2">
-                                    @if ($budget->roll_over)
-                                        <span class="text-green-600 font-semibold">Yes</span>
-                                    @else
-                                        <span class="text-gray-500">No</span>
-                                    @endif
-                                </td>
-                                <td class="px-4 py-2">
-                                    {{ $budget->histories->count() }}
+                                    {{ \Carbon\Carbon::parse($budget->start_date)->format('Y-m-d') }}</td>
+                                <td class="px-4 py-2">{{ \Carbon\Carbon::parse($budget->end_date)->format('Y-m-d') }}
                                 </td>
                                 <td class="px-4 py-2 text-center space-x-2">
                                     <a href="{{ route('budgets.show', $budget->id) }}"
                                         class="text-yellow-600 hover:underline">View</a>
                                     <a href="{{ route('budgets.edit', $budget->id) }}"
                                         class="text-blue-600 hover:underline">Edit</a>
-                                    <form action="{{ route('budgets.destroy', $budget->id) }}"
-                                        method="POST" class="inline-block"
-                                        onsubmit="return confirm('Delete this budget?')">
+                                    <form action="{{ route('budgets.destroy', $budget->id) }}" method="POST"
+                                        class="inline-block" onsubmit="return confirm('Delete this budget?')">
                                         @csrf
                                         @method('DELETE')
                                         <button class="text-red-600 hover:underline">Delete</button>
