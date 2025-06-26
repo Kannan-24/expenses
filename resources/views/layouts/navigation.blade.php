@@ -209,6 +209,13 @@
                         </a>
                     </li>
                 @endcan
+                <li>
+                    <a href="{{ route('support_tickets.index') }}"
+                        class="flex items-center px-4 py-4
+                        {{ request()->routeIs('support_tickets.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <span class="ml-3">Support Tickets</span>
+                    </a>
+                </li>
             </ul>
 
             <div class="absolute bottom-0 left-0 w-full">

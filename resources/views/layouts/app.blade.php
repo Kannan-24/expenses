@@ -21,6 +21,9 @@
     <!-- Alpine.js-->
     <script src="//unpkg.com/alpinejs" defer></script>
 
+    @isset($head)
+        {{ $head }}
+    @endisset
 
     <x-google-analytics-head />
 </head>

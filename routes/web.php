@@ -10,6 +10,7 @@ use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ExpensePersonController;
 use App\Http\Controllers\OnboardingController;
+use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
@@ -44,6 +45,14 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
     Route::resource('expense-people', ExpensePersonController::class);
     Route::resource('wallets', WalletController::class);
     Route::resource('budgets', BudgetController::class);
+
+    Route::get('/support-tickets', [SupportTicketController::class, 'index'])->name('support_tickets.index');
+    Route::get('/support-tickets/create', [SupportTicketController::class, 'create'])->name('support_tickets.create');
+    Route::post('/support-tickets', [SupportTicketController::class, 'store'])->name('support_tickets.store');
+    Route::get('/support-tickets/{supportTicket}', [SupportTicketController::class, 'show'])->name('support_tickets.show');
+    Route::post('/support-tickets/{supportTicket}/reply', [SupportTicketController::class, 'reply'])->name('support_tickets.reply');
+    Route::delete('/support-tickets/{supportTicket}', [SupportTicketController::class, 'destroy'])->name('support_tickets.destroy');
+    Route::post('/support-tickets/{supportTicket}/close', [SupportTicketController::class, 'markAsClosed'])->name('support_tickets.close');
 
     Route::get('/reports/expenses', [ReportController::class, 'expenses'])->name('reports.expenses');
     Route::get('/reports/expenses/pdf', [ReportController::class, 'expensesPdf'])->name('reports.expenses_report');
