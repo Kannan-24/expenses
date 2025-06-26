@@ -60,7 +60,7 @@ class BudgetController extends Controller
             $query->where('roll_over', $request->roll_over);
         }
 
-        $budgets = $query->orderBy('start_date', 'desc')->paginate(10);
+        $budgets = $query->orderBy('start_date', 'desc')->paginate(12);
 
         // For the filter dropdowns
         $categories = Auth::user()->categories()->get();

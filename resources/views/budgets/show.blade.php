@@ -83,10 +83,10 @@
                     </div>
                 </div>
 
-                <hr class="my-2 border-t border-gray-400">
+                <hr class=" border-t border-gray-400">
 
                 <!-- Budget Histories Table -->
-                <h3 class="text-md font-semibold text-gray-700 mt-4">Budget Histories</h3>
+                <h3 class="text-md font-semibold text-gray-700">Budget Histories</h3>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
@@ -101,6 +101,9 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @forelse ($histories->sortByDesc('end_date') as $history)
                                 <tr>
+                                    <td class="px-4 py-2 whitespace-nowrap">
+                                        {{ $loop->iteration }}
+                                    </td>
                                     <td class="px-4 py-2 whitespace-nowrap">
                                         {{ \Carbon\Carbon::parse($history->start_date)->format('d M, Y') }}
                                     </td>
@@ -137,7 +140,7 @@
                     {{ $histories->links() }}
                 </div>
 
-                <div class="flex justify-end space-x-2 mt-4">
+                <div class="flex justify-end space-x-2">
                     <a href="{{ route('budgets.edit', $budget->id) }}"
                         class="px-4 py-2 text-sm font-bold text-white bg-indigo-600 rounded hover:bg-indigo-700 transition">
                         Edit
