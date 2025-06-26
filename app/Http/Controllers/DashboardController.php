@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Budget;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +79,28 @@ class DashboardController extends Controller
                 ];
             });
 
+
+        $budgetData = Budget::with(['category', 'histories' => function ($query) use ($startOfMonth, $endOfMonth) {
+            $query->where('start_date', '<=', $startOfMonth)
+                ->where('end_date', '>=', $endOfMonth);
+        }])
+            ->where('user_id', Auth::id())
+            ->get()
+            ->map(function ($budget) {
+                $history = $budget->histories->first();
+                $allocated = $history ? $history->allocated_amount + $history->roll_over_amount : 0;
+                $spent = $history ? $history->spent_amount : 0;
+
+                return [
+                    'category' => $budget->category->name,
+                    'allocated' => round($allocated, 2),
+                    'spent' => round($spent, 2),
+                ];
+            })
+            ->filter(fn($item) => $item['allocated'] > 0)
+            ->values();
+
+
         return view('dashboard', compact(
             'totalIncome',
             'totalExpense',
@@ -88,7 +111,8 @@ class DashboardController extends Controller
             'incomeData',
             'expenseData',
             'wallets',
-            'topCategories'
+            'topCategories',
+            'budgetData'
         ));
     }
 

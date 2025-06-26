@@ -229,7 +229,7 @@
                                     @if ($transaction->type === 'income')
                                         <span class="text-green-600 font-semibold">Income</span>
                                     @else
-                                        <span class="text-red-600 font-semibold">Transaction</span>
+                                        <span class="text-red-600 font-semibold">Expense</span>
                                     @endif
                                 </td>
                                 <td class="px-4 py-2">

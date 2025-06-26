@@ -106,10 +106,18 @@
                 </div>
             </div>
 
-            <!-- Top Categories (using Bar Chart) -->
-            <div class="bg-white shadow rounded-lg p-6 mb-8 col-span-1">
-                <h3 class="text-xl font-semibold mb-4 text-gray-800">Top Categories</h3>
-                <canvas id="topCategoriesChart" height="100"></canvas>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Top Categories (using Bar Chart) -->
+                <div class="bg-white shadow rounded-lg p-6 mb-8 col-span-1">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Top Categories</h3>
+                    <canvas id="topCategoriesChart" height="150"></canvas>
+                </div>
+
+                <!-- Budget Usage Chart -->
+                <div class="bg-white shadow rounded-lg p-6 mb-8 col-span-1">
+                    <h3 class="text-lg font-bold mb-4">Budget Usage by Category</h3>
+                    <canvas id="budgetChart" height="150"></canvas>
+                </div>
             </div>
 
             <!-- Monthly Overview Table -->
@@ -147,6 +155,8 @@
                     </table>
                 </div>
             </div>
+
+
 
             <!-- Chart Section -->
             <div class="bg-white shadow rounded-lg p-6 mt-8">
@@ -283,6 +293,55 @@
                 plugins: {
                     legend: {
                         position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        const budgetChartCTX = document.getElementById('budgetChart').getContext('2d');
+        const budgetData = @json($budgetData);
+
+        const labels = budgetData.map(item => item.category);
+        const allocated = budgetData.map(item => item.allocated);
+        const spent = budgetData.map(item => item.spent);
+
+        const budgetChart = new Chart(budgetChartCTX, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                        label: 'Allocated',
+                        data: allocated,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Spent',
+                        data: spent,
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ₹${context.parsed.y.toFixed(2)}`;
+                            }
+                        }
                     }
                 }
             }
