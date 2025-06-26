@@ -84,7 +84,7 @@
     </nav>
 
     <div class="fixed top-0 z-50">
-        <div x-show="sidebarOpen" x-transition.opacity class="fixed inset-0 z-50 bg-black bg-opacity-40 sm:hidden"
+        <div x-show="sidebarOpen" x-transition.opacity class="fixed inset-0 z-40 bg-black bg-opacity-40 sm:hidden"
             @click="sidebarOpen = false" style="display: none;">
         </div>
 
