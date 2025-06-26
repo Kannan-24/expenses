@@ -36,7 +36,6 @@ class DashboardController extends Controller
         // Recent expenses with eager loading (limit to expenses only)
         $recentExpenses = Transaction::with('category')
             ->where('user_id', $userId)
-            ->where('type', 'expense')
             ->orderByDesc('date')
             ->limit(5)
             ->get();
@@ -67,7 +66,6 @@ class DashboardController extends Controller
         $topCategories = Transaction::select('category_id', DB::raw('SUM(amount) as total_amount'))
             ->with('category:id,name')
             ->where('user_id', $userId)
-            ->where('type', 'expense')
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->groupBy('category_id')
             ->orderByDesc('total_amount')

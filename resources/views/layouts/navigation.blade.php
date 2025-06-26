@@ -155,6 +155,15 @@
                         </a>
                     </li>
                 @endcan
+                @can('manage budgets')
+                    <li>
+                        <a href="{{ route('budgets.index') }}"
+                            class="flex items-center px-4 py-4
+                            {{ request()->routeIs('budgets.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <span class="ml-3">Budgets</span>
+                        </a>
+                    </li>
+                @endcan
                 @can('generate reports')
                     <li>
                         <a href="{{ route('reports.expenses') }}"
