@@ -83,15 +83,15 @@
         </div>
     </nav>
 
-    <div class="fixed top-0">
-        <div x-show="sidebarOpen" x-transition.opacity class="fixed inset-0 z-30 bg-black bg-opacity-40 sm:hidden"
+    <div class="fixed top-0 z-50">
+        <div x-show="sidebarOpen" x-transition.opacity class="fixed inset-0 z-50 bg-black bg-opacity-40 sm:hidden"
             @click="sidebarOpen = false" style="display: none;">
         </div>
 
         <aside id="logo-sidebar" x-show="sidebarOpen || window.innerWidth >= 640"
             @keydown.window.escape="sidebarOpen = false" @click.away="sidebarOpen = false"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-            class="fixed top-0 left-0 z-40 w-64 h-screen pt-0 pb-32 transition-transform bg-white border-r border-gray-200
+            class="fixed top-0 left-0 z-40 w-64 h-screen pt-0 pb-24 transition-transform bg-white border-r border-gray-200
             transform sm:translate-x-0 sm:static sm:inset-0"
             aria-label="Sidebar" x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
@@ -202,7 +202,7 @@
                 @endcan
             </ul>
 
-            <div class="fixed bottom-0 left-0 w-64 sm:static sm:w-full z-50">
+            <div class="absolute bottom-0 left-0 w-full">
                 <form id="sidebar-logout-form" action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit"
