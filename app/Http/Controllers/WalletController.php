@@ -17,6 +17,7 @@ class WalletController extends Controller
     {
         $query = Wallet::with('walletType', 'currency')->where('user_id', Auth::id());
 
+        // Search filter
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -30,9 +31,32 @@ class WalletController extends Controller
             });
         }
 
-        $wallets = $query->paginate(10)->appends($request->only('search'));
+        // Quick filter: active/inactive
+        if ($request->filled('filter')) {
+            if ($request->filter === 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->filter === 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
 
-        return view('wallets.index', compact('wallets'));
+        // Wallet type filter
+        if ($walletType = $request->input('wallet_type')) {
+            $query->where('wallet_type_id', $walletType);
+        }
+
+        // Currency filter
+        if ($currency = $request->input('currency')) {
+            $query->where('currency_id', $currency);
+        }
+
+        $wallets = $query->paginate(10)->appends($request->all());
+
+        // For filter dropdowns
+        $walletTypes = WalletType::where('is_active', true)->get();
+        $currencies = Currency::all();
+
+        return view('wallets.index', compact('wallets', 'walletTypes', 'currencies'));
     }
 
     /**
@@ -84,9 +108,14 @@ class WalletController extends Controller
     {
         $this->authorizeWallet($wallet);
 
-        $wallet->load('walletType', 'currency');
-        return view('wallets.show', compact('wallet'));
+        $wallet->load('walletType', 'currency', 'transactions.category'); // eager load category if needed
+
+        // Optionally, paginate transactions
+        $transactions = $wallet->transactions()->latest()->paginate(10);
+
+        return view('wallets.show', compact('wallet', 'transactions'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -137,7 +166,7 @@ class WalletController extends Controller
         $wallet->delete();
         return redirect()->route('wallets.index')->with('success', 'Wallet deleted successfully.');
     }
-
+    
     public function authorizeWallet(Wallet $wallet)
     {
         if ($wallet->user_id !== Auth::id()) {

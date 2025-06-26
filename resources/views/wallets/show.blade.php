@@ -37,13 +37,31 @@
                         </li>
                     </ol>
                 </nav>
+
             </div>
 
             <hr class="p-2 border-t border-gray-400">
 
             <!-- Wallet Details -->
             <div class="flex flex-col gap-4">
-                <h2 class="text-lg font-semibold text-gray-800">Wallet Details :</h2>
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-semibold text-gray-800">Wallet Details :</h2>
+                    <div class="flex space-x-2">
+                        <a href="{{ route('wallets.edit', $wallet->id) }}"
+                            class="px-4 py-2 text-sm font-bold text-white bg-indigo-600 rounded hover:bg-indigo-700 transition">
+                            Edit
+                        </a>
+                        <form action="{{ route('wallets.destroy', $wallet->id) }}" method="POST"
+                            onsubmit="return confirm('Are you sure?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded hover:bg-red-700 transition">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
                 <div class="grid grid-cols-1 gap-4">
                     <div class="flex items-center gap-4">
                         <span class="w-16 text-sm font-bold text-gray-900">Name</span>
@@ -82,21 +100,58 @@
 
                 <hr class="my-2 border-t border-gray-400">
 
-                <div class="flex justify-end space-x-2">
-                    <a href="{{ route('wallets.edit', $wallet->id) }}"
-                        class="px-4 py-2 text-sm font-bold text-white bg-indigo-600 rounded hover:bg-indigo-700 transition">
-                        Edit
-                    </a>
-                    <form action="{{ route('wallets.destroy', $wallet->id) }}" method="POST"
-                        onsubmit="return confirm('Are you sure?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded hover:bg-red-700 transition">
-                            Delete
-                        </button>
-                    </form>
+                <!-- Transaction History -->
+                <div>
+                    <h3 class="text-md font-semibold text-gray-800 mb-2">Transaction History</h3>
+                    <div class="overflow-auto flex-1">
+                        <table class="w-full text-sm text-left text-gray-700 bg-white">
+                            <thead class="text-xs uppercase bg-gray-100 text-gray-600">
+                                <tr>
+                                    <th class="px-4 py-2">#</th>
+                                    <th class="px-4 py-2">Date</th>
+                                    <th class="px-4 py-2">Category</th>
+                                    <th class="px-4 py-2">Type</th>
+                                    <th class="px-4 py-2">Amount</th>
+                                    <th class="px-4 py-2 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($transactions as $transaction)
+                                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                        <td class="px-4 py-2">{{ $loop->iteration }}</td>
+                                        <td class="px-4 py-2">{{ \Carbon\Carbon::parse($transaction->date)->format('Y-m-d') }}</td>
+                                        <td class="px-4 py-2">{{ $transaction->category->name ?? 'N/A' }}</td>
+                                        <td class="px-4 py-2">
+                                            @if ($transaction->type === 'income')
+                                                <span class="text-green-600 font-semibold">Income</span>
+                                            @else
+                                                <span class="text-red-600 font-semibold">Transaction</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-2">
+                                            <span class="{{ $transaction->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
+                                                ₹{{ number_format($transaction->amount, 2) }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-2 text-center">
+                                            <a href="{{ route('transactions.show', $transaction->id) }}"
+                                                class="text-yellow-600 hover:underline">Show</a>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center py-4 text-gray-400">No transactions found.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-2">
+                        {{ $transactions->links() }}
+                    </div>
                 </div>
+
+
             </div>
         </div>
     </div>

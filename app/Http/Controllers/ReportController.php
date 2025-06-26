@@ -16,6 +16,8 @@ class ReportController extends Controller
     {
         $type = $request->input('type', 'all');
         $person = $request->input('person');
+        $category = $request->input('category');
+        $search = $request->input('search');
         $filterRange = $this->getFilterRange($request);
 
         $query = Transaction::with(['category', 'person'])
@@ -32,21 +34,45 @@ class ReportController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        // Filter by type/person
-        if ($type === 'expenses_only') {
+        // Filter by type
+        if ($type === 'income') {
+            $query->where('type', 'income');
+        } elseif ($type === 'expense' || $type === 'expenses_only') {
             $query->where('type', 'expense');
-        } elseif ($type === 'person' && $person) {
-            $query->whereHas('person', function ($q) use ($person) {
-                $q->where('name', $person);
-            })->where('type', 'expense');
+        }
+
+        // Filter by person
+        if ($person) {
+            $query->where('person_id', $person);
+        }
+
+        // Filter by category
+        if ($category) {
+            $query->where('category_id', $category);
+        }
+
+        // Search filter
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('description', 'like', '%' . $search . '%')
+                  ->orWhereHas('category', function ($q2) use ($search) {
+                      $q2->where('name', 'like', '%' . $search . '%');
+                  })
+                  ->orWhereHas('person', function ($q3) use ($search) {
+                      $q3->where('name', 'like', '%' . $search . '%');
+                  });
+            });
         }
 
         $expenses = $query->orderBy('date', 'desc')->paginate(50);
 
         $people = ExpensePerson::where('user_id', $request->user()->id)
-            ->select('name')->distinct()->orderBy('name')->get();
+            ->select('id', 'name')->distinct()->orderBy('name')->get();
 
-        return view('reports.expenses', compact('expenses', 'people', 'filterRange', 'type'));
+        $categories = \App\Models\Category::where('user_id', $request->user()->id)
+            ->orderBy('name')->get();
+
+        return view('reports.expenses', compact('expenses', 'people', 'categories', 'filterRange', 'type'));
     }
 
     // Generate PDF report

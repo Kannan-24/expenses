@@ -27,6 +27,9 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
+        $categories = Category::all();
+        $people = ExpensePerson::where('user_id', Auth::id())->get();
+
         $query = Transaction::with(['category', 'person'])->where('user_id', Auth::id());
 
         // Search by person, category, or note
@@ -54,9 +57,24 @@ class TransactionController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
+        // Category filter
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // Person filter
+        if ($request->filled('person')) {
+            $query->where('expense_person_id', $request->person);
+        }
+
+        // Type filter
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
         $transactions = $query->orderBy('date', 'desc')->paginate(9);
 
-        return view('transactions.index', compact('transactions'));
+        return view('transactions.index', compact('transactions', 'categories', 'people'));
     }
 
     /**
