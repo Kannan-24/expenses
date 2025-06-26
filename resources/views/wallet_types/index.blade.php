@@ -42,7 +42,7 @@
                 </div>
 
                 <!-- Filters (Search Bar) -->
-                <form method="GET" class="relative w-1/2 mb-4 mx-auto flex items-center">
+                <form method="GET" class="relative w-full sm:w-1/2 mb-4 mx-auto flex items-center">
                     <!-- Lens Icon (left) -->
                     <span class="absolute left-4 text-gray-500 pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -52,7 +52,7 @@
                         </svg>
                     </span>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search ..."
-                        class="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-14 pr-10 text-lg text-gray-900 shadow-sm focus:ring-blue-100 focus:border-blue-400"
+                        class="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-14 pr-10 text-l text-gray-900 shadow-sm focus:ring-blue-100 focus:border-blue-400"
                         id="searchInput" autocomplete="off" />
                     @if (request('search'))
                         <!-- Reset (close) icon, only show if search is not empty -->
