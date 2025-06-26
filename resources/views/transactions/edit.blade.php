@@ -4,150 +4,188 @@
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full max-w-4xl mx-auto sm:px-4">
-            <x-bread-crumb-navigation />
+        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col"
+            style="height: 88vh;">
 
-            <div class="p-4 sm:p-8 bg-white border border-gray-200 rounded-lg shadow-lg">
-                <div class="mb-4 text-sm text-gray-600">
-                    <strong>Available Wallets: </strong> {{ $wallets->count() > 0 ? '' : 'None' }}<br>
-                    @foreach ($wallets as $wallet)
-                        <strong>{{ $wallet->name }}:</strong> {{ $wallet->currency->symbol }}
-                        {{ number_format($wallet->balance, 2) }}<br>
-                    @endforeach
-                </div>
-
-                <form action="{{ route('transactions.update', $transaction->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-
-                    <!-- Type -->
-                    <div class="mb-4">
-                        <label for="type" class="block text-sm font-semibold text-gray-700">Type</label>
-                        <select name="type" id="type"
-                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            required>
-                            <option value="expense"
-                                {{ old('type', $transaction->type) === 'expense' ? 'selected' : '' }}>
-                                Expense</option>
-                            <option value="income" {{ old('type', $transaction->type) === 'income' ? 'selected' : '' }}>
-                                Income</option>
-                        </select>
-                        @error('type')
-                            <span class="text-sm text-red-600">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Category -->
-                    <div class="mb-4">
-                        <div class="flex items-center justify-between">
-                            <label for="category_id" class="block text-sm font-semibold text-gray-700">Category</label>
-                            <button type="button" onclick="openCategoryModal()"
-                                class="text-sm text-blue-600 hover:underline">+ Add New</button>
-                        </div>
-                        <select name="category_id" id="category_id"
-                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                            <option value="">None</option>
-                            @foreach ($categories->where('user_id', auth()->id()) as $category)
-                                <option value="{{ $category->id }}"
-                                    {{ old('category_id', $transaction->category_id) == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('category_id')
-                            <span class="text-sm text-red-600">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Expense Person -->
-                    <div class="mb-4">
-                        <div class="flex items-center justify-between">
-                            <label for="expense_person_id" class="block text-sm font-semibold text-gray-700">Expense
-                                Person</label>
-                            <button type="button" onclick="openPersonModal()"
-                                class="text-sm text-blue-600 hover:underline">+ Add New</button>
-                        </div>
-                        <select name="expense_person_id" id="expense_person_id"
-                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                            <option value="">None</option>
-                            @foreach ($people as $person)
-                                <option value="{{ $person->id }}"
-                                    {{ old('expense_person_id', $transaction->expense_person_id) == $person->id ? 'selected' : '' }}>
-                                    {{ $person->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('expense_person_id')
-                            <span class="text-sm text-red-600">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Amount -->
-                    <div class="mb-4">
-                        <label for="amount" class="block text-sm font-semibold text-gray-700">Amount</label>
-                        <input type="number" name="amount" id="amount"
-                            value="{{ old('amount', $transaction->amount) }}"
-                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            min="0" step="0.01" required>
-                        @error('amount')
-                            <span class="text-sm text-red-600">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Wallet -->
-                    <div class="mb-4">
-                        <div class="flex items-center justify-between">
-                            <label for="wallet_id" class="block text-sm font-semibold text-gray-700">Wallet</label>
-                            <button type="button" onclick="openWalletModal()"
-                                class="text-sm text-blue-600 hover:underline">+ Add New</button>
-                        </div>
-                        <select name="wallet_id" id="wallet_id"
-                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            required>
-                            <option value="">Select Wallet</option>
-                            @foreach ($wallets as $wallet)
-                                <option value="{{ $wallet->id }}"
-                                    {{ old('wallet_id') == $wallet->id || $transaction->wallet_id == $wallet->id ? 'selected' : '' }}>
-                                    {{ $wallet->name }} ({{ $wallet->currency->symbol }}
-                                    {{ number_format($wallet->balance, 2) }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('wallet_id')
-                            <span class="text-sm text-red-600">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Date -->
-                    <div class="mb-4">
-                        <label for="date" class="block text-sm font-semibold text-gray-700">Date</label>
-                        <input type="date" name="date" id="date"
-                            value="{{ old('date', $transaction->date ? \Carbon\Carbon::parse($transaction->date)->format('Y-m-d') : '') }}"
-                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            required>
-                        @error('date')
-                            <span class="text-sm text-red-600">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <!-- Note -->
-                    <div class="mb-4">
-                        <label for="note" class="block text-sm font-semibold text-gray-700">Note</label>
-                        <textarea name="note" id="note" rows="3"
-                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">{{ old('note', $transaction->note) }}</textarea>
-                        @error('note')
-                            <span class="text-sm text-red-600">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                    <div class="flex justify-end">
-                        <button type="submit"
-                            class="w-full sm:w-auto px-4 py-2 text-lg font-semibold text-white transition duration-300 rounded-lg shadow-md bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600">
-                            Update
-                        </button>
-                    </div>
-                </form>
+            <!-- Breadcrumb -->
+            <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-3 gap-4">
+                <nav class="flex text-sm text-gray-500" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                        <li class="inline-flex items-center">
+                            <a href="{{ route('dashboard') }}" class="inline-flex items-center hover:text-blue-600">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 2a1 1 0 01.7.3l7 7a1 1 0 01-1.4 1.4L16 10.42V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3H9v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6.58l-.3.28a1 1 0 01-1.4-1.44l7-7A1 1 0 0110 2z" />
+                                </svg>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-4 h-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
+                            </svg>
+                            <a href="{{ route('transactions.index') }}" class="hover:text-blue-600">Transactions</a>
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-4 h-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
+                            </svg>
+                            <span class="text-gray-700">Edit</span>
+                        </li>
+                    </ol>
+                </nav>
             </div>
+
+            <div class="mt-2 text-sm text-gray-600">
+                <strong>Available Wallets: </strong> {{ $wallets->count() > 0 ? '' : 'None' }}<br>
+                @foreach ($wallets as $wallet)
+                    <strong>{{ $wallet->name }}:</strong> {{ $wallet->currency->symbol }}
+                    {{ number_format($wallet->balance, 2) }}<br>
+                @endforeach
+            </div>
+
+            <form action="{{ route('transactions.update', $transaction->id) }}" method="POST" class="mt-6">
+                @csrf
+                @method('PUT')
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Left Column -->
+                    <div class="space-y-5">
+                        <!-- Type -->
+                        <div>
+                            <label for="type" class="block text-sm font-semibold text-gray-700">Type</label>
+                            <select name="type" id="type"
+                                class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                required>
+                                <option value="expense"
+                                    {{ old('type', $transaction->type) === 'expense' ? 'selected' : '' }}>Expense
+                                </option>
+                                <option value="income"
+                                    {{ old('type', $transaction->type) === 'income' ? 'selected' : '' }}>Income
+                                </option>
+                            </select>
+                            @error('type')
+                                <span class="text-sm text-red-600">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Category -->
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <label for="category_id" class="block text-sm font-semibold text-gray-700">
+                                    Category <span class="text-xs text-gray-500 font-normal">(optional)</span>
+                                </label>
+                                <button type="button" onclick="openCategoryModal()"
+                                    class="text-sm text-blue-600 hover:underline">+ Add New</button>
+                            </div>
+                            <select name="category_id" id="category_id"
+                                class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">None</option>
+                                @foreach ($categories->where('user_id', auth()->id()) as $category)
+                                    <option value="{{ $category->id }}"
+                                        {{ old('category_id', $transaction->category_id) == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                                <span class="text-sm text-red-600">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Expense Person -->
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <label for="expense_person_id" class="block text-sm font-semibold text-gray-700">Expense
+                                    Person <span class="text-xs text-gray-500 font-normal">(optional)</span></label>
+                                <button type="button" onclick="openPersonModal()"
+                                    class="text-sm text-blue-600 hover:underline">+ Add New</button>
+                            </div>
+                            <select name="expense_person_id" id="expense_person_id"
+                                class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">None</option>
+                                @foreach ($people as $person)
+                                    <option value="{{ $person->id }}"
+                                        {{ old('expense_person_id', $transaction->expense_person_id) == $person->id ? 'selected' : '' }}>
+                                        {{ $person->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('expense_person_id')
+                                <span class="text-sm text-red-600">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="space-y-5">
+                        <!-- Amount -->
+                        <div>
+                            <label for="amount" class="block text-sm font-semibold text-gray-700">Amount</label>
+                            <input type="number" name="amount" id="amount"
+                                value="{{ old('amount', $transaction->amount) }}"
+                                class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                min="0" step="0.01" required>
+                            @error('amount')
+                                <span class="text-sm text-red-600">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Wallet -->
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <label for="wallet_id" class="block text-sm font-semibold text-gray-700">Wallet</label>
+                                <button type="button" onclick="openWalletModal()"
+                                    class="text-sm text-blue-600 hover:underline">+ Add New</button>
+                            </div>
+                            <select name="wallet_id" id="wallet_id"
+                                class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                required>
+                                <option value="">Select Wallet</option>
+                                @foreach ($wallets as $wallet)
+                                    <option value="{{ $wallet->id }}"
+                                        {{ old('wallet_id', $transaction->wallet_id) == $wallet->id ? 'selected' : '' }}>
+                                        {{ $wallet->name }} ({{ $wallet->currency->symbol }}
+                                        {{ number_format($wallet->balance, 2) }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('wallet_id')
+                                <span class="text-sm text-red-600">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Date -->
+                        <div>
+                            <label for="date" class="block text-sm font-semibold text-gray-700">Date</label>
+                            <input type="date" name="date" id="date"
+                                value="{{ old('date', $transaction->date ? \Carbon\Carbon::parse($transaction->date)->format('Y-m-d') : '') }}"
+                                class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                required>
+                            @error('date')
+                                <span class="text-sm text-red-600">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-5">
+                    <label for="note" class="block text-sm font-semibold text-gray-700">
+                        Note <span class="text-xs text-gray-500 font-normal">(optional)</span>
+                    </label>
+                    <textarea name="note" id="note" rows="3"
+                        class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">{{ old('note', $transaction->note) }}</textarea>
+                    @error('note')
+                        <span class="text-sm text-red-600">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="flex justify-end mt-6">
+                    <button type="submit"
+                        class="w-full sm:w-auto px-4 py-2 text-lg font-semibold text-white transition duration-300 rounded-lg shadow-md bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600">
+                        Update
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 

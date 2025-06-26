@@ -40,35 +40,28 @@
                 </nav>
             </div>
 
-            <hr class="p-2 border-t border-gray-400">
 
             <!-- Form -->
-            <div class="flex flex-col gap-4">
-                <h2 class="text-lg font-semibold text-gray-800">Create Category :</h2>
-                <div class="p-4 sm:p-8 bg-white border border-gray-200 rounded-lg shadow-lg">
-                    <form action="{{ route('categories.store') }}" method="POST">
-                        @csrf
+            <form action="{{ route('categories.store') }}" method="POST">
+                @csrf
 
-                        <!-- Category Name -->
-                        <div class="mb-5">
-                            <label for="name" class="block text-sm font-semibold text-gray-700">Category Name</label>
-                            <input type="text" name="name" id="name" value="{{ old('name') }}"
-                                class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                required maxlength="255">
-                            @error('name')
-                                <span class="text-sm text-red-600">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="flex justify-end">
-                            <button type="submit"
-                                class="w-full sm:w-auto px-4 py-2 text-lg font-semibold text-white transition duration-300 rounded-lg shadow-md bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600">
-                                Create Category
-                            </button>
-                        </div>
-                    </form>
+                <!-- Category Name -->
+                <div class="mb-5 mt-3">
+                    <label for="name" class="block text-sm font-semibold text-gray-700">Category Name</label>
+                    <input type="text" name="name" id="name" value="{{ old('name') }}"
+                        class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        required maxlength="255">
+                    @error('name')
+                        <span class="text-sm text-red-600">{{ $message }}</span>
+                    @enderror
                 </div>
-            </div>
+
+                <div class="flex justify-end">
+                    <x-primary-button>
+                        {{ __('Create Category') }}
+                    </x-primary-button>
+                </div>
+            </form>
         </div>
-    </div>
+    </div>  
 </x-app-layout>

@@ -242,10 +242,10 @@
                                     </span>
                                 </td>
                                 <td class="px-4 py-2 text-center space-x-2">
+                                    <a href="{{ route('transactions.show', $transaction->id) }}"
+                                        class="text-yellow-600 hover:underline">View</a>
                                     <a href="{{ route('transactions.edit', $transaction->id) }}"
                                         class="text-blue-600 hover:underline">Edit</a>
-                                    <a href="{{ route('transactions.show', $transaction->id) }}"
-                                        class="text-yellow-600 hover:underline">Show</a>
                                     <form action="{{ route('transactions.destroy', $transaction->id) }}"
                                         method="POST" class="inline-block"
                                         onsubmit="return confirm('Delete this transaction?')">

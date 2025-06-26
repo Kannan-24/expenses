@@ -87,8 +87,9 @@
                                 <td class="px-4 py-2 text-center space-x-2">
                                     <a href="{{ route('categories.edit', $category->id) }}"
                                         class="text-blue-600 hover:underline">Edit</a>
-                                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
-                                        class="inline-block" onsubmit="return confirm('Delete this category?')">
+                                    <form action="{{ route('categories.destroy', $category->id) }}"
+                                        method="POST" class="inline-block"
+                                        onsubmit="return confirm('Delete this category?')">
                                         @csrf
                                         @method('DELETE')
                                         <button class="text-red-600 hover:underline">Delete</button>

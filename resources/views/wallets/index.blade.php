@@ -202,16 +202,16 @@
                                     </span>
                                 </td>
                                 <td class="px-4 py-2 text-center space-x-2">
-                                    <a href="{{ route('wallets.show', $wallet) }}"
-                                        class="text-indigo-600 hover:underline">View</a>
-                                    <a href="{{ route('wallets.edit', $wallet) }}"
-                                        class="text-emerald-600 hover:underline">Edit</a>
-                                    <form action="{{ route('wallets.destroy', $wallet) }}" method="POST"
-                                        class="inline-block"
-                                        onsubmit="return confirm('Are you sure you want to delete this?');">
+                                    <a href="{{ route('wallets.show', $wallet->id) }}"
+                                        class="text-yellow-600 hover:underline">View</a>
+                                    <a href="{{ route('wallets.edit', $wallet->id) }}"
+                                        class="text-blue-600 hover:underline">Edit</a>
+                                    <form action="{{ route('wallets.destroy', $wallet->id) }}"
+                                        method="POST" class="inline-block"
+                                        onsubmit="return confirm('Delete this wallet?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="text-rose-600 hover:underline">Delete</button>
+                                        <button class="text-red-600 hover:underline">Delete</button>
                                     </form>
                                 </td>
                             </tr>

@@ -50,7 +50,7 @@
                             d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
                     </svg>
                 </span>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name..."
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search ..."
                     class="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-14 pr-10 text-lg text-gray-900 shadow-sm focus:ring-blue-100 focus:border-blue-400"
                     id="searchInput" autocomplete="off" />
                 @if (request('search'))
@@ -89,13 +89,13 @@
                                     {{ $user->roles->pluck('name')->join(', ') }}
                                 </td>
                                 <td class="px-4 py-2 text-center space-x-2">
-                                    <a href="{{ route('user.edit', $user) }}"
+                                    <a href="{{ route('user.show', $user->id) }}"
+                                        class="text-yellow-600 hover:underline">View</a>
+                                    <a href="{{ route('user.edit', $user->id) }}"
                                         class="text-blue-600 hover:underline">Edit</a>
-                                    <a href="{{ route('user.show', $user) }}"
-                                        class="text-green-600 hover:underline">View</a>
-                                    <form action="{{ route('user.destroy', $user) }}" method="POST"
-                                        class="inline-block"
-                                        onsubmit="return confirm('Are you sure you want to delete this?');">
+                                    <form action="{{ route('user.destroy', $user->id) }}"
+                                        method="POST" class="inline-block"
+                                        onsubmit="return confirm('Delete this user?')">
                                         @csrf
                                         @method('DELETE')
                                         <button class="text-red-600 hover:underline">Delete</button>

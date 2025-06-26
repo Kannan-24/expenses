@@ -33,7 +33,8 @@
                     <!-- Create Button -->
                     <a href="{{ route('wallet-types.create') }}"
                         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 shadow">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                         </svg>
                         Create
@@ -50,7 +51,7 @@
                                 d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
                         </svg>
                     </span>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search wallet types..."
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search ..."
                         class="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-14 pr-10 text-lg text-gray-900 shadow-sm focus:ring-blue-100 focus:border-blue-400"
                         id="searchInput" autocomplete="off" />
                     @if (request('search'))
@@ -94,14 +95,14 @@
                                         </span>
                                     </td>
                                     <td class="px-4 py-2 text-center space-x-2">
-                                        <a href="{{ route('wallet-types.edit', $walletType) }}"
+                                        <a href="{{ route('wallet-types.edit', $walletType->id) }}"
                                             class="text-blue-600 hover:underline">Edit</a>
-                                        <form action="{{ route('wallet-types.destroy', $walletType) }}" method="POST"
-                                            class="inline-block"
-                                            onsubmit="return confirm('Are you sure you want to delete this?');">
+                                        <form action="{{ route('wallet-types.destroy', $walletType->id) }}"
+                                            method="POST" class="inline-block"
+                                            onsubmit="return confirm('Are you sure you want to delete this wallet type?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="text-rose-600 hover:underline">Delete</button>
+                                            <button class="text-red-600 hover:underline">Delete</button>
                                         </form>
                                     </td>
                                 </tr>

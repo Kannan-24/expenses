@@ -85,13 +85,12 @@
                                 <td class="px-4 py-2">{{ $role->name }}</td>
                                 <td class="px-4 py-2">{{ $role->guard_name }}</td>
                                 <td class="px-4 py-2 text-center space-x-2">
-                                    <a href="{{ route('roles.edit', $role) }}"
+                                    <a href="{{ route('roles.show', $role->id) }}"
+                                        class="text-yellow-600 hover:underline">View</a>
+                                    <a href="{{ route('roles.edit', $role->id) }}"
                                         class="text-blue-600 hover:underline">Edit</a>
-                                    <a href="{{ route('roles.show', $role) }}"
-                                        class="text-yellow-600 hover:underline">Show</a>
-                                    <form action="{{ route('roles.destroy', $role) }}" method="POST"
-                                        class="inline-block"
-                                        onsubmit="return confirm('Are you sure you want to delete this?');">
+                                    <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
+                                        class="inline-block" onsubmit="return confirm('Delete this role?')">
                                         @csrf
                                         @method('DELETE')
                                         <button class="text-red-600 hover:underline">Delete</button>
