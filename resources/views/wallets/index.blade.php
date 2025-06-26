@@ -31,11 +31,14 @@
 
                 <!-- Create Button -->
                 <a href="{{ route('wallets.create') }}"
-                    class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 shadow">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 shadow
+                        sm:px-4 sm:py-2 sm:text-sm sm:font-medium
+                        px-2 py-2 text-base font-bold sm:inline-flex"
+                >
+                    <svg class="w-5 h-5 sm:w-4 sm:h-4 sm:mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
-                    Create
+                    <span class="hidden sm:inline">Create</span>
                 </a>
             </div>
 

@@ -32,13 +32,12 @@
                     <!-- Create Button -->
                     <a href="{{ route('wallet-types.create') }}"
                         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 shadow">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2"
+                        <svg class="w-5 h-5 sm:w-4 sm:h-4 mr-0 sm:mr-1" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                         </svg>
-                        Create
-                    </a>
-                </div>
+                        <span class="hidden sm:inline">Create</span>
+                    </a>    </div>
 
                 <!-- Filters (Search Bar) -->
                 <form method="GET" class="relative w-full sm:w-1/2 mb-4 mx-auto flex items-center">
