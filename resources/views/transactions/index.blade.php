@@ -42,7 +42,7 @@
 
             <!-- Alpine Wrapper -->
             <div>
-                <form method="GET" class="relative w-1/2 mb-4 mx-auto flex items-center">
+                <form method="GET" class="relative w-full sm:w-1/2 mb-4 mx-auto flex items-center" x-data="{ showModal: false }">
                     <!-- Lens Icon (left) -->
                     <span class="absolute left-4 text-gray-500 pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -54,21 +54,23 @@
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search ..."
                         class="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-12 pr-10 text-l text-gray-900 shadow-sm focus:ring-blue-100 focus:border-blue-400"
                         id="searchInput" autocomplete="off" />
-                    @if (request('search'))
-                        <!-- Reset (close) icon, only show if search is not empty -->
-                        <a href="{{ route('transactions.index') }}"
-                            class="absolute right-12 top-1.3 text-gray-400 hover:bg-gray-200 rounded-full p-1 hover:text-red-500 cursor-pointer"
-                            title="Clear search">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </a>
-                    @endif
+                    <!-- Show X mark if any filter/search is applied -->
+                    @php
+                        $hasFilters = request('search') || request('filter') || request('start_date') || request('end_date') || request('category') || request('person') || request('type');
+                    @endphp
+                    <a href="{{ route('transactions.index') }}"
+                        class="absolute right-12 top-1.5 text-gray-400 hover:bg-gray-200 rounded-full p-1 hover:text-red-500 cursor-pointer
+                        {{ $hasFilters ? '' : 'pointer-events-none opacity-50' }}"
+                        title="Clear filters and search">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </a>
 
                     <!-- Advanced Search Button (right) -->
-                    <div x-data="{ showModal: false }" class="absolute right-1.5 top-1.3">
+                    <div class="absolute right-1.5 top-1.5">
                         <button type="button" @click="showModal = true"
                             class="flex items-center justify-center h-9 w-9 rounded-full hover:bg-gray-200 hover:text-white transition"
                             title="Advanced Search">
@@ -199,8 +201,6 @@
                     </div>
                 </form>
             </div>
-
-
 
             <!-- Scrollable Table Area -->
             <div class="overflow-auto flex-1">
