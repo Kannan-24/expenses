@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Budget;
+use App\Models\BudgetHistory;
 use App\Models\Transaction;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\ExpensePerson;
 use App\Models\Wallet;
 use App\Models\WalletType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,6 +27,9 @@ class TransactionController extends Controller
 
     /**
      * Display a listing of the resource.
+     * 
+     *  @param  \Illuminate\Http\Request  $request
+     *  @return \Illuminate\View\View
      */
     public function index(Request $request)
     {
@@ -79,6 +85,8 @@ class TransactionController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     * 
+     *  @return \Illuminate\View\View
      */
     public function create()
     {
@@ -94,6 +102,9 @@ class TransactionController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * 
+     *  @param  \Illuminate\Http\Request  $request
+     *  @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -107,19 +118,20 @@ class TransactionController extends Controller
             'wallet_id'     => 'required|exists:wallets,id',
         ]);
 
-        $wallet = Wallet::where('user_id', Auth::id())
-            ->where('id', $request->wallet_id)
-            ->first();
-        if ($request->type === 'expense') {
-            $balance = $wallet->balance - $request->amount;
-            if ($balance < 0) {
-                return back()->withErrors(['amount' => 'Insufficient wallet balance.'])->withInput();
-            }
-            $wallet->balance -= $request->amount;
-        } else if ($request->type === 'income') {
-            $wallet->balance += $request->amount;
+        $wallet = Wallet::where('user_id', Auth::id())->findOrFail($request->wallet_id);
+
+        // Check wallet balance
+        if ($request->type === 'expense' && $wallet->balance < $request->amount) {
+            return redirect()->back()->withErrors(['wallet' => 'Insufficient balance in the selected wallet.']);
         }
+
+        // Adjust wallet balance based on transaction type
+        $wallet->balance += ($request->type === 'income') ? $request->amount : -$request->amount;
         $wallet->save();
+
+        if ($request->type == 'expense' && $request->category_id) {
+            $this->updateBudgetHistory($request->category_id, $request->amount, $request->date);
+        }
 
         $transaction = Transaction::create([
             'user_id'           => Auth::id(),
@@ -140,12 +152,13 @@ class TransactionController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * 
+     *  @param  \App\Models\Transaction  $transaction
+     *  @return \Illuminate\View\View
      */
     public function edit(Transaction $transaction)
     {
-        if ($transaction->user_id !== Auth::id()) {
-            abort(403);
-        }
+        $this->authorizeTransaction($transaction);
 
         $categories = Category::all();
         $people = ExpensePerson::where('user_id', Auth::id())->get();
@@ -159,12 +172,14 @@ class TransactionController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * 
+     *  @param  \Illuminate\Http\Request  $request
+     *   @param  \App\Models\Transaction  $transaction
+     *   @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Transaction $transaction)
     {
-        if ($transaction->user_id !== Auth::id()) {
-            abort(403);
-        }
+        $this->authorizeTransaction($transaction);
 
         $request->validate([
             'category_id'        => 'nullable|exists:categories,id',
@@ -179,16 +194,26 @@ class TransactionController extends Controller
         $wallet = Wallet::where('user_id', Auth::id())
             ->where('id', $request->wallet_id)
             ->first();
-        if ($request->type === 'expense') {
-            $balance = $wallet->balance - $request->amount;
-            if ($balance < 0) {
-                return back()->withErrors(['amount' => 'Insufficient wallet balance.'])->withInput();
-            }
-            $wallet->balance -= $request->amount;
-        } else if ($request->type === 'income') {
-            $wallet->balance += $request->amount;
+
+        // Rollback previous transaction amount from wallet
+        $wallet->balance += ($transaction->type === 'income') ? -$transaction->amount : $transaction->amount;
+
+        // Apply new transaction amount to wallet
+        if ($request->type == 'expense' && $wallet->balance < $request->amount) {
+            return redirect()->back()->withErrors(['wallet' => 'Insufficient balance in the selected wallet.'])->withInput();
         }
+
+        $wallet->balance += ($request->type === 'income') ? $request->amount : -$request->amount;
         $wallet->save();
+
+        if ($transaction->type === 'expense' && $transaction->category_id) {
+            $this->updateBudgetHistory($transaction->category_id, -$transaction->amount, $transaction->date);
+        }
+
+
+        if ($request->type == 'expense' && $request->category_id) {
+            $this->updateBudgetHistory($request->category_id, $request->amount, $request->date);
+        }
 
         $transaction->update([
             'category_id'       => $request->category_id,
@@ -208,24 +233,25 @@ class TransactionController extends Controller
 
     /**
      * Display the specified resource.
+     * 
+     *   @param  \App\Models\Transaction  $transaction
+     *   @return \Illuminate\View\View
      */
     public function show(Transaction $transaction)
     {
-        if ($transaction->user_id !== Auth::id()) {
-            abort(403);
-        }
-
+        $this->authorizeTransaction($transaction);
         return view('transactions.show', compact('transaction'));
     }
 
     /**
      * Remove the specified resource from storage.
+     * 
+     *  @param  \App\Models\Transaction  $transaction
+     *  @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Transaction $transaction)
     {
-        if ($transaction->user_id !== Auth::id()) {
-            abort(403);
-        }
+        $this->authorizeTransaction($transaction);
 
         $wallet = Wallet::where('user_id', Auth::id())
             ->where('id', $transaction->wallet_id)
@@ -235,6 +261,10 @@ class TransactionController extends Controller
             $wallet->balance -= $transaction->amount;
         } elseif ($transaction->type === 'expense') {
             $wallet->balance += $transaction->amount;
+
+            if ($transaction->category_id) {
+                $this->updateBudgetHistory($transaction->category_id, -$transaction->amount, $transaction->date);
+            }
         }
         $wallet->save();
         $transaction->delete();
@@ -243,5 +273,86 @@ class TransactionController extends Controller
             'success',
             ucfirst($transaction->type) . " deleted successfully. Balance restored."
         );
+    }
+
+    /**
+     * Authorize the user has access to the transaction.
+     * 
+     *  @param  \App\Models\Transaction  $transaction
+     *  @return void
+     */
+    protected function authorizeTransaction(Transaction $transaction)
+    {
+        if ($transaction->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+    }
+
+
+    /**
+     * Update budget history based on the transaction.
+     * 
+     *  @param int $categoryId
+     *  @param float $amount
+     *  @param string $date
+     *  @return void
+     */
+    protected function updateBudgetHistory($categoryId, $amount, $date)
+    {
+        $userId = Auth::id();
+
+        $budget = Budget::where('user_id', $userId)
+            ->where('category_id', $categoryId)
+            ->where('start_date', '<=', $date)
+            ->where('end_date', '>=', $date)
+            ->first();
+
+        if (!$budget) return;
+
+        $budgetHistory = BudgetHistory::where('budget_id', $budget->id)
+            ->where('start_date', '<=', $date)
+            ->where('end_date', '>=', $date)
+            ->first();
+
+        if (!$budgetHistory && $budget->roll_over) {
+            // Determine period
+            switch ($budget->frequency) {
+                case 'daily':
+                    $start = Carbon::parse($date)->startOfDay();
+                    $end = Carbon::parse($date)->endOfDay();
+                    break;
+                case 'weekly':
+                    $start = Carbon::parse($date)->startOfWeek();
+                    $end = Carbon::parse($date)->endOfWeek();
+                    break;
+                case 'monthly':
+                    $start = Carbon::parse($date)->startOfMonth();
+                    $end = Carbon::parse($date)->endOfMonth();
+                    break;
+                case 'yearly':
+                    $start = Carbon::parse($date)->startOfYear();
+                    $end = Carbon::parse($date)->endOfYear();
+                    break;
+            }
+
+            $previousHistory = BudgetHistory::where('budget_id', $budget->id)
+                ->orderBy('end_date', 'desc')
+                ->first();
+
+            $rollOverAmount = max(0, $budget->amount - ($previousHistory->spent_amount ?? 0));
+
+            $budgetHistory = BudgetHistory::create([
+                'budget_id'        => $budget->id,
+                'allocated_amount' => $budget->amount,
+                'roll_over_amount' => $rollOverAmount,
+                'spent_amount'     => $amount,
+                'start_date'       => $start,
+                'end_date'         => $end,
+                'status'           => 'active',
+            ]);
+        } elseif ($budgetHistory) {
+            $budgetHistory->spent_amount += $amount;
+            $budgetHistory->save();
+        }
     }
 }

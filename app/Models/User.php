@@ -94,4 +94,12 @@ class User extends Authenticatable
 
         return true;
     }
+
+    /**
+     * Get the categories associated with the user.
+     */
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class);
+    }
 }

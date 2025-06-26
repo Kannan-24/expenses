@@ -205,6 +205,7 @@ return [
         'manage wallets',
         'generate reports',
         'request support',
+        'manage budgets',
 
         'manage users',
         'manage roles',
@@ -239,7 +240,8 @@ return [
                 'manage balance',
                 'manage wallets',
                 'generate reports',
-                'request support'
+                'request support',
+                'manage budgets'
             ]
         ]
     ],
