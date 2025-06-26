@@ -78,7 +78,7 @@ class TransactionController extends Controller
             $query->where('type', $request->type);
         }
 
-        $transactions = $query->orderBy('date', 'desc')->paginate(9);
+        $transactions = $query->orderBy('date', 'desc')->paginate(12);
 
         return view('transactions.index', compact('transactions', 'categories', 'people'));
     }
