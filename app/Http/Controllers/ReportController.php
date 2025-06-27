@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\ExpensePerson;
@@ -11,6 +12,100 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
+    // Show report index page
+    public function index()
+    {
+        $categories = Category::where('user_id', auth()->id())
+            ->orderBy('name')->get()->pluck('name', 'id');
+
+        $people = ExpensePerson::where('user_id', auth()->id())
+            ->select('id', 'name')->distinct()->orderBy('name')->get()->pluck('name', 'id');
+
+        $wallets = Wallet::where('user_id', auth()->id())
+            ->select('id', 'name')->distinct()->orderBy('name')->get()->pluck('name', 'id');
+
+        return view('reports.index', compact('categories', 'people', 'wallets'));
+    }
+
+    public function generate(Request $request)
+    {
+        $request->validate([
+            'type' => 'required|in:transactions,wallets,budgets,support_tickets',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+        ]);
+
+        $data = [];
+        $view = '';
+
+        switch ($request->type) {
+            case 'transactions':
+                $data = $this->getTransactionReport($request);
+                $view = 'reports.transactions';
+                break;
+
+            case 'wallets':
+                $data = $this->getWalletReport($request);
+                $view = 'reports.wallets';
+                break;
+
+            case 'budgets':
+                $data = $this->getBudgetReport($request);
+                $view = 'reports.budgets';
+                break;
+
+            case 'support_tickets':
+                $data = $this->getSupportTicketReport($request);
+                $view = 'reports.support_tickets';
+                break;
+        }
+
+        $pdf = Pdf::loadView($view, ['data' => $data, 'filters' => $request->all()]);
+        return $pdf->stream($request->type . '_report.pdf');
+    }
+
+    private function getTransactionReport(Request $request)
+    {
+        return Transaction::with('category', 'expensePerson', 'wallet')
+            ->when($request->start_date, fn($q) => $q->where('date', '>=', $request->start_date))
+            ->when($request->end_date, fn($q) => $q->where('date', '<=', $request->end_date))
+            ->when($request->category_id, fn($q) => $q->where('category_id', $request->category_id))
+            ->when($request->expense_person_id, fn($q) => $q->where('expense_person_id', $request->expense_person_id))
+            ->when($request->type, fn($q) => $q->where('type', $request->type))
+            ->when($request->wallet_id, fn($q) => $q->where('wallet_id', $request->wallet_id))
+            ->get();
+    }
+
+    private function getWalletReport(Request $request)
+    {
+        return Transaction::with('category', 'expensePerson', 'wallet')
+            ->whereNotNull('wallet_id')
+            ->when($request->start_date, fn($q) => $q->where('date', '>=', $request->start_date))
+            ->when($request->end_date, fn($q) => $q->where('date', '<=', $request->end_date))
+            ->when($request->wallet_id, fn($q) => $q->where('wallet_id', $request->wallet_id))
+            ->when($request->type, fn($q) => $q->where('type', $request->type))
+            ->get();
+    }
+
+    private function getBudgetReport(Request $request)
+    {
+        return Budget::with('category')
+            ->when($request->start_date, fn($q) => $q->where('start_date', '>=', $request->start_date))
+            ->when($request->end_date, fn($q) => $q->where('end_date', '<=', $request->end_date))
+            ->when($request->category_id, fn($q) => $q->where('category_id', $request->category_id))
+            ->get();
+    }
+
+    private function getSupportTicketReport(Request $request)
+    {
+        return SupportTicket::with('messages')
+            ->when($request->start_date, fn($q) => $q->where('created_at', '>=', $request->start_date))
+            ->when($request->end_date, fn($q) => $q->where('created_at', '<=', $request->end_date))
+            ->when($request->status, fn($q) => $q->where('status', $request->status))
+            ->when($request->trashed, fn($q) => $q->onlyTrashed())
+            ->get();
+    }
+
     // Show HTML report
     public function expenses(Request $request)
     {
@@ -55,12 +150,12 @@ class ReportController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('description', 'like', '%' . $search . '%')
-                  ->orWhereHas('category', function ($q2) use ($search) {
-                      $q2->where('name', 'like', '%' . $search . '%');
-                  })
-                  ->orWhereHas('person', function ($q3) use ($search) {
-                      $q3->where('name', 'like', '%' . $search . '%');
-                  });
+                    ->orWhereHas('category', function ($q2) use ($search) {
+                        $q2->where('name', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('person', function ($q3) use ($search) {
+                        $q3->where('name', 'like', '%' . $search . '%');
+                    });
             });
         }
 

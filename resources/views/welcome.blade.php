@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker Landing Page</title>
+    <title>Expense Tracker - An Personal Finance Tracking App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>
@@ -69,10 +69,10 @@
                 class="absolute top-full left-0 w-full bg-white shadow-lg flex flex-col items-start py-4 space-y-2 md:hidden z-50 pl-4">
                 @php
                     $nav = [
-                        ['href' => '#home', 'label' => 'Home'],
-                        ['href' => '#features', 'label' => 'Features'],
-                        ['href' => '#how-it-works', 'label' => 'How It Works'],
-                        ['href' => '#faq', 'label' => 'FAQ'],
+                        ['href' => '/#home', 'label' => 'Home'],
+                        ['href' => '/#features', 'label' => 'Features'],
+                        ['href' => '/#how-it-works', 'label' => 'How It Works'],
+                        ['href' => '/#faq', 'label' => 'FAQ'],
                     ];
                 @endphp
                 @foreach ($nav as $item)
@@ -414,9 +414,9 @@
             <div>
                 <h3 class="font-semibold text-lg mb-4">Quick Links</h3>
                 <ul class="space-y-2 text-sm text-gray-300">
-                    <li><a href="#faq" class="hover:text-white">FAQ</a></li>
-                    <li><a href="#terms" class="hover:text-white">Terms of Service</a></li>
-                    <li><a href="#privacy" class="hover:text-white">Privacy Policy</a></li>
+                    <li><a href="/#faq" class="hover:text-white">FAQ</a></li>
+                    <li><a href="/terms-of-service" class="hover:text-white">Terms of Service</a></li>
+                    <li><a href="/privacy-policy" class="hover:text-white">Privacy Policy</a></li>
                 </ul>
             </div>
 
@@ -451,7 +451,8 @@
         <!-- Bottom Text -->
         <div class="text-center text-sm text-gray-400 mt-10 px-4">
             <strong class="text-white">Expense Tracker</strong> — A personal finance management product by
-            <a href="https://duodev.in" target="_blank" rel="noopener" class="text-white font-bold hover:underline">Duo Dev Technologies</a>.
+            <a href="https://duodev.in" target="_blank" rel="noopener"
+                class="text-white font-bold hover:underline">Duo Dev Technologies</a>.
         </div>
     </footer>
 
