@@ -162,7 +162,7 @@ class BudgetController extends Controller
         $this->authorizeUser($budget);
 
         if ($budget->histories()->count() > 0) {
-            return redirect()->route('budgets.index')->with('error', 'Cannot delete budget with existing histories.');
+            $budget->histories()->delete();
         }
 
         $budget->delete();
