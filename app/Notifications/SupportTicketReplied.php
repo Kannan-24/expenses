@@ -8,6 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class SupportTicketReplied extends Notification
 {
@@ -44,8 +45,7 @@ class SupportTicketReplied extends Notification
             ->subject('Support Reply: #' . $this->ticket->id)
             ->line('A new reply has been added to your support ticket.')
             ->line('Ticket Subject: ' . $this->ticket->subject)
-            // HTML code to display the message content
-            ->line('Reply: ' .  nl2br(e($this->message->content)))
+            ->line(new HtmlString('<strong>Reply:</strong> ' . nl2br(e($this->message->message))))
             ->line('Replied by: ' . ($this->isAdmin ? 'Admin' : $this->ticket->user->name))
             ->action('View Ticket', route('support_tickets.show', $this->ticket->id));
     }
