@@ -59,27 +59,20 @@
                         <span class="w-24 text-sm font-bold text-gray-900">Status</span>
                         <span class="mx-1">:</span>
                         <span class="text-base text-gray-600">
-                            @if ($supportTicket->status === 'opened')
-                                <span class="bg-green-100 text-green-800 font-semibold px-2 py-1 rounded">
-                                    Open
-                                </span>
-                            @elseif ($supportTicket->status === 'closed')
-                                <span class="bg-red-100 text-red-800 font-semibold px-2 py-1 rounded">
-                                    Closed
-                                </span>
-                            @elseif ($supportTicket->status === 'admin_replied')
-                                <span class="bg-blue-100 text-blue-800 font-semibold px-2 py-1 rounded">
-                                    Admin Replied
-                                </span>
-                            @elseif ($supportTicket->status === 'customer_replied')
-                                <span class="bg-yellow-100 text-yellow-800 font-semibold px-2 py-1 rounded">
-                                    User Replied
-                                </span>
-                            @else
-                                <span class="bg-gray-100 text-gray-800 font-semibold px-2 py-1 rounded">
-                                    Unknown
-                                </span>
-                            @endif
+                            @php
+                                $statusClasses = [
+                                    'opened' => 'bg-green-100 text-green-800',
+                                    'closed' => 'bg-red-100 text-red-800',
+                                    'admin_replied' => 'bg-blue-100 text-blue-800',
+                                    'customer_replied' => 'bg-yellow-100 text-yellow-800',
+                                    'unknown' => 'bg-gray-100 text-gray-800',
+                                ];
+                                $statusLabel = ucfirst(str_replace('_', ' ', $supportTicket->status ?? 'unknown'));
+                                $badgeClass = $statusClasses[$supportTicket->status] ?? $statusClasses['unknown'];
+                            @endphp
+                            <span class="font-semibold px-2 py-1 rounded {{ $badgeClass }}">
+                                {{ $statusLabel }}
+                            </span>
                         </span>
                     </div>
                     <div class="flex items-center gap-4">
@@ -106,45 +99,69 @@
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <form action="{{ route('support_tickets.close', $supportTicket) }}" method="POST">
-                            @csrf
-                            <x-danger-button type="submit" class="mt-2">
-                                {{ __('Close Ticket') }}
-                            </x-danger-button>
-                        </form>
-                        <form action="{{ route('support_tickets.destroy', $supportTicket) }}" method="POST"
-                            onsubmit="return confirm('Are you sure you want to delete this ticket?')">
-                            @csrf
-                            @method('DELETE')
-                            <x-danger-button type="submit" class="mt-2">
-                                {{ __('Delete Ticket') }}
-                            </x-danger-button>
-                        </form>
+                        @if ($supportTicket->status != 'closed')
+                            <form action="{{ route('support_tickets.close', $supportTicket) }}" method="POST">
+                                @csrf
+                                <x-warning-button type="submit" class="mt-2">
+                                    {{ __('Close Ticket') }}
+                                </x-warning-button>
+                            </form>
+                        @elseif ($supportTicket->status == 'closed' && !$supportTicket->trashed())
+                            <form action="{{ route('support_tickets.reopen', $supportTicket) }}" method="POST">
+                                @csrf
+                                <x-primary-button type="submit" class="mt-2">
+                                    {{ __('Reopen Ticket') }}
+                                </x-primary-button>
+                            </form>
+                        @endif
+                        @if ($supportTicket->trashed())
+                            <form action="{{ route('support_tickets.recover', $supportTicket) }}" method="POST">
+                                @csrf
+                                <x-primary-button type="submit" class="mt-2">
+                                    {{ __('Restore Ticket') }}
+                                </x-primary-button>
+                            </form>
+                        @endif
+                        @if (!$supportTicket->trashed())
+                            <form action="{{ route('support_tickets.destroy', $supportTicket) }}" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this ticket?')">
+                                @csrf
+                                @method('DELETE')
+                                <x-danger-button type="submit" class="mt-2">
+                                    {{ __('Delete Ticket') }}
+                                </x-danger-button>
+                            </form>
+                        @endif
                     </div>
                 </div>
 
-                <hr class="border-t border-gray-300 my-4">
-                <h3 class="text-lg font-semibold text-gray-800">Reply to Ticket:</h3>
+                @if ($supportTicket->status != 'closed')
+                    <hr class="border-t border-gray-300 my-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Reply to Ticket:</h3>
 
-                <form action="{{ route('support_tickets.reply', $supportTicket) }}" method="POST">
-                    @csrf
+                    <form action="{{ route('support_tickets.reply', $supportTicket) }}" method="POST">
+                        @csrf
 
 
-                    <div class="mb-5">
-                        <textarea id="editor" name="message"
-                            class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            >{{ old('message') }}</textarea>
-                        @error('message')
-                            <span class="text-sm text-red-600">{{ $message }}</span>
-                        @enderror
+                        <div class="mb-5">
+                            <textarea id="editor" name="message"
+                                class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">{{ old('message') }}</textarea>
+                            @error('message')
+                                <span class="text-sm text-red-600">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="flex justify-end">
+                            <x-primary-button>
+                                {{ __('Send Reply') }}
+                            </x-primary-button>
+                        </div>
+                    </form>
+                @else
+                    <div class="p-4 bg-yellow-100 text-yellow-800 rounded-lg">
+                        <strong>Note:</strong> This ticket is closed. You cannot reply to it.
                     </div>
-
-                    <div class="flex justify-end">
-                        <x-primary-button>
-                            {{ __('Send Reply') }}
-                        </x-primary-button>
-                    </div>
-                </form>
+                @endif
 
                 <hr class="border-t border-gray-300 my-4">
 

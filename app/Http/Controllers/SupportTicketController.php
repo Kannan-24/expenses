@@ -11,18 +11,35 @@ class SupportTicketController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        if (Auth::user()->hasRole('admin')) {
-            $supportTickets = SupportTicket::with('user')->paginate(10);
-        } else {
-            $supportTickets = SupportTicket::where('user_id', Auth::id())
-                ->with('user')
-                ->paginate(10);
+        $query = SupportTicket::with('user');
+
+        // Filter by role
+        if (!Auth::user()->hasRole('admin')) {
+            $query->where('user_id', Auth::id());
         }
+
+        // Handle deleted tickets
+        if ($request->boolean('show_deleted')) {
+            $query->withTrashed();
+        }
+
+        // Handle search
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('subject', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($q2) use ($search) {
+                        $q2->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $supportTickets = $query->paginate(10);
 
         return view('support_tickets.index', compact('supportTickets'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -114,6 +131,21 @@ class SupportTicketController extends Controller
         return redirect()->route('support_tickets.index')->with('success', 'Support ticket closed successfully.');
     }
 
+    /**
+     *  Mark as reopened.
+     */
+    public function markAsReopened(SupportTicket $supportTicket)
+    {
+        if (!$this->canAccessTicket($supportTicket)) {
+            return redirect()->route('support_tickets.index')->with('error', 'You do not have permission to reopen this support ticket.');
+        }
+
+        $supportTicket->update([
+            'status' => 'opened',
+            'closed_at' => null,
+        ]);
+        return redirect()->route('support_tickets.index')->with('success', 'Support ticket reopened successfully.');
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -127,6 +159,19 @@ class SupportTicketController extends Controller
         $supportTicket->delete();
 
         return redirect()->route('support_tickets.index')->with('success', 'Support ticket deleted successfully.');
+    }
+
+    /**
+     * Recover the specified resource from storage.
+     */
+    public function recover(SupportTicket $supportTicket)
+    {
+        if (!Auth::user()->hasRole('admin')) {
+            return redirect()->route('support_tickets.index')->with('error', 'You do not have permission to recover this support ticket.');
+        }
+
+        $supportTicket->restore();
+        return redirect()->route('support_tickets.index')->with('success', 'Support ticket recovered successfully.');
     }
 
     /**

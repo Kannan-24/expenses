@@ -59,7 +59,7 @@
                     id="searchInput" autocomplete="off" />
                 @if (request('search'))
                     <!-- Reset (close) icon, only show if search is not empty -->
-                    <a href="{{ route('roles.index') }}"
+                    <a href="{{ route('support_tickets.index') }}"
                         class="absolute right-1.5 top-1.3 text-gray-400 hover:bg-gray-200 rounded-full p-1 hover:text-red-500 cursor-pointer"
                         title="Clear search">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
@@ -69,6 +69,14 @@
                         </svg>
                     </a>
                 @endif
+
+                <!-- Show Deleted Tickets Checkbox -->
+                <div class="ml-4">
+                    <input type="checkbox" name="show_deleted" id="show_deleted"
+                        class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        {{ request('show_deleted') ? 'checked' : '' }} onchange="this.form.submit()">
+                    <label for="show_deleted" class="ml-2 text-sm text-gray-700">Show Deleted Tickets</label>
+                </div>
             </form>
 
             <!-- Scrollable Table Area -->
@@ -78,34 +86,29 @@
                         class="bg-white border border-gray-200 shadow-sm rounded-xl mb-5 p-5 transition hover:shadow-md">
                         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 gap-2">
                             <h3 class="text-xl font-bold text-gray-800 line-clamp-1">
-                                Ticket #{{ $supportTicket->id }} @if (Auth::user()->hasRole('admin'))
+                                Ticket #{{ $supportTicket->id }}
+                                @if (Auth::user()->hasRole('admin'))
                                     <span class="text-sm text-gray-500">({{ $supportTicket->user->name }})</span>
                                 @endif
                             </h3>
-                            <div  class="flex flex-col items-end gap-4 text-gray-500 text-sm">
+                            <div class="flex flex-col items-end gap-2 text-gray-500 text-sm">
                                 <span class="text-sm text-gray-400 whitespace-nowrap">
-                                    Updated {{ $supportTicket->updated_at->diffForHumans() }}</span>
-                                @if ($supportTicket->status === 'opened')
-                                    <span class="bg-green-100 text-green-800 font-semibold px-2 py-1 rounded">
-                                        Open
-                                    </span>
-                                @elseif ($supportTicket->status === 'closed')
-                                    <span class="bg-red-100 text-red-800 font-semibold px-2 py-1 rounded">
-                                        Closed
-                                    </span>
-                                @elseif ($supportTicket->status === 'admin_replied')
-                                    <span class="bg-blue-100 text-blue-800 font-semibold px-2 py-1 rounded">
-                                        Admin Replied
-                                    </span>
-                                @elseif ($supportTicket->status === 'customer_replied')
-                                    <span class="bg-yellow-100 text-yellow-800 font-semibold px-2 py-1 rounded">
-                                        User Replied
-                                    </span>
-                                @else
-                                    <span class="bg-gray-100 text-gray-800 font-semibold px-2 py-1 rounded">
-                                        Unknown
-                                    </span>
-                                @endif
+                                    Updated {{ $supportTicket->updated_at->diffForHumans() }}
+                                </span>
+                                @php
+                                    $statusClasses = [
+                                        'opened' => 'bg-green-100 text-green-800',
+                                        'closed' => 'bg-red-100 text-red-800',
+                                        'admin_replied' => 'bg-blue-100 text-blue-800',
+                                        'customer_replied' => 'bg-yellow-100 text-yellow-800',
+                                        'unknown' => 'bg-gray-100 text-gray-800',
+                                    ];
+                                    $statusLabel = ucfirst(str_replace('_', ' ', $supportTicket->status ?? 'unknown'));
+                                    $badgeClass = $statusClasses[$supportTicket->status] ?? $statusClasses['unknown'];
+                                @endphp
+                                <span class="font-semibold px-2 py-1 rounded {{ $badgeClass }}">
+                                    {{ $statusLabel }}
+                                </span>
                             </div>
                         </div>
 
@@ -113,16 +116,66 @@
                             {{ $supportTicket->subject }}
                         </p>
 
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center flex-wrap gap-3">
                             <a href="{{ route('support_tickets.show', $supportTicket) }}"
                                 class="inline-flex items-center text-blue-600 font-medium hover:underline hover:text-blue-700 transition">
                                 View Details
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2"
                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3">
-                                    </path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                 </svg>
                             </a>
+
+                            <div class="flex flex-wrap gap-2">
+                                {{-- Close Ticket --}}
+                                @if ($supportTicket->status !== 'closed' && !$supportTicket->trashed())
+                                    <form method="POST" action="{{ route('support_tickets.close', $supportTicket) }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="text-sm px-3 py-1 bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200">
+                                            Close
+                                        </button>
+                                    </form>
+                                @endif
+
+                                {{-- Open Ticket --}}
+                                @if ($supportTicket->status === 'closed' && !$supportTicket->trashed())
+                                    <form method="POST"
+                                        action="{{ route('support_tickets.reopen', $supportTicket) }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="text-sm px-3 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200">
+                                            Reopen
+                                        </button>
+                                    </form>
+                                @endif
+
+                                {{-- Delete Ticket --}}
+                                @if (!$supportTicket->trashed())
+                                    <form method="POST"
+                                        action="{{ route('support_tickets.destroy', $supportTicket) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="text-sm px-3 py-1 bg-red-100 text-red-800 rounded hover:bg-red-200"
+                                            onclick="return confirm('Are you sure you want to delete this ticket?')">
+                                            Delete
+                                        </button>
+                                    </form>
+                                @endif
+
+                                {{-- Recover Ticket --}}
+                                @if ($supportTicket->trashed() && Auth::user()->hasRole('admin'))
+                                    <form method="POST"
+                                        action="{{ route('support_tickets.recover', $supportTicket) }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="text-sm px-3 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200">
+                                            Restore
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @empty
@@ -131,6 +184,7 @@
                     </div>
                 @endforelse
             </div>
+
 
             <!-- Pagination -->
             <div class="pt-4">
