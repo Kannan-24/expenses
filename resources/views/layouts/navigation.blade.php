@@ -49,7 +49,7 @@
                         </g>
                     </svg>
                 </a>
-                <div x-data="{ notificationOpen: false }" class="relative">
+                <div x-data="{ notificationOpen: false }" class="relative z-50">
                     <button @click="notificationOpen = true"
                         class="relative p-1 text-gray-600 hover:text-blue-600 focus:outline-none">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
