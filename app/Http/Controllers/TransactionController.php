@@ -314,43 +314,52 @@ class TransactionController extends Controller
             ->where('end_date', '>=', $date)
             ->first();
 
-        if (!$budgetHistory && $budget->roll_over) {
-            // Determine period
-            switch ($budget->frequency) {
-                case 'daily':
-                    $start = Carbon::parse($date)->startOfDay();
-                    $end = Carbon::parse($date)->endOfDay();
-                    break;
-                case 'weekly':
-                    $start = Carbon::parse($date)->startOfWeek();
-                    $end = Carbon::parse($date)->endOfWeek();
-                    break;
-                case 'monthly':
-                    $start = Carbon::parse($date)->startOfMonth();
-                    $end = Carbon::parse($date)->endOfMonth();
-                    break;
-                case 'yearly':
-                    $start = Carbon::parse($date)->startOfYear();
-                    $end = Carbon::parse($date)->endOfYear();
-                    break;
-            }
+        if (!$budgetHistory) {
+            // Calculate period aligned to budget's plan start_date
+            $budgetStart = Carbon::parse($budget->start_date);
+            $periodStart = match ($budget->frequency) {
+                'daily' => Carbon::parse($date)->startOfDay(),
+                'weekly' => Carbon::parse($budgetStart)->copy()->startOfWeek()->addWeeks(
+                    Carbon::parse($budgetStart)->diffInWeeks($date)
+                ),
+                'monthly' => Carbon::parse($budgetStart)->copy()->startOfMonth()->addMonthsNoOverflow(
+                    Carbon::parse($budgetStart)->diffInMonths($date)
+                ),
+                'yearly' => Carbon::parse($budgetStart)->copy()->startOfYear()->addYears(
+                    Carbon::parse($budgetStart)->diffInYears($date)
+                ),
+            };
 
+            $periodEnd = match ($budget->frequency) {
+                'daily' => $periodStart->copy()->endOfDay(),
+                'weekly' => $periodStart->copy()->endOfWeek(),
+                'monthly' => $periodStart->copy()->endOfMonth(),
+                'yearly' => $periodStart->copy()->endOfYear(),
+            };
+
+            // Fetch previous history (if exists)
             $previousHistory = BudgetHistory::where('budget_id', $budget->id)
-                ->orderBy('end_date', 'desc')
+                ->where('end_date', '<', $periodStart)
+                ->latest('end_date')
                 ->first();
 
-            $rollOverAmount = max(0, $budget->amount - ($previousHistory->spent_amount ?? 0));
+            $rollOverAmount = 0;
 
-            $budgetHistory = BudgetHistory::create([
+            if ($previousHistory && $budget->roll_over) {
+                $unspent = $previousHistory->allocated_amount + $previousHistory->roll_over_amount - $previousHistory->spent_amount;
+                $rollOverAmount = max(0, $unspent);
+            }
+
+            BudgetHistory::create([
                 'budget_id'        => $budget->id,
                 'allocated_amount' => $budget->amount,
                 'roll_over_amount' => $rollOverAmount,
                 'spent_amount'     => $amount,
-                'start_date'       => $start,
-                'end_date'         => $end,
+                'start_date'       => $periodStart,
+                'end_date'         => $periodEnd,
                 'status'           => 'active',
             ]);
-        } elseif ($budgetHistory) {
+        } else {
             $budgetHistory->spent_amount += $amount;
             $budgetHistory->save();
         }
