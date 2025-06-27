@@ -34,7 +34,9 @@
                         stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
-                    Export PDF
+                    <span class="hidden sm:inline">
+                        Export PDF
+                    </span>
                 </a>
             </div>
 
