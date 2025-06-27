@@ -57,7 +57,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a2 2 0 00-4 0v.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m7 0v1a3 3 0 01-6 0v-1m6 0H9" />
                         </svg>
-                        <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
+                        @if (Auth::user()->unreadNotifications->count() > 0)
+                            <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full animate-ping"></span>
+                            <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
+                        @endif
                     </button>
                     <div x-show="notificationOpen" @click.away="notificationOpen = false" x-transition
                         class="fixed top-0 right-0 z-50 w-80 mt-16 h-full bg-white border-l border-gray-200 shadow-lg flex flex-col"
@@ -87,7 +90,7 @@
                                     $style = $styles[$type] ?? $styles['info'];
                                 @endphp
                                 <div class="p-4 border-l-4 rounded mb-3 shadow-sm {{ $style }}">
-                                    <div class="flex items-center justify-between">
+                                    <div class="flex flex-col items-end justify-between">
                                         <div>
                                             <div class="font-semibold text-sm">
                                                 {{ $notification->data['title'] ?? 'Notification' }}
