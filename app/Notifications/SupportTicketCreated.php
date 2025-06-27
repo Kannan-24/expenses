@@ -36,7 +36,7 @@ class SupportTicketCreated extends Notification
             ->subject('New Support Ticket: #' . $this->ticket->id)
             ->line('A new support ticket has been submitted by ' . $this->ticket->user->name)
             ->line('Subject: ' . $this->ticket->subject)
-            ->action('View Ticket', route('admin.support.show', $this->ticket->id));
+            ->action('View Ticket', route('support_tickets.show', $this->ticket->id));
     }
 
     /**
@@ -62,7 +62,7 @@ class SupportTicketCreated extends Notification
             'title' => 'New Support Ticket',
             'message' => $this->ticket->user->name . ' created a support ticket: "' . $this->ticket->subject . '"',
             'action_text' => 'View Ticket',
-            'action_url' => route('admin.support.show', $this->ticket->id),
+            'action_url' => route('support_tickets.show', $this->ticket->id),
             'type' => 'warning',
         ];
     }
