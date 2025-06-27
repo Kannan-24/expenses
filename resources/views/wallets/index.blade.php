@@ -33,8 +33,7 @@
                 <!-- Create Button -->
                 <a href="{{ route('wallets.create') }}"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 shadow
-                        sm:px-4 sm:py-2 sm:text-sm sm:font-medium
-                        px-2 py-2 text-base font-bold sm:inline-flex">
+                        sm:inline-flex">
                     <svg class="w-5 h-5 sm:w-4 sm:h-4 sm:mr-1" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
@@ -99,10 +98,12 @@
                         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
                         @keydown.escape.window="showFilterForm = false">
 
-                        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6" @click.away="showFilterForm = false">
+                        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6"
+                            @click.away="showFilterForm = false">
                             <div class="flex items-center justify-between mb-4">
                                 <h2 class="text-lg font-semibold text-gray-800">Advanced Search</h2>
-                                <button @click="showFilterForm = false" class="text-gray-600 hover:text-red-600" type="button">
+                                <button @click="showFilterForm = false" class="text-gray-600 hover:text-red-600"
+                                    type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
