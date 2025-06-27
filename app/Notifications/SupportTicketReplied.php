@@ -46,7 +46,7 @@ class SupportTicketReplied extends Notification
             ->line('Ticket Subject: ' . $this->ticket->subject)
             ->line('Reply: ' . $this->message->message)
             ->line('Replied by: ' . ($this->isAdmin ? 'Admin' : $this->ticket->user->name))
-            ->action('View Ticket', route('support.tickets.show', $this->ticket->id));
+            ->action('View Ticket', route('support_tickets.show', $this->ticket->id));
     }
 
     /**
@@ -60,7 +60,7 @@ class SupportTicketReplied extends Notification
             'title' => 'Support Reply for Ticket #' . $this->ticket->id,
             'message' => 'A new reply has been added to' . ($this->isAdmin ? ('the ticket #' . $this->ticket->id) : 'your ticket') . ':"' . $this->ticket->subject . '"',
             'action_text' => 'View Ticket',
-            'action_url' => route('support.tickets.show', $this->ticket->id),
+            'action_url' => route('support_tickets.show', $this->ticket->id),
             'type' => 'info',
         ];
     }
@@ -76,7 +76,7 @@ class SupportTicketReplied extends Notification
             'title' => 'Support Reply for Ticket #' . $this->ticket->id,
             'message' =>  'A new reply has been added to' . ($this->isAdmin ? ('the ticket #' . $this->ticket->id) : 'your ticket') . ':"' . $this->ticket->subject . '"',
             'action_text' => 'View Ticket',
-            'action_url' => route('support.tickets.show', $this->ticket->id),
+            'action_url' => route('support_tickets.show', $this->ticket->id),
             'type' => 'info',
         ];
     }
