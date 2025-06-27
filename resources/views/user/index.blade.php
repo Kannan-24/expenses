@@ -4,7 +4,8 @@
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between" style="height: 88vh;">
+        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between"
+            style="height: 88vh;">
 
             <!-- Breadcrumb & Create Button -->
             <div class="flex justify-between items-center mb-3">
@@ -32,7 +33,8 @@
                 <!-- Create Button -->
                 <a href="{{ route('user.create') }}"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 shadow">
-                    <svg class="w-5 h-5 sm:w-4 sm:h-4 mr-0 sm:mr-1 sm:mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 sm:w-4 sm:h-4 mr-0 sm:mr-1 sm:mr-1" fill="none" stroke="currentColor"
+                        stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
                     <span class="hidden sm:inline">Create</span>
@@ -40,7 +42,7 @@
             </div>
 
             <!-- Filters -->
-            <form method="GET" class="relative w-full sm:w-1/2 mb-4 mx-auto flex items-center">
+            <form method="GET" class="relative w-full z-10 sm:w-1/2 mb-4 mx-auto flex items-center">
                 <!-- Lens Icon (left) -->
                 <span class="absolute left-4 text-gray-500 pointer-events-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -92,9 +94,8 @@
                                         class="text-yellow-600 hover:underline">View</a>
                                     <a href="{{ route('user.edit', $user->id) }}"
                                         class="text-blue-600 hover:underline">Edit</a>
-                                    <form action="{{ route('user.destroy', $user->id) }}"
-                                        method="POST" class="inline-block"
-                                        onsubmit="return confirm('Delete this user?')">
+                                    <form action="{{ route('user.destroy', $user->id) }}" method="POST"
+                                        class="inline-block" onsubmit="return confirm('Delete this user?')">
                                         @csrf
                                         @method('DELETE')
                                         <button class="text-red-600 hover:underline">Delete</button>
