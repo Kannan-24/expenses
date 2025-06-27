@@ -81,6 +81,14 @@ class WalletTypeController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(WalletType $walletType)
+    {
+        return view('wallet_types.show', compact('walletType'));
+    }
+
+    /**
      * Remove the specified resource from storage temproarily.
      */
     public function destroy(WalletType $walletType)

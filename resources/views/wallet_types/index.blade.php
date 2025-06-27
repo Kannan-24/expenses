@@ -4,7 +4,8 @@
         </x-slot>
 
         <div class="sm:ml-64">
-            <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between" style="height: 88vh;">
+            <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between"
+                style="height: 88vh;">
 
                 <!-- Breadcrumb & Create Button -->
                 <div class="flex justify-between items-center mb-3">
@@ -32,12 +33,13 @@
                     <!-- Create Button -->
                     <a href="{{ route('wallet-types.create') }}"
                         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 shadow">
-                        <svg class="w-5 h-5 sm:w-4 sm:h-4 mr-0 sm:mr-1" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 sm:w-4 sm:h-4 mr-0 sm:mr-1" fill="none" stroke="currentColor"
+                            stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                         </svg>
                         <span class="hidden sm:inline">Create</span>
-                    </a>    </div>
+                    </a>
+                </div>
 
                 <!-- Filters (Search Bar) -->
                 <form method="GET" class="relative w-full sm:w-1/2 mb-4 mx-auto flex items-center">
@@ -73,7 +75,6 @@
                             <tr>
                                 <th class="px-4 py-2">#</th>
                                 <th class="px-4 py-2">Name</th>
-                                <th class="px-4 py-2">Description</th>
                                 <th class="px-4 py-2 text-center">Is Active</th>
                                 <th class="px-4 py-2 text-center">Actions</th>
                             </tr>
@@ -85,7 +86,6 @@
                                         {{ $loop->iteration + ($walletTypes->currentPage() - 1) * $walletTypes->perPage() }}
                                     </td>
                                     <td class="px-4 py-2">{{ $walletType->name }}</td>
-                                    <td class="px-4 py-2">{{ $walletType->description }}</td>
                                     <td class="px-4 py-2 text-center">
                                         <span
                                             class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full {{ $walletType->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
@@ -95,6 +95,8 @@
                                     <td class="px-4 py-2 text-center space-x-2">
                                         <a href="{{ route('wallet-types.edit', $walletType->id) }}"
                                             class="text-blue-600 hover:underline">Edit</a>
+                                        <a href="{{ route('wallet-types.show', $walletType->id) }}"
+                                            class="text-blue-600 hover:underline">View</a>
                                         <form action="{{ route('wallet-types.destroy', $walletType->id) }}"
                                             method="POST" class="inline-block"
                                             onsubmit="return confirm('Are you sure you want to delete this wallet type?')">
