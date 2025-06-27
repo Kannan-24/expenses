@@ -95,6 +95,8 @@
                                     <td class="px-4 py-2 text-center space-x-2">
                                         <a href="{{ route('wallet-types.edit', $walletType->id) }}"
                                             class="text-blue-600 hover:underline">Edit</a>
+                                        <a href="{{ route('wallet-types.show', $walletType->id) }}"
+                                            class="text-blue-600 hover:underline">View</a>
                                         <form action="{{ route('wallet-types.destroy', $walletType->id) }}"
                                             method="POST" class="inline-block"
                                             onsubmit="return confirm('Are you sure you want to delete this wallet type?')">
