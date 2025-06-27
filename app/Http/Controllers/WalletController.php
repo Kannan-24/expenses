@@ -50,7 +50,7 @@ class WalletController extends Controller
             $query->where('currency_id', $currency);
         }
 
-        $wallets = $query->paginate(10)->appends($request->all());
+        $wallets = $query->paginate(12)->appends($request->all());
 
         // For filter dropdowns
         $walletTypes = WalletType::where('is_active', true)->get();

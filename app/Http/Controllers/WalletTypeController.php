@@ -19,7 +19,7 @@ class WalletTypeController extends Controller
                 ->orWhere('description', 'like', '%' . $search . '%');
         }
 
-        $walletTypes = $query->orderBy('name')->paginate(10)->withQueryString();
+        $walletTypes = $query->orderBy('name')->paginate(12)->withQueryString();
 
         return view('wallet_types.index', compact('walletTypes'));
     }
