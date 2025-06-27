@@ -18,6 +18,11 @@ class SupportTicketController extends Controller
         // Filter by role
         if (!Auth::user()->hasRole('admin')) {
             $query->where('user_id', Auth::id());
+        } else {
+            // For admin, allow filtering by user
+            if ($userId = $request->input('user')) {
+                $query->where('user_id', $userId);
+            }
         }
 
         // Handle deleted tickets
@@ -35,9 +40,41 @@ class SupportTicketController extends Controller
             });
         }
 
-        $supportTickets = $query->paginate(10);
+        // Quick filter (last 7/15/30 days)
+        if ($filter = $request->input('filter')) {
+            if ($filter === '7days') {
+                $query->where('created_at', '>=', now()->subDays(7));
+            } elseif ($filter === '15days') {
+                $query->where('created_at', '>=', now()->subDays(15));
+            } elseif ($filter === '1month') {
+                $query->where('created_at', '>=', now()->subMonth());
+            }
+        }
 
-        return view('support_tickets.index', compact('supportTickets'));
+        // Start date filter
+        if ($start = $request->input('start_date')) {
+            $query->whereDate('created_at', '>=', $start);
+        }
+
+        // End date filter
+        if ($end = $request->input('end_date')) {
+            $query->whereDate('created_at', '<=', $end);
+        }
+
+        // Status filter
+        if ($status = $request->input('status')) {
+            $query->where('status', $status);
+        }
+
+        $supportTickets = $query->paginate(6);
+
+        // For admin, pass users for filter dropdown
+        $users = [];
+        if (Auth::user()->hasRole('admin')) {
+            $users = \App\Models\User::orderBy('name')->get();
+        }
+
+        return view('support_tickets.index', compact('supportTickets', 'users'));
     }
 
 
