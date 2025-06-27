@@ -42,7 +42,7 @@
             </div>
 
             <!-- Filters -->
-            <form method="GET" class="relative w-full z-10 sm:w-1/2 mb-4 mx-auto flex items-center">
+            <form method="GET" class="relative w-full z-0 sm:w-1/2 mb-4 mx-auto flex items-center">
                 <!-- Lens Icon (left) -->
                 <span class="absolute left-4 text-gray-500 pointer-events-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
