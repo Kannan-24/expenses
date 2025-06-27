@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\ExpensePerson;
+use App\Models\User;
 use App\Models\Wallet;
 use App\Models\WalletType;
 use Carbon\Carbon;
@@ -362,6 +363,15 @@ class TransactionController extends Controller
         } else {
             $budgetHistory->spent_amount += $amount;
             $budgetHistory->save();
+        }
+
+        // Notify user if budget is exceeded above 100% or 90%
+        $exceededPercent =  ($budgetHistory->spent_amount / $budgetHistory->allocated_amount) * 100;
+        $user = User::find($userId);
+        if ($exceededPercent >= 100) {
+            $user->notify(new \App\Notifications\BudgetLimit($budget, $exceededPercent));
+        } elseif ($exceededPercent >= 90 && $exceededPercent < 100) {
+            $user->notify(new \App\Notifications\BudgetLimit($budget, $exceededPercent));
         }
     }
 }

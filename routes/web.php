@@ -16,6 +16,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WalletTypeController;
 use App\Http\Middleware\EnsureUserIsOnboarded;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -39,6 +40,11 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
     Route::get('/account-settings', [AccountSettingsController::class, 'index'])->name('account.settings');
     Route::patch('/account-settings/password', [AccountSettingsController::class, 'updatePassword'])->name('account.update.password');
     Route::delete('/account-settings/delete', [AccountSettingsController::class, 'destroy'])->name('account.destroy');
+
+    Route::post('/notifications/{id}/read', function ($id) {
+        Auth::user()->notifications()->where('id', $id)->first()?->markAsRead();
+        return back();
+    })->name('notifications.read');
 
     Route::resource('transactions', TransactionController::class);
     Route::resource('categories', CategoryController::class);

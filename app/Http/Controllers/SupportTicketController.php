@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\SupportTicket;
+use App\Models\User;
+use App\Notifications\SupportTicketCreated;
+use App\Notifications\SupportTicketReplied;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class SupportTicketController extends Controller
 {
@@ -71,6 +75,12 @@ class SupportTicketController extends Controller
             'message' => $request->message,
         ]);
 
+        // Notify admins about the new support ticket
+        $admins = User::whereHas('roles', function ($query) {
+            $query->where('name', 'admin');
+        })->get();
+        Notification::send($admins, new SupportTicketCreated($supportTicket));
+
         return redirect()->route('support_tickets.index')->with('success', 'Support ticket created successfully.');
     }
 
@@ -110,6 +120,27 @@ class SupportTicketController extends Controller
             'is_admin' => Auth::user()->hasRole('admin'),
             'message' => $request->message,
         ]);
+
+        /**
+         *  Notify the ticket creator about the reply - if reply is from admin
+         */
+        if (Auth::user()->hasRole('admin')) {
+            $supportTicket->user->notify(new SupportTicketReplied($supportTicket, $supportTicket->messages()->latest()->first(), false));
+        } else if (Auth::user()->hasRole('user')) {
+            // Find last replied admin
+            $lastAdminMessage = $supportTicket->messages()->where('is_admin', true)->latest()->first();
+            if ($lastAdminMessage) {
+                $lastAdmin = User::find($lastAdminMessage->user_id);
+                if ($lastAdmin) {
+                    $lastAdmin->notify(new SupportTicketReplied($supportTicket, $supportTicket->messages()->latest()->first(), true));
+                } else {
+                    $admins = User::whereHas('roles', function ($query) {
+                        $query->where('name', 'admin');
+                    })->get();
+                    Notification::send($admins, new SupportTicketReplied($supportTicket, $supportTicket->messages()->latest()->first(), true));
+                }
+            }
+        }
 
         return redirect()->route('support_tickets.show', $supportTicket)->with('success', 'Message added successfully.');
     }

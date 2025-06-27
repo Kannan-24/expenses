@@ -131,4 +131,90 @@ return [
             'user-preferences',
         ],
     ],
+
+    /**
+     * Currency List
+     */
+    'currencies' => [
+        'USD' => [
+            'name' => 'US Dollar',
+            'symbol' => '$',
+        ],
+        'EUR' => [
+            'name' => 'Euro',
+            'symbol' => '€',
+        ],
+        'GBP' => [
+            'name' => 'British Pound Sterling',
+            'symbol' => '£',
+        ],
+        'JPY' => [
+            'name' => 'Japanese Yen',
+            'symbol' => '¥',
+        ],
+        'INR' => [
+            'name' => 'Indian Rupee',
+            'symbol' => '₹',
+        ],
+        'AUD' => [
+            'name' => 'Australian Dollar',
+            'symbol' => 'A$',
+        ],
+        'CAD' => [
+            'name' => 'Canadian Dollar',
+            'symbol' => 'C$',
+        ],
+        'CHF' => [
+            'name' => 'Swiss Franc',
+            'symbol' => 'CHF',
+        ],
+        'CNY' => [
+            'name' => 'Chinese Yuan Renminbi',
+            'symbol' => '¥ / 元',
+        ],
+        'SGD' => [
+            'name' => 'Singapore Dollar',
+            'symbol' => 'S$',
+        ],
+        'KRW' => [
+            'name' => 'South Korean Won',
+            'symbol' => '₩',
+        ],
+        'RUB' => [
+            'name' => 'Russian Ruble',
+            'symbol' => '₽',
+        ],
+        'BRL' => [
+            'name' => 'Brazilian Real',
+            'symbol' => 'R$',
+        ],
+        'ZAR' => [
+            'name' => 'South African Rand',
+            'symbol' => 'R',
+        ],
+        'NZD' => [
+            'name' => 'New Zealand Dollar',
+            'symbol' => 'NZ$',
+        ],
+        'AED' => [
+            'name' => 'UAE Dirham',
+            'symbol' => 'د.إ‎',
+        ],
+        'SAR' => [
+            'name' => 'Saudi Riyal',
+            'symbol' => '﷼',
+        ],
+        'MYR' => [
+            'name' => 'Malaysian Ringgit',
+            'symbol' => 'RM',
+        ],
+        'IDR' => [
+            'name' => 'Indonesian Rupiah',
+            'symbol' => 'Rp',
+        ],
+        'TRY' => [
+            'name' => 'Turkish Lira',
+            'symbol' => '₺',
+        ],
+    ],
 ];

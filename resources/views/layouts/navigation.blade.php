@@ -72,10 +72,44 @@
                             </button>
                         </div>
                         <div class="flex-1 overflow-y-auto p-4">
-                            <div class="bg-blue-50 border-l-4 border-blue-400 text-blue-700 p-3 rounded mb-2">
-                                <div class="font-medium">No new notifications</div>
-                                <div class="text-xs text-blue-600">You are all caught up!</div>
-                            </div>
+                            @forelse (Auth::user()->unreadNotifications as $notification)
+                                @php
+                                    $type = $notification->data['type'] ?? 'info';
+
+                                    $styles = [
+                                        'info' => 'border-blue-400 bg-blue-50 text-blue-700',
+                                        'success' => 'border-green-400 bg-green-50 text-green-700',
+                                        'warning' => 'border-yellow-400 bg-yellow-50 text-yellow-800',
+                                        'danger' => 'border-red-400 bg-red-50 text-red-700',
+                                        'secondary' => 'border-gray-400 bg-gray-50 text-gray-700',
+                                    ];
+
+                                    $style = $styles[$type] ?? $styles['info'];
+                                @endphp
+                                <div class="p-4 border-l-4 rounded mb-3 shadow-sm {{ $style }}">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="font-semibold text-sm">
+                                                {{ $notification->data['title'] ?? 'Notification' }}
+                                            </div>
+                                            <div class="text-xs text-yellow-700 mt-1">
+                                                {{ $notification->data['message'] ?? '' }}
+                                            </div>
+                                        </div>
+                                        @if (isset($notification->data['action_url']))
+                                            <a href="{{ $notification->data['action_url'] }}"
+                                                class="text-sm underline font-medium hover:opacity-75">
+                                                {{ $notification->data['action_text'] ?? 'View' }}
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="bg-blue-50 border-l-4 border-blue-400 text-blue-700 p-3 rounded mb-2">
+                                    <div class="font-medium">No new notifications</div>
+                                    <div class="text-xs text-blue-600">You are all caught up!</div>
+                                </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
