@@ -44,7 +44,8 @@ class SupportTicketReplied extends Notification
             ->subject('Support Reply: #' . $this->ticket->id)
             ->line('A new reply has been added to your support ticket.')
             ->line('Ticket Subject: ' . $this->ticket->subject)
-            ->line('Reply: ' . $this->message->message)
+            // HTML code to display the message content
+            ->line('Reply: ' .  nl2br(e($this->message->content)))
             ->line('Replied by: ' . ($this->isAdmin ? 'Admin' : $this->ticket->user->name))
             ->action('View Ticket', route('support_tickets.show', $this->ticket->id));
     }
