@@ -4,7 +4,8 @@
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between" style="height: 88vh;">
+        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between"
+            style="height: 88vh;">
             <!-- Breadcrumb & Export Button -->
             <div class="flex justify-between items-center mb-3">
                 <nav class="flex text-sm text-gray-500" aria-label="Breadcrumb">
@@ -12,14 +13,16 @@
                         <li class="inline-flex items-center">
                             <a href="{{ route('dashboard') }}" class="inline-flex items-center hover:text-blue-600">
                                 <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10 2a1 1 0 01.7.3l7 7a1 1 0 01-1.4 1.4L16 10.42V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3H9v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6.58l-.3.28a1 1 0 01-1.4-1.44l7-7A1 1 0 0110 2z" />
+                                    <path
+                                        d="M10 2a1 1 0 01.7.3l7 7a1 1 0 01-1.4 1.4L16 10.42V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3H9v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6.58l-.3.28a1 1 0 01-1.4-1.44l7-7A1 1 0 0110 2z" />
                                 </svg>
                                 Dashboard
                             </a>
                         </li>
                         <li class="flex items-center">
                             <svg class="w-4 h-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
+                                <path
+                                    d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
                             </svg>
                             <span class="text-gray-700">Expense Report</span>
                         </li>
@@ -27,7 +30,8 @@
                 </nav>
                 <a href="{{ route('reports.expenses_report', request()->query()) }}" target="_blank"
                     class="inline-flex items-center px-4 py-2 bg-red-500 text-white text-sm font-medium rounded hover:bg-red-600 shadow">
-                    <svg class="w-5 h-5 sm:w-4 sm:h-4 mr-0 sm:mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 sm:w-4 sm:h-4 mr-0 sm:mr-1" fill="none" stroke="currentColor"
+                        stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
                     Export PDF
@@ -36,7 +40,8 @@
 
             <!-- Search & Advanced Filter -->
             <div>
-                <form method="GET" class="relative w-1/2 mb-4 mx-auto flex items-center">
+                <form method="GET"
+                    class="w-full sm:max-w-screen-sm mb-4 mx-auto flex items-center gap-2 bg-white border border-gray-300 rounded-full px-3 py-1 shadow-sm">
                     <span class="text-gray-500 pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -49,8 +54,7 @@
                         id="searchInput" autocomplete="off" />
                     @if (request('search'))
                         <a href="{{ route('reports.expenses') }}"
-                            class="absolute right-12 top-1.3 text-gray-400 hover:bg-gray-200 rounded-full p-1 hover:text-red-500 cursor-pointer"
-                            title="Clear search">
+                            class="text-gray-400 hover:text-red-500 p-1 transition" title="Clear search">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -60,8 +64,8 @@
                     @endif
 
                     <!-- Advanced Search Button -->
-                    <div x-data="{ showModal: false }" class="absolute right-1.5 top-1.3">
-                        <button type="button" @click="showModal = true"
+                    <div x-data="{ showFilterForm: false }" class="text-gray-600 hover:text-blue-600 p-1 transition">
+                        <button type="button" @click="showFilterForm = true"
                             class="flex items-center justify-center h-9 w-9 rounded-full hover:bg-gray-200 hover:text-white transition"
                             title="Advanced Search">
                             <svg viewBox="0 0 600 600" class="h-5 w-5">
@@ -79,14 +83,15 @@
                         </button>
 
                         <!-- Popup Modal -->
-                        <div x-show="showModal" x-cloak
+                        <div x-show="showFilterForm" x-cloak
                             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-                            @keydown.escape.window="showModal = false">
+                            @keydown.escape.window="showFilterForm = false">
                             <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6"
-                                @click.away="showModal = false">
+                                @click.away="showFilterForm = false">
                                 <div class="flex items-center justify-between mb-4">
                                     <h2 class="text-lg font-semibold text-gray-800">Advanced Filter</h2>
-                                    <button @click="showModal = false" class="text-gray-600 hover:text-red-600">
+                                    <button @click="showFilterForm = false" class="text-gray-600 hover:text-red-600"
+                                        type="button">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -101,9 +106,14 @@
                                         <select name="filter"
                                             class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-800 focus:ring-blue-100 focus:border-blue-500">
                                             <option value="">All</option>
-                                            <option value="7days" {{ request('filter') == '7days' ? 'selected' : '' }}>Last 7 Days</option>
-                                            <option value="15days" {{ request('filter') == '15days' ? 'selected' : '' }}>Last 15 Days</option>
-                                            <option value="30days" {{ request('filter') == '30days' ? 'selected' : '' }}>Last 30 Days</option>
+                                            <option value="7days" {{ request('filter') == '7days' ? 'selected' : '' }}>
+                                                Last 7 Days</option>
+                                            <option value="15days"
+                                                {{ request('filter') == '15days' ? 'selected' : '' }}>Last 15 Days
+                                            </option>
+                                            <option value="30days"
+                                                {{ request('filter') == '30days' ? 'selected' : '' }}>Last 30 Days
+                                            </option>
                                         </select>
                                     </div>
                                     <!-- Start Date -->
@@ -152,8 +162,10 @@
                                         <select name="type"
                                             class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-800 focus:ring-blue-100 focus:border-blue-500">
                                             <option value="">All Types</option>
-                                            <option value="income" {{ request('type') == 'income' ? 'selected' : '' }}>Income</option>
-                                            <option value="expense" {{ request('type') == 'expense' ? 'selected' : '' }}>Expense</option>
+                                            <option value="income"
+                                                {{ request('type') == 'income' ? 'selected' : '' }}>Income</option>
+                                            <option value="expense"
+                                                {{ request('type') == 'expense' ? 'selected' : '' }}>Expense</option>
                                         </select>
                                     </div>
                                     <!-- Buttons -->

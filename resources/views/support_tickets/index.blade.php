@@ -33,8 +33,7 @@
                 <!-- Create Button -->
                 <a href="{{ route('support_tickets.create') }}"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 shadow
-                        sm:px-4 sm:py-2 sm:text-sm
-                        px-2 py-2 text-base sm:text-sm"
+                        sm:px-4 sm:py-2 sm:text-sm"
                     title="Create">
                     <svg class="w-5 h-5 sm:w-4 sm:h-4 mr-0 sm:mr-1" fill="none" stroke="currentColor"
                         stroke-width="2" viewBox="0 0 24 24">
