@@ -45,6 +45,10 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
         Auth::user()->notifications()->where('id', $id)->first()?->markAsRead();
         return back();
     })->name('notifications.read');
+    Route::post('/notifications/read-all', function () {
+        Auth::user()->unreadNotifications->markAsRead();
+        return back();
+    })->name('notifications.markAllAsRead');
 
     Route::resource('transactions', TransactionController::class);
     Route::resource('categories', CategoryController::class);
