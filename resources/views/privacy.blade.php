@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service | Expense Tracker - An Personal Finance Tracking App</title>
+    <title>Privacy Policy | Expense Tracker - An Personal Finance Tracking App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>
@@ -134,9 +134,9 @@
         </nav>
     </header>
 
-    <div class="sm:ml-64">
-        <div class="w-full mx-auto max-w-4xl sm:px-6 lg:px-8 bg-white p-6 rounded-2xl shadow m-4">
-            <h1 class="text-3xl font-bold mb-6 text-gray-800">Privacy Policy</h1>
+    <div class="mt-24">
+        <div class="w-full mx-auto max-w-4xl sm:px-6 lg:px-8 p-6 m-4">
+            <h3 class="text-3xl text-center font-bold mb-6 text-gray-800">Privacy Policy</h3>
 
             <p class="mb-4 text-gray-700">
                 This Privacy Policy explains how Duo Dev Technologies ("we", "our", or "us") collects, uses, and
@@ -144,7 +144,7 @@
                     class="text-blue-600 underline">https://duodev.in</a>.
             </p>
 
-            <h2 class="text-2xl font-semibold mt-6 mb-2">1. Information We Collect</h2>
+            <h4 class="text-2xl font-semibold mt-6 mb-2">1. Information We Collect</h4>
             <p class="mb-2 text-gray-700">
                 When you use our services, we may collect the following personal information:
             </p>
@@ -154,7 +154,7 @@
                 <li>Usage data such as access times and pages visited (for analytics and improvements)</li>
             </ul>
 
-            <h2 class="text-2xl font-semibold mt-6 mb-2">2. Use of Google Sign-In</h2>
+            <h4 class="text-2xl font-semibold mt-6 mb-2">2. Use of Google Sign-In</h4>
             <p class="mb-4 text-gray-700">
                 We use Google Sign-In as an authentication method for account creation and login. When you log in with
                 Google, we access only your:
@@ -169,7 +169,7 @@
                 data.
             </p>
 
-            <h2 class="text-2xl font-semibold mt-6 mb-2">3. How We Use Your Information</h2>
+            <h4 class="text-2xl font-semibold mt-6 mb-2">3. How We Use Your Information</h4>
             <p class="mb-4 text-gray-700">
                 We use the collected information to:
             </p>
@@ -180,7 +180,7 @@
                 <li>Send notifications related to your activity within the app</li>
             </ul>
 
-            <h2 class="text-2xl font-semibold mt-6 mb-2">4. Data Sharing and Disclosure</h2>
+            <h4 class="text-2xl font-semibold mt-6 mb-2">4. Data Sharing and Disclosure</h4>
             <p class="mb-4 text-gray-700">
                 We do not sell, rent, or share your personal information with third parties except:
             </p>
@@ -190,13 +190,13 @@
                 </li>
             </ul>
 
-            <h2 class="text-2xl font-semibold mt-6 mb-2">5. Data Retention</h2>
+            <h4 class="text-2xl font-semibold mt-6 mb-2">5. Data Retention</h4>
             <p class="mb-4 text-gray-700">
                 We retain your data only for as long as necessary to fulfill the purposes outlined in this policy, or as
                 required by law.
             </p>
 
-            <h2 class="text-2xl font-semibold mt-6 mb-2">6. Your Rights</h2>
+            <h4 class="text-2xl font-semibold mt-6 mb-2">6. Your Rights</h4>
             <p class="mb-4 text-gray-700">
                 You have the right to:
             </p>
@@ -206,31 +206,31 @@
                 <li>Withdraw consent for data processing (e.g., stop receiving emails)</li>
             </ul>
 
-            <h2 class="text-2xl font-semibold mt-6 mb-2">7. Cookies and Tracking</h2>
+            <h4 class="text-2xl font-semibold mt-6 mb-2">7. Cookies and Tracking</h4>
             <p class="mb-4 text-gray-700">
                 We may use cookies or similar tracking technologies to improve your browsing experience. You can disable
                 cookies via your browser settings, though some functionality may be affected.
             </p>
 
-            <h2 class="text-2xl font-semibold mt-6 mb-2">8. Data Security</h2>
+            <h4 class="text-2xl font-semibold mt-6 mb-2">8. Data Security</h4>
             <p class="mb-4 text-gray-700">
                 We implement appropriate technical and organizational measures to protect your data against unauthorized
                 access, alteration, disclosure, or destruction.
             </p>
 
-            <h2 class="text-2xl font-semibold mt-6 mb-2">9. Third-Party Links</h2>
+            <h4 class="text-2xl font-semibold mt-6 mb-2">9. Third-Party Links</h4>
             <p class="mb-4 text-gray-700">
                 Our site may contain links to third-party websites or services. We are not responsible for the content
                 or privacy practices of those third parties.
             </p>
 
-            <h2 class="text-2xl font-semibold mt-6 mb-2">10. Changes to This Privacy Policy</h2>
+            <h4 class="text-2xl font-semibold mt-6 mb-2">10. Changes to This Privacy Policy</h4>
             <p class="mb-4 text-gray-700">
                 We may update this Privacy Policy from time to time. We encourage you to review this page periodically
                 for any changes. Continued use of the service after changes implies acceptance of the revised policy.
             </p>
 
-            <h2 class="text-2xl font-semibold mt-6 mb-2">11. Contact Us</h2>
+            <h4 class="text-2xl font-semibold mt-6 mb-2">11. Contact Us</h4>
             <p class="mb-4 text-gray-700">
                 If you have any questions about this Privacy Policy, please contact us at <a
                     href="mailto:support@duodev.in" class="text-blue-600 underline">support@duodev.in</a>.
