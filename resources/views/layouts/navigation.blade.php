@@ -63,8 +63,8 @@
                         @endif
                     </button>
                     <div x-show="notificationOpen" @click.away="notificationOpen = false" x-transition
-                        class="fixed top-0 right-0 w-80 mt-16 h-full bg-white border-l border-gray-200 shadow-lg flex flex-col"
-                        style="display: none; z-index: 10000 !important;">
+                        class="fixed top-0 right-0 w-80 mt-16 h-full bg-white border-l border-gray-200 shadow-lg flex flex-col z-[9999]"
+                        style="display: none; isolation: isolate; transform: translateZ(0);" >
                         <div class="flex items-center justify-between px-4 py-3 border-b">
                             <span class="font-semibold text-lg">Notifications</span>
                             <button @click="notificationOpen = false" class="text-gray-500 hover:text-gray-700">

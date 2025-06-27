@@ -4,7 +4,8 @@
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between" style="height: 88vh;">
+        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between"
+            style="height: 88vh;">
 
             <!-- Breadcrumb & Create Button -->
             <div class="flex justify-between items-center mb-3">
@@ -32,7 +33,8 @@
                 <!-- Create Button -->
                 <a href="{{ route('categories.create') }}"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 shadow">
-                    <svg class="w-5 h-5 sm:w-4 sm:h-4 mr-0 sm:mr-1 sm:mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 sm:w-4 sm:h-4 mr-0 sm:mr-1 sm:mr-1" fill="none" stroke="currentColor"
+                        stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
                     <span class="hidden sm:inline">Create</span>
@@ -40,9 +42,10 @@
             </div>
 
             <!-- Filters -->
-            <form method="GET" class="relative w-full sm:w-1/2 mb-4 mx-auto flex items-center">
+            <form method="GET"
+                class="w-full sm:max-w-screen-sm mb-4 mx-auto flex items-center gap-2 bg-white border border-gray-300 rounded-full px-3 py-1 shadow-sm">
                 <!-- Lens Icon (left) -->
-                <span class="absolute left-4 text-gray-500 pointer-events-none">
+                <span class="text-gray-500 pointer-events-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -50,12 +53,11 @@
                     </svg>
                 </span>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search ..."
-                    class="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-14 pr-10 text-l text-gray-900 shadow-sm focus:ring-blue-100 focus:border-blue-400"
+                    class="flex-grow border-0 focus:ring-0 focus:outline-none text-base text-gray-900 bg-transparent"
                     id="searchInput" autocomplete="off" />
                 @if (request('search'))
                     <!-- Reset (close) icon, only show if search is not empty -->
-                    <a href="{{ route('categories.index') }}"
-                        class="absolute right-1.5 top-1.3 text-gray-400 hover:bg-gray-200 rounded-full p-1 hover:text-red-500 cursor-pointer"
+                    <a href="{{ route('categories.index') }}" class="text-gray-400 hover:text-red-500 p-1 transition"
                         title="Clear search">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -86,9 +88,8 @@
                                 <td class="px-4 py-2 text-center space-x-2">
                                     <a href="{{ route('categories.edit', $category->id) }}"
                                         class="text-blue-600 hover:underline">Edit</a>
-                                    <form action="{{ route('categories.destroy', $category->id) }}"
-                                        method="POST" class="inline-block"
-                                        onsubmit="return confirm('Delete this category?')">
+                                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
+                                        class="inline-block" onsubmit="return confirm('Delete this category?')">
                                         @csrf
                                         @method('DELETE')
                                         <button class="text-red-600 hover:underline">Delete</button>

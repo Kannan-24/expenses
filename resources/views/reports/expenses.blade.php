@@ -37,7 +37,7 @@
             <!-- Search & Advanced Filter -->
             <div>
                 <form method="GET" class="relative w-1/2 mb-4 mx-auto flex items-center">
-                    <span class="absolute left-4 text-gray-500 pointer-events-none">
+                    <span class="text-gray-500 pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -45,7 +45,7 @@
                         </svg>
                     </span>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search ..."
-                        class="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-12 pr-10 text-l text-gray-900 shadow-sm focus:ring-blue-100 focus:border-blue-400"
+                        class="flex-grow border-0 focus:ring-0 focus:outline-none text-base text-gray-900 bg-transparent"
                         id="searchInput" autocomplete="off" />
                     @if (request('search'))
                         <a href="{{ route('reports.expenses') }}"

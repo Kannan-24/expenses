@@ -45,33 +45,33 @@
             </div>
 
             <!-- Filters -->
-            <form method="GET" class="relative w-full sm:w-1/2 mb-4 mx-auto flex items-center"
-                x-data="{ showModal: false }">
+            <form method="GET"
+                class="w-full sm:max-w-screen-sm mb-4 mx-auto flex items-center gap-2 bg-white border border-gray-300 rounded-full px-3 py-1 shadow-sm">
                 <!-- Lens Icon (left) -->
-                <span class="absolute left-4 text-gray-500 pointer-events-none">
+                <span class="text-gray-500 pointer-events-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
                     </svg>
                 </span>
+
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search ..."
-                    class="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-12 pr-10 text-l text-gray-900 shadow-sm focus:ring-blue-100 focus:border-blue-400"
+                    class="flex-grow border-0 focus:ring-0 focus:outline-none text-base text-gray-900 bg-transparent"
                     id="searchInput" autocomplete="off" />
+
                 <!-- Show X mark if any filter/search is applied -->
                 @php
                     $hasFilters =
                         request('search') ||
                         request('filter') ||
                         request('start_date') ||
-                        request('end_date') ||
-                        request('category') ||
-                        request('person') ||
-                        request('type');
+                        request('end_date');
                 @endphp
+
                 <a href="{{ route('support_tickets.index') }}"
-                    class="absolute right-12 top-1.5 text-gray-400 hover:bg-gray-200 rounded-full p-1 hover:text-red-500 cursor-pointer
-                    {{ $hasFilters ? '' : 'pointer-events-none opacity-50' }}"
+                    class="text-gray-400 hover:text-red-500 p-1 transition
+                    {{ $hasFilters ? '' : 'pointer-events-none' }}"
                     title="Clear filters and search">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -80,9 +80,10 @@
                     </svg>
                 </a>
 
+
                 <!-- Advanced Search Button (right) -->
-                <div class="absolute right-1.5 top-1.5">
-                    <button type="button" @click="showModal = true"
+                <div class="text-gray-600 hover:text-blue-600 p-1 transition" x-data="{ showFilterForm: false }">
+                    <button type="button" @click="showFilterForm = true"
                         class="flex items-center justify-center h-9 w-9 rounded-full hover:bg-gray-200 hover:text-white transition"
                         title="Advanced Search">
                         <svg viewBox="0 0 600 600" class="h-5 w-5">
@@ -100,14 +101,16 @@
                     </button>
 
                     <!-- Popup Modal (Hidden by default) -->
-                    <div x-show="showModal" x-cloak
-                        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+                    <div x-show="showFilterForm" x-cloak
+                        class="fixed inset-0 z-0 flex items-center justify-center bg-black/50 p-4"
                         @keydown.escape.window="showModal = false">
 
-                        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6" @click.away="showModal = false">
+                        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6"
+                            @click.away="showFilterForm = false">
                             <div class="flex items-center justify-between mb-4">
                                 <h2 class="text-lg font-semibold text-gray-800">Advanced Search</h2>
-                                <button @click="showModal = false" class="text-gray-600 hover:text-red-600">
+                                <button @click="showFilterForm = false" class="text-gray-600 hover:text-red-600"
+                                    type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -119,38 +122,36 @@
                             <!-- Filter Form -->
                             <form method="GET" id="support-ticket-filter-form" class="space-y-4">
                                 <!-- Quick Filter -->
-                                <div>
+                                <div class="mb-4">
                                     <label class="text-sm text-gray-600 block mb-1">Quick Filter</label>
                                     <select name="filter"
                                         class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-800 focus:ring-blue-100 focus:border-blue-500">
                                         <option value="">All</option>
-                                        <option value="7days" {{ request('filter') == '7days' ? 'selected' : '' }}>
-                                            Last 7 Days</option>
+                                        <option value="7days" {{ request('filter') == '7days' ? 'selected' : '' }}>Last
+                                            7 Days</option>
                                         <option value="15days" {{ request('filter') == '15days' ? 'selected' : '' }}>
-                                            Last 15 Days
-                                        </option>
+                                            Last 15 Days</option>
                                         <option value="1month" {{ request('filter') == '1month' ? 'selected' : '' }}>
-                                            Last 1 Month
-                                        </option>
+                                            Last 1 Month</option>
                                     </select>
                                 </div>
 
                                 <!-- Start Date -->
-                                <div>
+                                <div class="mb-4">
                                     <label class="text-sm text-gray-600 block mb-1">Start Date</label>
                                     <input type="date" name="start_date" value="{{ request('start_date') }}"
                                         class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-800 focus:ring-blue-100 focus:border-blue-500" />
                                 </div>
 
                                 <!-- End Date -->
-                                <div>
+                                <div class="mb-4">
                                     <label class="text-sm text-gray-600 block mb-1">End Date</label>
                                     <input type="date" name="end_date" value="{{ request('end_date') }}"
                                         class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-800 focus:ring-blue-100 focus:border-blue-500" />
                                 </div>
 
                                 <!-- Status Filter -->
-                                <div>
+                                <div class="mb-4">
                                     <label class="text-sm text-gray-600 block mb-1">Status</label>
                                     <select name="status"
                                         class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-800 focus:ring-blue-100 focus:border-blue-500">
@@ -170,7 +171,7 @@
 
                                 <!-- User Filter (only for admin) -->
                                 @if (Auth::user()->hasRole('admin'))
-                                    <div>
+                                    <div class="mb-4">
                                         <label class="text-sm text-gray-600 block mb-1">User</label>
                                         <select name="user"
                                             class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-800 focus:ring-blue-100 focus:border-blue-500">
@@ -199,6 +200,7 @@
                     </div>
                 </div>
             </form>
+
             <div class="w-full mb-6 mx-auto mt-4 flex items-start">
                 <form method="GET" id="showDeletedForm" class="flex items-center w-full">
                     <input type="hidden" name="search" value="{{ request('search') }}">
@@ -211,7 +213,7 @@
 
             <!-- Scrollable Table Area -->
             <div class="overflow-auto flex-1">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     @forelse ($supportTickets as $supportTicket)
                         <div
                             class="bg-white border border-gray-200 shadow-sm rounded-xl p-5 transition hover:shadow-md flex flex-col justify-between h-full">
