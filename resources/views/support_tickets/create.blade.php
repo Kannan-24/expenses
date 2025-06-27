@@ -66,7 +66,7 @@
                     <label for="editor" class="block text-sm font-semibold text-gray-700">Message</label>
                     <textarea id="editor" name="message"
                         class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        required>{{ old('message') }}</textarea>
+                        >{{ old('message') }}</textarea>
                     @error('message')
                         <span class="text-sm text-red-600">{{ $message }}</span>
                     @enderror

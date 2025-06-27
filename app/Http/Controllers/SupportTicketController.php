@@ -74,7 +74,7 @@ class SupportTicketController extends Controller
     /**
      * Add a message to the support ticket.
      */
-    public function replay(Request $request, SupportTicket $supportTicket)
+    public function reply(Request $request, SupportTicket $supportTicket)
     {
         if (!$this->canAccessTicket($supportTicket)) {
             return redirect()->route('support_tickets.index')->with('error', 'You do not have permission to add a message to this support ticket.');

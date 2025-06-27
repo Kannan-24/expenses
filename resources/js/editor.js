@@ -22,6 +22,7 @@ tinymce.init({
     license_key: 'gpl',
     promotion: false,
 
+    paste_data_images: true,
     images_upload_url: '/upload-image',
     automatic_uploads: true,
     images_upload_handler: function (blobInfo, success, failure) {

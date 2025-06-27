@@ -20,11 +20,11 @@ class HelperController extends Controller
         $imageName = time() . '.' . $image->getClientOriginalExtension();
 
         // Private storage path
-        Storage::disk('local')->putFileAs('uploads', $image, $imageName);
+        $image->storeAs('uploads', $imageName, 'public');
 
         // Return the image URL
         return response()->json([
-            'url' => Storage::url('uploads/' . $imageName),
+            'location' => Storage::url('uploads/' . $imageName),
         ]);
     }
 }
