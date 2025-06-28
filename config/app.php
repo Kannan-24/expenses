@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'DD Expenses'),
+    'name' => env('APP_NAME', 'Duo Dev Expenses'),
 
     /*
     |--------------------------------------------------------------------------

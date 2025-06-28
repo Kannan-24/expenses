@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <x-slot name="title">Privacy Policy | DD Expenses - A Personal Finance Tracking App</x-slot>
+    <x-slot name="title">Privacy Policy | Duo Dev Expenses - A Personal Finance Tracking App</x-slot>
 
 
     <div class="mt-24">

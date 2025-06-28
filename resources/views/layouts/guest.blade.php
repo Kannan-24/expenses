@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>
-        {{ $title ?? 'DD Expenses - An Personal Expense Tracking App by Duo Dev Technologies' }}
+        {{ $title ?? 'Duo Dev Expenses - An Personal Expense Tracking App by Duo Dev Technologies' }}
     </title>
 
     <!-- Fonts -->
@@ -64,7 +64,7 @@
     <header id="main-navbar"
         class="flex justify-between items-center p-4 shadow-sm bg-white z-50 transition-all duration-300 fixed top-0 left-0 w-full"
         x-data="{ openNav: false }">
-        <h1 class="text-lg font-bold ml-2 md:ml-0">DD Expenses</h1>
+        <h1 class="text-lg font-bold ml-2 md:ml-0">Duo Dev Expenses</h1>
         <!-- Mobile menu button -->
         <div class="md:hidden flex items-center">
             <button @click="openNav = !openNav" class="focus:outline-none p-1 ml-0">
@@ -195,7 +195,7 @@
                     class="text-white font-bold hover:underline">Duo Dev Technologies</a>. All rights reserved.
             </p>
             <p>
-                <strong class="text-white">DD Expenses</strong> — A personal finance management product by <a
+                <strong class="text-white">Duo Dev Expenses</strong> — A personal finance management product by <a
                     href="https://duodev.in" target="_blank" rel="noopener"
                     class="text-white font-bold hover:underline">Duo Dev Technologies</a>.
             </p>

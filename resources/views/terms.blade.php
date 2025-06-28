@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <x-slot name="title">Terms of Service | DD Expenses - A Personal Finance Tracking App</x-slot>
+    <x-slot name="title">Terms of Service | Duo Dev Expenses - A Personal Finance Tracking App</x-slot>
 
     <div class="mt-24">
         <div class="w-full mx-auto max-w-4xl sm:px-6 lg:px-8 p-6 m-4">

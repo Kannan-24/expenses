@@ -1,10 +1,8 @@
 <x-guest-layout>
 
     <x-slot name="title">
-        DD Expenses - An Personal Expense Tracking App by Duo Dev Technologies
+        Duo Dev Expenses - An Personal Expense Tracking App by Duo Dev Technologies
     </x-slot>
-
-    <x-google-analytics-body />
 
     <!-- Hero Section -->
     <section id="home"
@@ -37,7 +35,7 @@
     <section id="features" class="text-center py-16 relative"
         style="background: url('{{ asset('assets/Features_BG.png') }}') center center / cover no-repeat; min-height: 100vh; box-shadow: 0 -30px 40px -20px rgba(0,0,0,0.08) inset, 0 30px 40px -20px rgba(0,0,0,0.08) inset;">
         <div class="relative z-10 mx-auto w-full px-2 sm:px-6">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-8">Why Use DD Expenses</h2>
+            <h2 class="text-3xl sm:text-4xl font-bold mb-8">Why Use Duo Dev Expenses</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-10 px-2 sm:px-10 w-max mx-auto">
                 @php
                     $features = [
@@ -185,19 +183,19 @@
             <h2 class="text-2xl sm:text-4xl font-bold text-center mb-4 sm:mb-6">Frequently Asked Questions</h2>
             <p class="text-center text-gray-500 mb-8 sm:mb-12 text-sm sm:text-base">Everything you need to know
                 about
-                DD Expenses</p>
+                Duo Dev Expenses</p>
 
             @php
                 $faqs = [
                     [
-                        'question' => 'What is DD Expenses?',
+                        'question' => 'What is Duo Dev Expenses?',
                         'answer' =>
-                            'DD Expenses is a simple and powerful tool to help you manage your personal finances. You can track daily spending, set budgets, manage wallets, and get insights — all in one place.',
+                            'Duo Dev Expenses is a simple and powerful tool to help you manage your personal finances. You can track daily spending, set budgets, manage wallets, and get insights — all in one place.',
                     ],
                     [
-                        'question' => 'Is DD Expenses free to use?',
+                        'question' => 'Is Duo Dev Expenses free to use?',
                         'answer' =>
-                            'Yes! DD Expenses is completely free to use. We’re focused on helping individuals build better financial habits without cost.',
+                            'Yes! Duo Dev Expenses is completely free to use. We’re focused on helping individuals build better financial habits without cost.',
                     ],
                     [
                         'question' => 'Do I need to create an account?',
@@ -235,9 +233,9 @@
                             'Not yet. We’re working on it! For now, you can use the web version on any device. Stay tuned for app updates.',
                     ],
                     [
-                        'question' => 'Who built DD Expenses?',
+                        'question' => 'Who built Duo Dev Expenses?',
                         'answer' =>
-                            'DD Expenses is proudly built by Duo Dev Technologies, with the goal of making personal finance simple and accessible for everyone.',
+                            'Duo Dev Expenses is proudly built by Duo Dev Technologies, with the goal of making personal finance simple and accessible for everyone.',
                     ],
                 ];
             @endphp
