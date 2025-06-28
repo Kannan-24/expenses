@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? config('app.name', 'expenses') }}</title>
+    <title>{{ $title ?? config('app.name', 'DD Expenses') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -49,6 +49,7 @@
         }
     </style>
 
+    <script src="https://accounts.google.com/gsi/client" async></script>
 
     <x-google-analytics-head />
 </head>
@@ -56,6 +57,10 @@
 <body class="font-sans antialiased text-gray-900">
 
     <x-google-analytics-body />
+
+    <div id="g_id_onload" data-client_id="{{ config('services.google.client_id') }}" data-context="signin"
+        data-ux_mode="redirect" data-login_uri="https://expenses.duodev.in/auth/google" data-itp_support="true">
+    </div>
 
     <!-- Navbar -->
     <header id="main-navbar"
@@ -104,6 +109,7 @@
                 </a>
             </div>
         </div>
+        
         <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-2 md:gap-4">
             @foreach ($nav as $item)

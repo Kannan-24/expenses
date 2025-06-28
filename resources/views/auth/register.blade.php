@@ -2,7 +2,7 @@
     <x-slot name="title">
         {{ __('Register') }} - {{ config('app.name', 'expenses') }}
     </x-slot>
-    <div class="flex flex-col items-center min-h-screen pt-6 bg-blue-200 sm:justify-center">
+    <div class="flex flex-col items-center min-h-screen pt-20 pb-2 bg-blue-200 sm:justify-center">
         <div class="flex items-center justify-center min-h-screen px-6">
             <div class="grid w-full max-w-6xl overflow-hidden bg-white rounded-lg shadow-lg">
                 <div class="max-w-md p-8 mx-auto">

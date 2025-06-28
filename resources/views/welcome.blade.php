@@ -6,10 +6,6 @@
 
     <x-google-analytics-body />
 
-    <div id="g_id_onload" data-client_id="{{ config('services.google.client_id') }}" data-context="signin"
-        data-ux_mode="redirect" data-login_uri="https://expenses.duodev.in/auth/google" data-itp_support="true">
-    </div>
-
     <!-- Hero Section -->
     <section id="home"
         class="flex flex-col md:flex-row justify-between items-center px-4 sm:px-6 md:px-10 py-10 md:py-20 bg-gray-50 min-h-screen"
