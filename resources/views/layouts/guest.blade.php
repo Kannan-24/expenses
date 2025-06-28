@@ -59,7 +59,7 @@
     <x-google-analytics-body />
 
     <div id="g_id_onload" data-client_id="{{ config('services.google.client_id') }}" data-context="signin"
-        data-ux_mode="redirect" data-login_uri="https://expenses.duodev.in/auth/google" data-itp_support="true">
+        data-ux_mode="redirect" data-login_uri="https://expenses.duodev.in/auth/google/callback" data-itp_support="true">
     </div>
 
     <!-- Navbar -->
@@ -109,7 +109,7 @@
                 </a>
             </div>
         </div>
-        
+
         <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-2 md:gap-4">
             @foreach ($nav as $item)
