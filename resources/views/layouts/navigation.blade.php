@@ -14,7 +14,7 @@
                 </button>
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
                     <x-application-logo class="w-auto h-8" />
-                    <span class="hidden text-2xl font-semibold text-gray-900 sm:inline">Expense Tracker</span>
+                    <span class="hidden text-2xl font-semibold text-gray-900 sm:inline">DD Expenses</span>
                 </a>
             </div>
             <div class="flex items-center space-x-4">
@@ -148,7 +148,7 @@
             <div class="flex items-center justify-between px-4 py-4 border-b">
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
                     <x-application-logo class="w-auto h-8" />
-                    <span class="text-2xl font-semibold text-gray-900">Expense Tracker</span>
+                    <span class="text-2xl font-semibold text-gray-900">DD Expenses</span>
                 </a>
                 <button @click="sidebarOpen = false"
                     class="sm:hidden text-gray-500 hover:text-gray-700 focus:outline-none">
