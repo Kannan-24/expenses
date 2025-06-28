@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? config('app.name', 'DD Expenses') }}</title>
+    <title>
+        {{ $title ?? 'DD Expenses - An Personal Expense Tracking App by Duo Dev Technologies' }}
+    </title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -57,10 +59,6 @@
 <body class="font-sans antialiased text-gray-900">
 
     <x-google-analytics-body />
-
-    <div id="g_id_onload" data-client_id="{{ config('services.google.client_id') }}" data-context="signin"
-        data-ux_mode="redirect" data-login_uri="https://expenses.duodev.in/auth/google/callback" data-itp_support="true">
-    </div>
 
     <!-- Navbar -->
     <header id="main-navbar"
@@ -150,7 +148,7 @@
 
 
     <!-- Footer -->
-    <footer class="bg-[#0F172A] text-white pt-10 pb-8">
+    <footer class="bg-[#0F172A] text-white pt-10 pb-6">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
             <!-- Quick Links -->
             <div>
@@ -191,11 +189,16 @@
         </div>
 
         <!-- Bottom Text -->
-        <div class="text-center text-sm text-gray-400 mt-10 px-4">
-            <strong class="text-white">DD Expenses</strong> — A personal finance management product by
-            <a href="https://duodev.in" target="_blank" rel="noopener"
-                class="text-white font-bold hover:underline">Duo
-                Dev Technologies</a>.
+        <div class="text-sm text-gray-400 mt-10 px-4 flex justify-between items-center">
+            <p>
+                &copy; {{ date('Y') }} <a href="https://duodev.in" target="_blank" rel="noopener"
+                    class="text-white font-bold hover:underline">Duo Dev Technologies</a>. All rights reserved.
+            </p>
+            <p>
+                <strong class="text-white">DD Expenses</strong> — A personal finance management product by <a
+                    href="https://duodev.in" target="_blank" rel="noopener"
+                    class="text-white font-bold hover:underline">Duo Dev Technologies</a>.
+            </p>
         </div>
     </footer>
 
@@ -245,6 +248,44 @@
                 }
             });
         });
+
+        @guest
+        window.onload = function() {
+            google.accounts.id.initialize({
+                client_id: "{{ config('services.google.client_id') }}",
+                callback: handleCredentialResponse
+            });
+
+            google.accounts.id.prompt();
+        };
+
+        function handleCredentialResponse(response) {
+            // Send the JWT ID token to your Laravel backend
+            fetch('/google-onetap-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({
+                        token: response.credential
+                    })
+                }).then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/dashboard';
+                    } else {
+                        const toast = `<div class="fixed bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded shadow-lg">
+                        ${data.message}
+                        </div>`;
+                        document.body.insertAdjacentHTML('beforeend', toast);
+                        setTimeout(() => {
+                            document.querySelector('.fixed.bottom-4.right-4').remove();
+                        }, 4000);
+                    }
+                });
+        }
+        @endguest
     </script>
 </body>
 

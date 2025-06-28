@@ -1,7 +1,7 @@
 <x-guest-layout>
 
     <x-slot name="title">
-        DD Expenses - A Personal Finance Tracking App
+        DD Expenses - An Personal Expense Tracking App by Duo Dev Technologies
     </x-slot>
 
     <x-google-analytics-body />

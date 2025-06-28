@@ -37,6 +37,7 @@ Route::middleware('guest')->group(function () {
 
     Route::get('auth/google', [SocialLoginController::class, 'redirectToGoogle'])->name('google.login');
     Route::get('auth/google/callback', [SocialLoginController::class, 'handleGoogleCallback']);
+    Route::post('/google-onetap-login', [SocialLoginController::class, 'handleOneTap']);
 });
 
 Route::middleware('auth')->group(function () {
