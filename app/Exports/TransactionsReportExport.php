@@ -292,7 +292,7 @@ class CategoryAnalysisSheet implements FromArray, WithHeadings, WithStyles, With
                 $categoryName ?: 'Uncategorized',
                 $categoryData['amount'],
                 $categoryData['count'],
-                $categoryData['percentage'],
+                $categoryData['percentage'] / 100,
                 $categoryData['count'] > 0 ? $categoryData['amount'] / $categoryData['count'] : 0,
             ];
         }
@@ -398,8 +398,8 @@ class CategoryAnalysisSheet implements FromArray, WithHeadings, WithStyles, With
             DataSeries::TYPE_PIECHART,
             DataSeries::GROUPING_STANDARD,
             $plotOrder,
-            [$categories],
             [],
+            [$categories],
             [$values]
         );
 
@@ -561,12 +561,18 @@ class MonthlyTrendsSheet implements FromCollection, WithHeadings, WithStyles, Wi
         $expense = new DataSeriesValues('Number', "'Monthly Trends'!\$C\$2:\$C\$" . $rowCount, null, $rowCount - 1);
         $net = new DataSeriesValues('Number', "'Monthly Trends'!\$D\$2:\$D\$" . $rowCount, null, $rowCount - 1);
 
+        $seriesLabels = [
+            new DataSeriesValues('String', "'Monthly Trends'!\$B\$1", null, 1), // Income
+            new DataSeriesValues('String', "'Monthly Trends'!\$C\$1", null, 1), // Expense
+            new DataSeriesValues('String', "'Monthly Trends'!\$D\$1", null, 1), // Net
+        ];
+
         // Build the data series
         $series = new DataSeries(
             DataSeries::TYPE_LINECHART,
             DataSeries::GROUPING_STANDARD,
             [0, 1, 2],
-            [],
+            $seriesLabels,
             [$months],
             [$income, $expense, $net]
         );
