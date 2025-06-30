@@ -20,7 +20,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3f gap-6">
             <!-- Recently Registered Users Table -->
-            <div class="bg-white shadow rounded-lg p-6 mb-8 sm:col-span-2">
+            <div class="bg-white shadow rounded-lg p-6 mb-8 sm:col-span-2 overflow-x-auto">
                 <h3 class="text-xl font-semibold p-4 border-b">Recently Registered Users</h3>
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
