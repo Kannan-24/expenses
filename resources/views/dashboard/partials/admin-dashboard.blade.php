@@ -18,7 +18,7 @@
                 color="red" />
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3f gap-6">
             <!-- Recently Registered Users Table -->
             <div class="bg-white shadow rounded-lg p-6 mb-8 sm:col-span-2">
                 <h3 class="text-xl font-semibold p-4 border-b">Recently Registered Users</h3>
@@ -66,7 +66,7 @@
 
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-white shadow rounded-lg p-6 mb-8 sm:col-span-2">
                 <h3 class="text-xl font-semibold p-4 border-b">Support Tickets</h3>
                 <ul class="divide-y divide-gray-200">
