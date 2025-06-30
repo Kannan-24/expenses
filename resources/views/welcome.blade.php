@@ -36,7 +36,7 @@
         style="background: url('{{ asset('assets/Features_BG.png') }}') center center / cover no-repeat; min-height: 100vh; box-shadow: 0 -30px 40px -20px rgba(0,0,0,0.08) inset, 0 30px 40px -20px rgba(0,0,0,0.08) inset;">
         <div class="relative z-10 mx-auto w-full px-2 sm:px-6">
             <h2 class="text-3xl sm:text-4xl font-bold mb-8">Why Use Duo Dev Expenses</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-10 px-2 sm:px-10 w-max mx-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10 px-2 sm:px-10 w-full max-w-6xl mx-auto">
                 @php
                     $features = [
                         [
@@ -118,7 +118,7 @@
                 financial habits.
             </p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-10">
 
                 @php
                     $steps = [
@@ -156,6 +156,7 @@
                         ],
                     ];
                 @endphp
+
                 @foreach ($steps as $step)
                     <div
                         class="bg-white rounded-3xl shadow-lg p-6 flex flex-col items-start justify-start text-left h-auto sm:h-[330px]">

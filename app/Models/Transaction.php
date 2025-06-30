@@ -20,6 +20,10 @@ class Transaction extends Model
         'note',
     ];
 
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     // Expense belongs to a user
     public function user()
     {

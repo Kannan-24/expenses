@@ -41,12 +41,7 @@
 
         @media (max-width: 768px) {
             .nav-link::after {
-                width: 20px;
-                height: 1.5px;
-                margin: 0;
-                margin-left: 0;
-                left: 0;
-                right: auto;
+                display: hidden;
             }
         }
     </style>
@@ -62,7 +57,7 @@
 
     <!-- Navbar -->
     <header id="main-navbar"
-        class="flex justify-between items-center p-4 shadow-sm bg-white z-50 transition-all duration-300 fixed top-0 left-0 w-full"
+        class="flex justify-between items-center p-4 shadow-sm bg-white z-50 transition-all duration-300 fixed top-0 left-0 w-full max-w-screen"
         x-data="{ openNav: false }">
         <h1 class="text-lg font-bold ml-2 md:ml-0">Duo Dev Expenses</h1>
         <!-- Mobile menu button -->
@@ -90,18 +85,18 @@
                 @endphp
                 @foreach ($nav as $item)
                     <a href="{{ $item['href'] }}"
-                        class="nav-link px-3 py-1 rounded transition block text-left text-base w-auto @if (request()->get('section') === ltrim($item['href'], '#')) text-blue-600 font-semibold @endif"
+                        class="nav-link px-3 py-4 rounded transition block text-left text-base w-auto @if (request()->get('section') === ltrim($item['href'], '#')) text-blue-600 font-semibold @endif"
                         @click="openNav = false">
                         {{ $item['label'] }}
                     </a>
                 @endforeach
                 <a href="{{ route('login') }}"
-                    class="nav-link px-3 py-1 rounded transition block text-left text-base w-auto @if (Route::currentRouteName() === 'login') text-blue-600 font-semibold @endif"
+                    class="nav-link px-3 py-4 rounded transition block text-left text-base w-auto @if (Route::currentRouteName() === 'login') text-blue-600 font-semibold @endif"
                     @click="openNav = false">
                     Sign In
                 </a>
                 <a href="{{ route('register') }}"
-                    class="bg-blue-600 text-white px-4 py-1 rounded-full hover:bg-blue-700 transition font-semibold shadow block text-left text-base w-auto @if (Route::currentRouteName() === 'register') ring-2 ring-blue-400 @endif"
+                    class="bg-blue-600 text-white px-4 py-4 rounded-full hover:bg-blue-700 transition font-semibold shadow block text-left text-base w-auto @if (Route::currentRouteName() === 'register') ring-2 ring-blue-400 @endif"
                     @click="openNav = false">
                     Sign Up
                 </a>
@@ -121,13 +116,6 @@
                     class="bg-blue-600 text-white px-5 py-2 rounded-full ml-2 hover:bg-blue-700 transition font-semibold shadow">
                     <span class="z-10">Dashboard</span>
                 </a>
-                <form method="POST" action="{{ route('logout') }}" class="inline">
-                    @csrf
-                    <button type="submit"
-                        class="relative nav-link flex flex-col items-center px-3 py-1 rounded transition bg-red-600 text-white hover:bg-red-700">
-                        <span class="z-10">Logout</span>
-                    </button>
-                </form>
             @endauth
             @if (!auth()->check())
                 <a href="{{ route('login') }}"

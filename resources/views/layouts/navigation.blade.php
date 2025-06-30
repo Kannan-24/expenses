@@ -58,13 +58,14 @@
                                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a2 2 0 00-4 0v.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m7 0v1a3 3 0 01-6 0v-1m6 0H9" />
                         </svg>
                         @if (Auth::user()->unreadNotifications->count() > 0)
-                            <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full animate-ping"></span>
+                            <span
+                                class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full animate-ping"></span>
                             <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
                         @endif
                     </button>
                     <div x-show="notificationOpen" @click.away="notificationOpen = false" x-transition
                         class="fixed top-0 right-0 w-80 mt-16 h-full bg-white border-l border-gray-200 shadow-lg flex flex-col z-[9999]"
-                        style="display: none; isolation: isolate; transform: translateZ(0);" >
+                        style="display: none; isolation: isolate; transform: translateZ(0);">
                         <div class="flex items-center justify-between px-4 py-3 border-b">
                             <span class="font-semibold text-lg">Notifications</span>
                             <button @click="notificationOpen = false" class="text-gray-500 hover:text-gray-700">
@@ -214,7 +215,7 @@
                 @endcan
                 @can('generate reports')
                     <li>
-                        <a href="{{ route('reports.expenses') }}"
+                        <a href="{{ route('reports.index') }}"
                             class="flex items-center px-4 py-4
                             {{ request()->routeIs('reports.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
                             <span class="ml-3">Reports</span>

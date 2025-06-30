@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 Route::get('/terms-of-service', function () {
     return view('terms');
@@ -76,8 +76,6 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
 
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
-    Route::get('/reports/expenses', [ReportController::class, 'expenses'])->name('reports.expenses');
-    Route::get('/reports/expenses/pdf', [ReportController::class, 'expensesPdf'])->name('reports.expenses_report');
 
     // Admin Routes
     Route::resources([

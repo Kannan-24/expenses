@@ -6,22 +6,32 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\ExpensePerson;
+use App\Models\SupportTicket;
 use App\Models\Wallet;
+use App\Services\TransactionReportService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
+    protected $reportService;
+
+    public function __construct()
+    {
+        $this->reportService = new TransactionReportService();
+    }
+
     // Show report index page
     public function index()
     {
-        $categories = Category::where('user_id', auth()->id())
+        $categories = Category::where('user_id', Auth::id())
             ->orderBy('name')->get()->pluck('name', 'id');
 
-        $people = ExpensePerson::where('user_id', auth()->id())
+        $people = ExpensePerson::where('user_id', Auth::id())
             ->select('id', 'name')->distinct()->orderBy('name')->get()->pluck('name', 'id');
 
-        $wallets = Wallet::where('user_id', auth()->id())
+        $wallets = Wallet::where('user_id', Auth::id())
             ->select('id', 'name')->distinct()->orderBy('name')->get()->pluck('name', 'id');
 
         return view('reports.index', compact('categories', 'people', 'wallets'));
@@ -30,212 +40,146 @@ class ReportController extends Controller
     public function generate(Request $request)
     {
         $request->validate([
-            'type' => 'required|in:transactions,wallets,budgets,support_tickets',
+            'report_type' => 'required|in:transactions,budgets,tickets',
+            'report_format' => 'required|in:pdf,html,csv,xlsx',
+
+            'date_range' => 'required|in:all,today,yesterday,this_week,last_week,this_month,last_month,custom',
             'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+
+            // Transactions specific filters
+            'transaction_type' => 'required_if:report_type,transactions|in:income,expense,all',
+            'amount' => 'nullable|numeric',
+            'amount_filter' => 'nullable|in:<,>,=',
+
+            // Budgets specific filters
+            'budget_category_id' => 'nullable|exists:categories,id',
+
+            // Support tickets specific filters
+            'status' => 'nullable|in:all,opened,closed,admin_replied,customer_replied',
+            'is_trashed' => 'nullable|boolean',
         ]);
 
-        $data = [];
-        $view = '';
 
-        switch ($request->type) {
+        switch ($request->report_type) {
             case 'transactions':
-                $data = $this->getTransactionReport($request);
-                $view = 'reports.transactions';
+                return $this->generateTransactionsReport($request);
                 break;
-
-            case 'wallets':
-                $data = $this->getWalletReport($request);
-                $view = 'reports.wallets';
-                break;
-
             case 'budgets':
-                $data = $this->getBudgetReport($request);
-                $view = 'reports.budgets';
+                return $this->generateBudgetsReport($request);
                 break;
-
-            case 'support_tickets':
-                $data = $this->getSupportTicketReport($request);
-                $view = 'reports.support_tickets';
+            case 'tickets':
+                return $this->generateTicketsReport($request);
                 break;
+            default:
+                return redirect()->back()->withErrors(['report_type' => 'Invalid report type selected.']);
         }
-
-        $pdf = Pdf::loadView($view, ['data' => $data, 'filters' => $request->all()]);
-        return $pdf->stream($request->type . '_report.pdf');
     }
 
-    private function getTransactionReport(Request $request)
+    // Generate transactions report
+    private function generateTransactionsReport(Request $request)
     {
-        return Transaction::with('category', 'expensePerson', 'wallet')
-            ->when($request->start_date, fn($q) => $q->where('date', '>=', $request->start_date))
-            ->when($request->end_date, fn($q) => $q->where('date', '<=', $request->end_date))
-            ->when($request->category_id, fn($q) => $q->where('category_id', $request->category_id))
-            ->when($request->expense_person_id, fn($q) => $q->where('expense_person_id', $request->expense_person_id))
-            ->when($request->type, fn($q) => $q->where('type', $request->type))
-            ->when($request->wallet_id, fn($q) => $q->where('wallet_id', $request->wallet_id))
-            ->get();
+        return $this->reportService->generateTransactionsReport($request);
     }
 
-    private function getWalletReport(Request $request)
+    // Generate budgets report
+    private function generateBudgetsReport(Request $request)
     {
-        return Transaction::with('category', 'expensePerson', 'wallet')
-            ->whereNotNull('wallet_id')
-            ->when($request->start_date, fn($q) => $q->where('date', '>=', $request->start_date))
-            ->when($request->end_date, fn($q) => $q->where('date', '<=', $request->end_date))
-            ->when($request->wallet_id, fn($q) => $q->where('wallet_id', $request->wallet_id))
-            ->when($request->type, fn($q) => $q->where('type', $request->type))
-            ->get();
-    }
-
-    private function getBudgetReport(Request $request)
-    {
-        return Budget::with('category')
-            ->when($request->start_date, fn($q) => $q->where('start_date', '>=', $request->start_date))
-            ->when($request->end_date, fn($q) => $q->where('end_date', '<=', $request->end_date))
-            ->when($request->category_id, fn($q) => $q->where('category_id', $request->category_id))
-            ->get();
-    }
-
-    private function getSupportTicketReport(Request $request)
-    {
-        return SupportTicket::with('messages')
-            ->when($request->start_date, fn($q) => $q->where('created_at', '>=', $request->start_date))
-            ->when($request->end_date, fn($q) => $q->where('created_at', '<=', $request->end_date))
-            ->when($request->status, fn($q) => $q->where('status', $request->status))
-            ->when($request->trashed, fn($q) => $q->onlyTrashed())
-            ->get();
-    }
-
-    // Show HTML report
-    public function expenses(Request $request)
-    {
-        $type = $request->input('type', 'all');
-        $person = $request->input('person');
-        $category = $request->input('category');
-        $search = $request->input('search');
-        $filterRange = $this->getFilterRange($request);
-
-        $query = Transaction::with(['category', 'person'])
-            ->where('user_id', $request->user()->id);
-
-        // Date filters
-        if ($request->filter === '7days') {
-            $query->where('date', '>=', now()->subDays(7));
-        } elseif ($request->filter === '15days') {
-            $query->where('date', '>=', now()->subDays(15));
-        } elseif ($request->filter === '30days') {
-            $query->where('date', '>=', now()->subDays(30));
-        } elseif ($request->start_date && $request->end_date) {
-            $query->whereBetween('date', [$request->start_date, $request->end_date]);
-        }
-
-        // Filter by type
-        if ($type === 'income') {
-            $query->where('type', 'income');
-        } elseif ($type === 'expense' || $type === 'expenses_only') {
-            $query->where('type', 'expense');
-        }
-
-        // Filter by person
-        if ($person) {
-            $query->where('person_id', $person);
-        }
+        $dateRange = $this->getDateRange($request->date_range, $request->start_date, $request->end_date);
+        $query = Category::where('user_id', Auth::id())
+            ->whereBetween('created_at', $dateRange);
 
         // Filter by category
-        if ($category) {
-            $query->where('category_id', $category);
+        if ($request->budget_category_id) {
+            $query->where('id', $request->budget_category_id);
         }
 
-        // Search filter
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('description', 'like', '%' . $search . '%')
-                    ->orWhereHas('category', function ($q2) use ($search) {
-                        $q2->where('name', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('person', function ($q3) use ($search) {
-                        $q3->where('name', 'like', '%' . $search . '%');
-                    });
-            });
+        // Get categories
+        $categories = $query->with(['transactions' => function ($q) use ($dateRange) {
+            $q->whereBetween('date', $dateRange);
+        }])->get();
+
+        // Generate report based on format
+        switch ($request->report_format) {
+            case 'pdf':
+                return Pdf::loadView('reports.budgets.pdf', compact('dateRange', 'categories'))
+                    ->setPaper('a4', 'portrait')
+                    ->stream('budgets_report.pdf');
+                break;
+            case 'html':
+                return view('reports.budgets.html', compact('categories'));
+                break;
+            case 'csv':
+                $filename = 'budgets_report_' . now()->format('Ymd_His') . '.csv';
+                break;
+            case 'xlsx':
+                $filename = 'budgets_report_' . now()->format('Ymd_His') . '.xlsx';
+                break;
         }
-
-        $expenses = $query->orderBy('date', 'desc')->paginate(12);
-
-        $people = ExpensePerson::where('user_id', $request->user()->id)
-            ->select('id', 'name')->distinct()->orderBy('name')->get();
-
-        $categories = \App\Models\Category::where('user_id', $request->user()->id)
-            ->orderBy('name')->get();
-
-        return view('reports.expenses', compact('expenses', 'people', 'categories', 'filterRange', 'type'));
     }
 
-    // Generate PDF report
-    public function expensesPdf(Request $request)
+    // Generate tickets report
+    private function generateTicketsReport(Request $request)
     {
-        $type = $request->input('type', 'all');
-        $person = $request->input('person');
-        $filterRange = $this->getFilterRange($request);
+        $dateRange = $this->getDateRange($request->date_range, $request->start_date, $request->end_date);
 
-        $query = Transaction::with(['category', 'person'])
-            ->where('user_id', $request->user()->id);
+        $query = SupportTicket::where('user_id', Auth::id())
+            ->whereBetween('created_at', $dateRange);
 
-        // Date filters
-        if ($request->filter === '7days') {
-            $query->where('date', '>=', now()->subDays(7));
-        } elseif ($request->filter === '15days') {
-            $query->where('date', '>=', now()->subDays(15));
-        } elseif ($request->filter === '30days') {
-            $query->where('date', '>=', now()->subDays(30));
-        } elseif ($request->start_date && $request->end_date) {
-            $query->whereBetween('date', [$request->start_date, $request->end_date]);
+        // Filter by status
+        if ($request->status && $request->status !== 'all') {
+            $query->where('status', $request->status);
         }
 
-        // Filter by type/person
-        if ($type === 'expenses_only') {
-            $query->where('type', 'expense');
-        } elseif ($type === 'person' && $person) {
-            $query->whereHas('person', function ($q) use ($person) {
-                $q->where('name', $person);
-            })->where('type', 'expense');
+        // Filter by trashed tickets
+        if ($request->is_trashed) {
+            $query->withTrashed();
         }
 
-        $expenses = $query->orderBy('date', 'asc')->get();
+        // Get tickets
+        $tickets = $query->with(['customer', 'admin'])->get();
 
-        // Group by person and sort each group by date
-        $groupedExpenses = $expenses->groupBy(function ($item) {
-            return $item->person->name ?? 'N/A';
-        })->map(function ($group) {
-            return $group->sortBy('date');
-        });
-
-        // Get current account and cash balance from balances table
-        $userId = $request->user()->id;
-        $wallets = Wallet::where('user_id', $userId)->get();
-
-        $pdf = Pdf::loadView('reports.expense_report', [
-            'expenses' => $groupedExpenses,
-            'filterRange' => $filterRange,
-            'reportType' => $type,
-            'wallets' => $wallets,
-        ])->setPaper('a4', 'portrait');
-
-        return $pdf->stream('expense_report_' . now()->format('Ymd_His') . '.pdf');
+        // Generate report based on format
+        switch ($request->report_format) {
+            case 'pdf':
+                return Pdf::loadView('reports.tickets.pdf', compact('dateRange', 'tickets'))
+                    ->setPaper('a4', 'portrait')
+                    ->stream('tickets_report.pdf');
+                break;
+            case 'html':
+                return view('reports.tickets.html', compact('tickets'));
+                break;
+            case 'csv':
+                $filename = 'tickets_report_' . now()->format('Ymd_His') . '.csv';
+                break;
+            case 'xlsx':
+                $filename = 'tickets_report_' . now()->format('Ymd_His') . '.xlsx';
+                break;
+        }
     }
 
-    // Get readable date range
-    private function getFilterRange(Request $request)
+    // Get Date Range
+    private function getDateRange(String $dateRange, ?string $startDate = null, ?string $endDate = null): array
     {
-        if ($request->filter === '7days') {
-            return now()->subDays(7)->format('d-m-Y') . ' to ' . now()->format('d-m-Y');
-        } elseif ($request->filter === '15days') {
-            return now()->subDays(15)->format('d-m-Y') . ' to ' . now()->format('d-m-Y');
-        } elseif ($request->filter === '30days') {
-            return now()->subDays(30)->format('d-m-Y') . ' to ' . now()->format('d-m-Y');
-        } elseif ($request->start_date && $request->end_date) {
-            return Carbon::parse($request->start_date)->format('d-m-Y') . ' to ' . Carbon::parse($request->end_date)->format('d-m-Y');
+        switch ($dateRange) {
+            case 'all':
+                return [null, null];
+            case 'today':
+                return [now()->startOfDay(), now()->endOfDay()];
+            case 'yesterday':
+                return [now()->subDay()->startOfDay(), now()->subDay()->endOfDay()];
+            case 'this_week':
+                return [now()->startOfWeek(), now()->endOfWeek()];
+            case 'last_week':
+                return [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()];
+            case 'this_month':
+                return [now()->startOfMonth(), now()->endOfMonth()];
+            case 'last_month':
+                return [now()->subMonth()->startOfMonth(), now()->subMonth()->endOfMonth()];
+            case 'custom':
+                return [$startDate, $endDate];
+            default:
+                return [null, null];
         }
-
-        return 'Full Report';
     }
 }
