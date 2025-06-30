@@ -76,7 +76,7 @@ class DashboardController extends Controller
 
     private function findInactiveUsers()
     {
-        $cutoffDate = CarbonImmutable::now();
+        $cutoffDate = CarbonImmutable::now()->subMonths(6)->startOfDay();
 
         $inactiveUsers = User::with(['transactions', 'supportTickets', 'budgets', 'wallets', 'categories', 'expensePeople'])
             ->whereDoesntHave('transactions', function ($query) use ($cutoffDate) {

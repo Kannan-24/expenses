@@ -45,27 +45,6 @@
                     </tbody>
                 </table>
             </div>
-            <div class="bg-white shadow rounded-lg p-6 mb-8 sm:col-span-2">
-                <h3 class="text-xl font-semibold p-4 border-b">Support Tickets</h3>
-                <ul class="divide-y divide-gray-200">
-                    @foreach ($supportTickets as $ticket)
-                        <li class="px-6 py-4 flex justify-between items-center">
-                            <div>
-                                <p class="text-sm font-medium text-gray-900">{{ $ticket->subject }}</p>
-                                <p class="text-sm text-gray-500">
-                                    {{ \Carbon\Carbon::parse($ticket->created_at)->diffForHumans() }}</p>
-                            </div>
-                            <span
-                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                {{ $ticket->status }}
-                            </span>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
             <div class="bg-white shadow rounded-lg p-6 mb-8 sm:col-span-1">
                 <h3 class="text-xl font-semibold p-4 border-b">Most Used Currencies</h3>
@@ -79,6 +58,28 @@
                             <span
                                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                 {{ $currency->count }} wallets
+                            </span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white shadow rounded-lg p-6 mb-8 sm:col-span-2">
+                <h3 class="text-xl font-semibold p-4 border-b">Support Tickets</h3>
+                <ul class="divide-y divide-gray-200">
+                    @foreach ($supportTickets as $ticket)
+                        <li class="px-6 py-4 flex justify-between items-center">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">{{ $ticket->subject }}</p>
+                                <p class="text-sm text-gray-500">
+                                    {{ \Carbon\Carbon::parse($ticket->created_at)->diffForHumans() }}</p>
+                            </div>
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                {{ $ticket->status }}
                             </span>
                         </li>
                     @endforeach
