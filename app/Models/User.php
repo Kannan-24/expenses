@@ -102,4 +102,44 @@ class User extends Authenticatable
     {
         return $this->hasMany(Category::class);
     }
+
+    /**
+     * Get the wallets associated with the user.
+     */
+    public function wallets(): HasMany
+    {
+        return $this->hasMany(Wallet::class);
+    }
+
+    /**
+     * Get the transactions associated with the user.
+     */
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * Get the budgets associated with the user.
+     */
+    public function budgets(): HasMany
+    {
+        return $this->hasMany(Budget::class);
+    }
+
+    /**
+     * Get the support tickets associated with the user.
+     */
+    public function supportTickets(): HasMany
+    {
+        return $this->hasMany(SupportTicket::class);
+    }
+
+    /**
+     * Get the expense people associated with the user.
+     */
+    public function expensePeople(): HasMany
+    {
+        return $this->hasMany(ExpensePerson::class);
+    }
 }

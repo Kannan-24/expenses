@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Budget;
+use App\Models\Currency;
+use App\Models\SupportTicket;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +17,106 @@ use Carbon\CarbonImmutable;
 class DashboardController extends Controller
 {
     public function index()
+    {
+        if (Auth::user()->hasRole('admin')) {
+            return $this->adminDashboard();
+        }
+
+        return $this->userDashboard();
+    }
+
+    private function adminDashboard()
+    {
+        $totalUsers = User::with('roles')
+            ->whereHas('roles', function ($query) {
+                $query->where('name', '=', 'user');
+            })
+            ->count();
+        $recentlyRegisteredUsers = User::with('roles')
+            ->whereHas('roles', function ($query) {
+                $query->where('name', '=', 'user');
+            })
+            ->where('created_at', '>=', CarbonImmutable::now()->subDays(7))
+            ->orderByDesc('created_at')
+            ->get();
+
+        $totalOpenedSupportTickets = SupportTicket::where('status', 'opened')
+            ->count();
+
+        $supportTickets = SupportTicket::with('user')
+            ->where('status', '!=', 'closed')
+            ->orderByDesc('created_at')
+            ->limit(5)
+            ->get();
+
+        $mostUsedCurrencies = Wallet::select('currency_id', DB::raw('COUNT(*) as count'))
+            ->groupBy('currency_id')
+            ->orderByDesc('count')
+            ->take(5)
+            ->get()
+            ->map(function ($item) {
+                return (object)[
+                    'name' => Currency::find($item->currency_id)->name ?? 'Unknown',
+                    'code' => Currency::find($item->currency_id)->code ?? 'Unknown',
+                    'count' => $item->count,
+                ];
+            });
+
+        $inactiveUsers = $this->findInactiveUsers();
+
+        return view('dashboard.dashboard', compact(
+            'totalUsers',
+            'recentlyRegisteredUsers',
+            'inactiveUsers',
+            'totalOpenedSupportTickets',
+            'supportTickets',
+            'mostUsedCurrencies'
+        ));
+    }
+
+    private function findInactiveUsers()
+    {
+        $cutoffDate = CarbonImmutable::now();
+
+        $inactiveUsers = User::with(['transactions', 'supportTickets', 'budgets', 'wallets', 'categories', 'expensePeople'])
+            ->whereDoesntHave('transactions', function ($query) use ($cutoffDate) {
+                $query->where('date', '>=', $cutoffDate);
+            })
+            ->whereDoesntHave('supportTickets', function ($query) use ($cutoffDate) {
+                $query->where('created_at', '>=', $cutoffDate);
+            })
+            ->whereDoesntHave('budgets', function ($query) use ($cutoffDate) {
+                $query->where('start_date', '>=', $cutoffDate);
+            })
+            ->whereDoesntHave('wallets', function ($query) use ($cutoffDate) {
+                $query->where('created_at', '>=', $cutoffDate);
+            })
+            ->whereDoesntHave('categories', function ($query) use ($cutoffDate) {
+                $query->where('created_at', '>=', $cutoffDate);
+            })
+            ->whereDoesntHave('expensePeople', function ($query) use ($cutoffDate) {
+                $query->where('created_at', '>=', $cutoffDate);
+            })
+            ->whereHas('roles', function ($query) {
+                $query->where('name', 'user');
+            })
+            ->get();
+
+        if ($inactiveUsers->isEmpty()) {
+            return collect();
+        }
+
+        return $inactiveUsers->map(function ($user) {
+            return (object)[
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'last_active' => $user->transactions()->max('date') ?? $user->supportTickets()->max('created_at'),
+            ];
+        });
+    }
+
+    private function userDashboard()
     {
         $userId = Auth::id();
         $now = CarbonImmutable::now();
@@ -101,7 +204,7 @@ class DashboardController extends Controller
             ->values();
 
 
-        return view('dashboard', compact(
+        return view('dashboard.dashboard', compact(
             'totalIncome',
             'totalExpense',
             'monthlyNetBalance',
