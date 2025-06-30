@@ -211,7 +211,7 @@
 
                 incomeExpenseChart = new Chart(ctx, {
                     type: 'line',
-                    borderJoinStyle: 'bevel',
+                    borderJoinStyle: 'round',
                     data: {
                         labels: res.labels,
                         datasets: [{

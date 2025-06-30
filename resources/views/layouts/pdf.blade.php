@@ -7,26 +7,32 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title ?? 'Duo Dev Expenses Report' }}</title>
     <style>
+
+        @page {
+            margin: 20px;
+        }
+        
         * {
-            margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'DejaVu Sans', sans-serif;
-            font-family: DejaVu Sans, sans-serif;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            font-family: 'DejaVu Sans', sans-serif;
+            background-color: #fff;
         }
 
         body main {
             font-size: 12px;
             color: #333;
-            margin: 20px;
         }
 
         .pdf-header {
-            text-align: center;
-            background-color: #f9f9f9;
             padding: 0 10px;
-            border-bottom: 1px solid #ccc;
-            margin-bottom: 20px;
+            margin: 0 0 20px 0;
         }
 
         .pdf-header table {
@@ -61,19 +67,6 @@
             font-size: 12px;
             color: #666;
         }
-
-        .pdf-footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 8px 0;
-            font-size: 12px;
-            color: #666;
-            text-align: center;
-            background-color: #f9f9f9;
-            border-top: 1px solid #ccc;
-        }
     </style>
 </head>
 
@@ -82,7 +75,7 @@
         <table>
             <tr>
                 <td>
-                    <img src="{{ public_path('assets\\logo.png') }}" alt="Duo Dev Expenses Logo">
+                    <img src="https://expenses.duodev.in/assets/logo.png" alt="Duo Dev Expenses Logo">
                 </td>
                 <td>
                     Duo Dev Expenses <br>

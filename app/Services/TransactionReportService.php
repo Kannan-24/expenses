@@ -38,33 +38,33 @@ class TransactionReportService
      */
     public function generateTransactionsReport(Request $request)
     {
-        // try {
-        // Validate request
-        $validatedData = $this->validateReportRequest($request);
+        try {
+            // Validate request
+            $validatedData = $this->validateReportRequest($request);
 
-        // Build optimized query
-        $query = $this->buildOptimizedQuery($validatedData);
+            // Build optimized query
+            $query = $this->buildOptimizedQuery($validatedData);
 
-        // Get transactions with pagination for large datasets
-        $transactions = $this->getTransactions($query, $validatedData);
+            // Get transactions with pagination for large datasets
+            $transactions = $this->getTransactions($query, $validatedData);
 
-        // Calculate summary statistics
-        $summary = $this->calculateSummary($transactions);
+            // Calculate summary statistics
+            $summary = $this->calculateSummary($transactions);
 
-        // Get category summary if needed
-        $categorySummary = $this->getCategorySummary($transactions, $validatedData);
+            // Get category summary if needed
+            $categorySummary = $this->getCategorySummary($transactions, $validatedData);
 
-        // Generate report based on format
-        return $this->generateReport($validatedData, $transactions, $summary, $categorySummary);
-        // } catch (Exception $e) {
-        //     Log::error('Transaction report generation failed', [
-        //         'error' => $e->getMessage(),
-        //         'user_id' => Auth::id(),
-        //         'request_data' => $request->all()
-        //     ]);
+            // Generate report based on format
+            return $this->generateReport($validatedData, $transactions, $summary, $categorySummary);
+        } catch (Exception $e) {
+            Log::error('Transaction report generation failed', [
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id(),
+                'request_data' => $request->all()
+            ]);
 
-        //     return redirect()->back()->withErrors(['error' => 'Failed to generate report. Please try again.']);
-        // }
+            return redirect()->back()->withErrors(['error' => 'Failed to generate report. Please try again.']);
+        }
     }
 
     /**
@@ -271,11 +271,11 @@ class TransactionReportService
         $pdf = Pdf::loadView('reports.transactions.pdf', $data)
             ->setPaper('a4', 'landscape')
             ->setOptions([
-                'dpi' => 150,
+                'dpi' => 96,
                 'defaultFont' => 'DejaVu Sans',
-                'isRemoteEnabled' => false,
+                'isRemoteEnabled' => true,
                 'isHtml5ParserEnabled' => true,
-                'isPhpEnabled' => false,
+                'isPhpEnabled' => true,
             ]);
 
         $filename = 'transactions_report_' . now()->format('Ymd_His') . '.pdf';

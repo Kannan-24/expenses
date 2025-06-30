@@ -1,248 +1,256 @@
 <x-pdf-layout>
     <x-slot name="title">Transactions Report</x-slot>
 
-  <style>
-    .header {
-        text-align: center;
-        margin-bottom: 30px;
-        border-bottom: 3px solid #2563eb;
-        padding-bottom: 15px;
-    }
+    <style>
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 15px;
+        }
 
-    .header h1 {
-        color: #1e40af;
-        font-size: 24px;
-        margin: 0 0 10px 0;
-        font-weight: bold;
-    }
+        .header h1 {
+            color: #1e40af;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+        }
 
-    .header .subtitle {
-        color: #6b7280;
-        font-size: 12px;
-        margin: 0;
-    }
+        .header .subtitle {
+            color: #6b7280;
+            font-size: 12px;
+            margin: 0;
+        }
 
-    .filters-section {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        padding: 10px;
-        margin-bottom: 25px;
-    }
+        .filters-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            margin-bottom: 25px;
+        }
 
-    .filters-title {
-        color: #374151;
-        font-size: 14px;
-        font-weight: bold;
-        margin-bottom: 10px;
-        border-bottom: 1px solid #d1d5db;
-        padding-bottom: 5px;
-    }
+        .filters-title {
+            color: #374151;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #d1d5db;
+            padding-bottom: 5px;
+        }
 
-    .filter-item {
-        margin-bottom: 5px;
-    }
+        .filter-item {
+            margin-bottom: 5px;
+        }
 
-    .filter-label {
-        display: inline-block;
-        color: #4b5563;
-        font-weight: bold;
-        width: 80px;
-    }
+        .filter-label {
+            display: inline-block;
+            color: #4b5563;
+            font-weight: bold;
+            width: 80px;
+        }
 
-    .filter-value {
-        display: inline-block;
-        color: #111827;
-        padding: 2px 6px;
-        border: 1px solid #d1d5db;
-        background: #fff;
-    }
+        .filter-value {
+            display: inline-block;
+            color: #111827;
+            padding: 2px 6px;
+            border: 1px solid #d1d5db;
+            background: #fff;
+        }
 
-    .summary-cards {
-        width: 100%;
-        margin-bottom: 25px;
-    }
+        .summary-cards {
+            width: 100%;
+            margin-bottom: 25px;
+        }
 
-    .summary-card {
-        width: calc(100% / 3 - 31.5px);
-        display: inline-block;
-        vertical-align: top;
-        padding: 10px;
-        border: 1px solid #cbd5e1;
-        background: #f8fafc;
-        text-align: center;
-    }
+        .summary-card {
+            width: calc(100% / 3 - 31.5px);
+            display: inline-block;
+            vertical-align: top;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            text-align: center;
+        }
 
-    .summary-card:first-child {
-        margin-right: 10px;
-    }
+        .summary-card:first-child {
+            margin-right: 10px;
+        }
 
-    .summary-card:last-child {
-        margin-left: 10px;
-    }
+        .summary-card:last-child {
+            margin-left: 10px;
+        }
 
-    .summary-card.income {
-        background: #ecfdf5;
-        border-color: #a7f3d0;
-    }
+        .summary-card.income {
+            background: #ecfdf5;
+            border-color: #a7f3d0;
+        }
 
-    .summary-card.expense {
-        background: #fef2f2;
-        border-color: #fca5a5;
-    }
+        .summary-card.expense {
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
 
-    .summary-card.net {
-        background: #eff6ff;
-        border-color: #93c5fd;
-    }
+        .summary-card.net {
+            background: #eff6ff;
+            border-color: #93c5fd;
+        }
 
-    .summary-card h3 {
-        margin: 0 0 5px 0;
-        font-size: 11px;
-        color: #6b7280;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
+        .summary-card h3 {
+            margin: 0 0 5px 0;
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
 
-    .summary-card .amount {
-        font-size: 16px;
-        font-weight: bold;
-        margin: 0;
-    }
+        .summary-card .amount {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+        }
 
-    .income .amount { color: #059669; }
-    .expense .amount { color: #dc2626; }
-    .net .amount { color: #2563eb; }
+        .income .amount {
+            color: #059669;
+        }
 
-    .table-container {
-        margin-bottom: 25px;
-        border: 1px solid #e2e8f0;
-    }
+        .expense .amount {
+            color: #dc2626;
+        }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 9px;
-    }
+        .net .amount {
+            color: #2563eb;
+        }
 
-    thead {
-        background: #2563eb;
-        color: white;
-    }
+        .table-container {
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+        }
 
-    thead th {
-        padding: 6px;
-        text-align: left;
-        font-weight: bold;
-        font-size: 9px;
-        border-right: 1px solid #cbd5e1;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9px;
+        }
 
-    thead th:last-child {
-        border-right: none;
-    }
+        thead {
+            background: #2563eb;
+            color: white;
+        }
 
-    tbody tr {
-        border-bottom: 1px solid #e5e7eb;
-    }
+        thead th {
+            padding: 6px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 9px;
+            border-right: 1px solid #cbd5e1;
+        }
 
-    tbody tr:nth-child(even) {
-        background: #f8fafc;
-    }
+        thead th:last-child {
+            border-right: none;
+        }
 
-    tbody td {
-        padding: 6px;
-        border-right: 1px solid #e5e7eb;
-        vertical-align: top;
-    }
+        tbody tr {
+            border-bottom: 1px solid #e5e7eb;
+        }
 
-    tbody td:last-child {
-        border-right: none;
-    }
+        tbody tr:nth-child(even) {
+            background: #f8fafc;
+        }
 
-    .transaction-type {
-        padding: 2px 4px;
-        font-size: 8px;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
+        tbody td {
+            padding: 6px;
+            border-right: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
 
-    .type-income {
-        background: #dcfce7;
-        color: #166534;
-    }
+        tbody td:last-child {
+            border-right: none;
+        }
 
-    .type-expense {
-        background: #fee2e2;
-        color: #991b1b;
-    }
+        .transaction-type {
+            padding: 2px 4px;
+            font-size: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
 
-    .amount-positive {
-        color: #059669;
-        font-weight: bold;
-    }
+        .type-income {
+            background: #dcfce7;
+            color: #166534;
+        }
 
-    .amount-negative {
-        color: #dc2626;
-        font-weight: bold;
-    }
+        .type-expense {
+            background: #fee2e2;
+            color: #991b1b;
+        }
 
-    .notes {
-        max-width: 100px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+        .amount-positive {
+            color: #059669;
+            font-weight: bold;
+        }
 
-    .category-summary {
-        margin-top: 25px;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        padding: 10px;
-    }
+        .amount-negative {
+            color: #dc2626;
+            font-weight: bold;
+        }
 
-    .category-summary h3 {
-        color: #374151;
-        font-size: 14px;
-        margin: 0 0 10px 0;
-        border-bottom: 1px solid #d1d5db;
-        padding-bottom: 5px;
-    }
+        .notes {
+            max-width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-    .category-item {
-        font-size: 10px;
-        border-bottom: 1px solid #e5e7eb;
-        padding: 4px 0;
-    }
+        .category-summary {
+            margin-top: 25px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+        }
 
-    .category-item:last-child {
-        border-bottom: none;
-    }
+        .category-summary h3 {
+            color: #374151;
+            font-size: 14px;
+            margin: 0 0 10px 0;
+            border-bottom: 1px solid #d1d5db;
+            padding-bottom: 5px;
+        }
 
-    .footer {
-        margin-top: 30px;
-        text-align: center;
-        font-size: 9px;
-        color: #6b7280;
-        border-top: 1px solid #e2e8f0;
-        padding-top: 15px;
-    }
+        .category-item {
+            font-size: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 4px 0;
+        }
 
-    .footer-grid {
-        text-align: center;
-        margin-bottom: 10px;
-    }
+        .category-item:last-child {
+            border-bottom: none;
+        }
 
-    .no-data {
-        text-align: center;
-        padding: 30px;
-        color: #6b7280;
-        font-style: italic;
-    }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 9px;
+            color: #6b7280;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+        }
 
-    .page-break {
-        page-break-before: always;
-    }
-</style>
+        .footer-grid {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
 
 
     <div class="header">
@@ -263,37 +271,39 @@
                     @endif
                 </span>
             </div>
-            
+
             <div class="filter-item">
                 <span class="filter-label">Type:</span>
-                <span class="filter-value">{{ $transactionType === 'all' ? 'All Types' : ucfirst($transactionType) }}</span>
+                <span
+                    class="filter-value">{{ $transactionType === 'all' ? 'All Types' : ucfirst($transactionType) }}</span>
             </div>
-            
+
             @if ($category)
                 <div class="filter-item">
                     <span class="filter-label">Category:</span>
                     <span class="filter-value">{{ $category->name }}</span>
                 </div>
             @endif
-            
+
             @if ($wallet)
                 <div class="filter-item">
                     <span class="filter-label">Wallet:</span>
                     <span class="filter-value">{{ $wallet->name }}</span>
                 </div>
             @endif
-            
+
             @if ($person)
                 <div class="filter-item">
                     <span class="filter-label">Person:</span>
                     <span class="filter-value">{{ $person->name }}</span>
                 </div>
             @endif
-            
+
             @if ($amountFilter)
                 <div class="filter-item">
                     <span class="filter-label">Amount Filter:</span>
-                    <span class="filter-value">{{ $amountFilter['operator'] }} {{ number_format($amountFilter['amount'], 2) }}</span>
+                    <span class="filter-value">{{ $amountFilter['operator'] }}
+                        {{ number_format($amountFilter['amount'], 2) }}</span>
                 </div>
             @endif
         </div>
@@ -367,12 +377,28 @@
         @if (!$category && count($categorySummary) > 0)
             <div class="category-summary">
                 <h3>Expense by Category</h3>
-                @foreach ($categorySummary as $categoryName => $amount)
-                    <div class="category-item">
-                        <span>{{ $categoryName ?: 'Uncategorized' }}</span>
-                        <span class="amount-negative">{{ number_format(array_sum($amount), 2) }}</span>
-                    </div>
-                @endforeach
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50%">Category</th>
+                            <th style="width: 20%">Amount</th>
+                            <th style="width: 10%">Count</th>
+                            <th style="width: 20%">Percentage</th>
+                        </tr>
+                    </thead>
+                    @foreach ($categorySummary as $categoryName => $amount)
+                        <tbody>
+                            <tr>
+                                <td>{{ $categoryName ?: 'Uncategorized' }}</td>
+                                <td class="amount-negative">{{ number_format($amount['amount'], 2) }}</td>
+                                <td>{{ $amount['count'] }}</td>
+                                <td>
+                                    {{ $amount['percentage'] ? number_format($amount['percentage'], 2) . '%' : '0%' }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    @endforeach
+                </table>
             </div>
         @endif
     @else

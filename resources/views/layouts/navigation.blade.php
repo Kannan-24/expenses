@@ -140,12 +140,13 @@
         <aside id="logo-sidebar" x-show="sidebarOpen || window.innerWidth >= 640"
             @keydown.window.escape="sidebarOpen = false" @click.away="sidebarOpen = false"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-            class="fixed top-0 left-0 z-40 w-64 h-screen sm:h-screen pt-0 pb-24 transition-transform bg-white border-r border-gray-200
-            transform sm:translate-x-0 sm:static sm:inset-0"
+            class="fixed top-0 left-0 z-40 w-64 h-screen pt-0 transition-transform bg-white border-r border-gray-200
+            transform sm:translate-x-0 sm:static sm:inset-0 flex flex-col overflow-y-auto"
             aria-label="Sidebar" x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
             x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0"
             x-transition:leave-end="-translate-x-full" style="display: none;">
+   
             <div class="flex items-center justify-between px-4 py-4 border-b">
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
                     <x-application-logo class="w-auto h-8" />
@@ -267,11 +268,11 @@
                 </li>
             </ul>
 
-            <div class="absolute bottom-0 left-0 w-full">
+            <div class="mt-auto w-full">
                 <form id="sidebar-logout-form" action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit"
-                        class="w-full flex items-center px-4 py-3 hover:text-red-50 bg-red-600 transition font-medium">
+                        class="w-full flex items-center px-4 py-3 text-red-50 bg-red-600 transition font-medium">
                         <svg class="w-5 h-5 mr-2 " fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
