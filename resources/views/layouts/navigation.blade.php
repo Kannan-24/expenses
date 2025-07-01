@@ -268,7 +268,7 @@
                 </li>
             </ul>
 
-            <div class="w-full lg:mt-auto">
+            <div class="w-full absolute bottom-0 left-0">
                 <form id="sidebar-logout-form" action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit"
