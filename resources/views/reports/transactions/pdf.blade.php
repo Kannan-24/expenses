@@ -367,7 +367,7 @@
                             @if ($wallet == null)
                                 <td>{{ $transaction->wallet->name ?? 'Default' }}</td>
                             @endif
-                            <td class="notes">{{ $transaction->notes ?? '-' }}</td>
+                            <td class="notes">{{ $transaction->note ?? '-' }}</td>
                         </tr>
                     @endforeach
                 </tbody>
