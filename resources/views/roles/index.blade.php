@@ -5,7 +5,7 @@
 
     <div class="sm:ml-64">
         <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between"
-            style="height: 88vh;">
+            style="height: 88vh; overflow: auto;">
 
             <!-- Breadcrumb & Create Button -->
             <div class="flex justify-between items-center mb-3">

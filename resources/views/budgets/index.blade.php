@@ -5,7 +5,7 @@
 
     <div class="sm:ml-64">
         <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between"
-            style="height: 88vh;">
+            style="height: 88vh; overflow: auto;">
 
             <!-- Breadcrumb & Create Button -->
             <div class="flex justify-between items-center mb-3">
@@ -107,7 +107,8 @@
                             @click.away="showFilterForm = false">
                             <div class="flex items-center justify-between mb-4">
                                 <h2 class="text-lg font-semibold text-gray-800">Advanced Search</h2>
-                                <button @click="showFilterForm = false" class="text-gray-600 hover:text-red-600" type="button">
+                                <button @click="showFilterForm = false" class="text-gray-600 hover:text-red-600"
+                                    type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

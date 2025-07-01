@@ -4,7 +4,8 @@
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between" style="height: 88vh;">
+        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between"
+            style="height: 88vh; overflow: auto;">
 
             <!-- Breadcrumb & Create Button -->
             <div class="flex justify-between items-center mb-3">
@@ -32,7 +33,8 @@
                 <!-- Create Button -->
                 <a href="{{ route('expense-people.create') }}"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 shadow">
-                    <svg class="w-5 h-5 sm:w-4 sm:h-4 mr-0 sm:mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 sm:w-4 sm:h-4 mr-0 sm:mr-1" fill="none" stroke="currentColor"
+                        stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
                     <span class="hidden sm:inline">Create</span>
@@ -40,7 +42,8 @@
             </div>
 
             <!-- Search Box (centered, rounded, with lens and reset) -->
-            <form method="GET" class="w-full sm:max-w-screen-sm mb-4 mx-auto flex items-center gap-2 bg-white border border-gray-300 rounded-full px-3 py-1 shadow-sm">
+            <form method="GET"
+                class="w-full sm:max-w-screen-sm mb-4 mx-auto flex items-center gap-2 bg-white border border-gray-300 rounded-full px-3 py-1 shadow-sm">
                 <!-- Lens Icon (left) -->
                 <span class="text-gray-500 pointer-events-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -55,8 +58,7 @@
                 @if (request('search'))
                     <!-- Reset (close) icon, only show if search is not empty -->
                     <a href="{{ route('expense-people.index') }}"
-                        class="text-gray-400 hover:text-red-500 p-1 transition"
-                        title="Clear search">
+                        class="text-gray-400 hover:text-red-500 p-1 transition" title="Clear search">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

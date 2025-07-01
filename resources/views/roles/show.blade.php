@@ -4,7 +4,8 @@
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-6 rounded-2xl shadow m-4 flex flex-col" style="height: 88vh;">
+        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-6 rounded-2xl shadow m-4 flex flex-col"
+            style="height: 88vh; overflow: auto;">
             <!-- Breadcrumb -->
             <div class="flex justify-between items-center mb-4">
                 <nav class="flex text-sm text-gray-500" aria-label="Breadcrumb">
@@ -53,9 +54,9 @@
                         <span class="w-32 text-sm font-bold text-gray-900">Permissions</span>
                         <span class="mx-1">:</span>
                         <span class="text-base text-gray-600">
-                            @if($role->permissions->count())
+                            @if ($role->permissions->count())
                                 <ol class="list-decimal ml-4">
-                                    @foreach($role->permissions as $permission)
+                                    @foreach ($role->permissions as $permission)
                                         <li>{{ $permission->name }}</li>
                                     @endforeach
                                 </ol>

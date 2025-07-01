@@ -4,7 +4,8 @@
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col" style="height: 88vh;">
+        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col"
+            style="height: 88vh; overflow: auto;">
 
             <!-- Breadcrumb -->
             <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-3 gap-4">

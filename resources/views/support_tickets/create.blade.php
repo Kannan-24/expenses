@@ -9,7 +9,7 @@
 
     <div class="sm:ml-64">
         <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-6 rounded-2xl shadow m-4 flex flex-col"
-            style="height: 88vh;">
+            style="height: 88vh; overflow: auto;">
             <!-- Breadcrumb -->
             <div class="flex justify-between items-center mb-4">
                 <nav class="flex text-sm text-gray-500" aria-label="Breadcrumb">
@@ -65,8 +65,7 @@
                 <div class="mb-5">
                     <label for="editor" class="block text-sm font-semibold text-gray-700">Message</label>
                     <textarea id="editor" name="message"
-                        class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        >{{ old('message') }}</textarea>
+                        class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">{{ old('message') }}</textarea>
                     @error('message')
                         <span class="text-sm text-red-600">{{ $message }}</span>
                     @enderror

@@ -4,7 +4,8 @@
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-6 rounded-2xl shadow m-4 flex flex-col" style="height: 88vh;"> 
+        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-6 rounded-2xl shadow m-4 flex flex-col"
+            style="height: 88vh; overflow: auto;">
             <!-- Breadcrumb -->
             <div class="flex justify-between items-center mb-4">
                 <nav class="flex text-sm text-gray-500" aria-label="Breadcrumb">
@@ -64,7 +65,8 @@
                         <span class="w-16 text-sm font-bold text-gray-900">Amount</span>
                         <span class="mx-1">:</span>
                         <span class="text-lg font-bold text-green-600">
-                            {{ $transaction->wallet->currency->symbol ?? '' }} {{ number_format($transaction->amount, 2) }}
+                            {{ $transaction->wallet->currency->symbol ?? '' }}
+                            {{ number_format($transaction->amount, 2) }}
                         </span>
                     </div>
                     <div class="flex items-center gap-4">

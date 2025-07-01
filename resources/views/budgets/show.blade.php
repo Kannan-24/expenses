@@ -5,7 +5,7 @@
 
     <div class="sm:ml-64">
         <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-6 rounded-2xl shadow m-4 flex flex-col"
-            style="height: 88vh;">
+            style="height: 88vh; overflow: auto;">
             <!-- Breadcrumb -->
             <div class="flex justify-between items-center mb-4">
                 <nav class="flex text-sm text-gray-500" aria-label="Breadcrumb">
@@ -92,11 +92,16 @@
                         <thead>
                             <tr>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Start Date</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">End Date</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Alloted Amount</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Spent Amount</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Remaining Amount</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Start Date
+                                </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">End Date
+                                </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Alloted
+                                    Amount</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Spent Amount
+                                </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Remaining
+                                    Amount</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -113,7 +118,8 @@
                                     </td>
                                     <td class="px-4 py-2 whitespace-nowrap">
                                         @php
-                                            $allocatedAmount = $history->allocated_amount + ($history->roll_over_amount ?? 0);
+                                            $allocatedAmount =
+                                                $history->allocated_amount + ($history->roll_over_amount ?? 0);
                                         @endphp
                                         {{ number_format($allocatedAmount, 2) }}
                                     </td>
@@ -121,8 +127,8 @@
                                         {{ number_format($history->spent_amount, 2) }}
                                     </td>
                                     <td class="px-4 py-2 whitespace-nowrap">
-                                        @php 
-                                            $remaining =  $allocatedAmount - $history->spent_amount;
+                                        @php
+                                            $remaining = $allocatedAmount - $history->spent_amount;
                                         @endphp
                                         {{ number_format($remaining, 2) }}
                                     </td>

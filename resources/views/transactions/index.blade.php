@@ -5,7 +5,7 @@
 
     <div class="sm:ml-64">
         <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-4 rounded-2xl shadow m-4 flex flex-col justify-between"
-            style="height: 88vh;">
+            style="height: 88vh; overflow: auto;">
 
             <!-- Breadcrumb & Create Button -->
             <div class="flex justify-between items-center mb-3">
@@ -43,8 +43,8 @@
             </div>
 
             <!-- Search and Filter Form -->
-            <form method="GET" class="w-full sm:max-w-screen-sm mb-4 mx-auto flex items-center gap-2 bg-white border border-gray-300 rounded-full px-3 py-1 shadow-sm"
-                >
+            <form method="GET"
+                class="w-full sm:max-w-screen-sm mb-4 mx-auto flex items-center gap-2 bg-white border border-gray-300 rounded-full px-3 py-1 shadow-sm">
                 <!-- Lens Icon (left) -->
                 <span class="text-gray-500 pointer-events-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"

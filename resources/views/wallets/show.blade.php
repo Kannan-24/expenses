@@ -4,7 +4,8 @@
     </x-slot>
 
     <div class="sm:ml-64">
-        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-6 rounded-2xl shadow m-4 flex flex-col" style="height: 88vh;">
+        <div class="w-full mx-auto max-w-7xl sm:px-6 lg:px-8 bg-white p-6 rounded-2xl shadow m-4 flex flex-col"
+            style="height: 88vh; overflow: auto;">
             <!-- Breadcrumb -->
             <div class="flex justify-between items-center mb-4">
                 <nav class="flex text-sm text-gray-500" aria-label="Breadcrumb">
@@ -118,7 +119,8 @@
                                 @forelse ($transactions as $transaction)
                                     <tr class="border-b border-gray-200 hover:bg-gray-50">
                                         <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                                        <td class="px-4 py-2">{{ \Carbon\Carbon::parse($transaction->date)->format('Y-m-d') }}</td>
+                                        <td class="px-4 py-2">
+                                            {{ \Carbon\Carbon::parse($transaction->date)->format('Y-m-d') }}</td>
                                         <td class="px-4 py-2">{{ $transaction->category->name ?? 'N/A' }}</td>
                                         <td class="px-4 py-2">
                                             @if ($transaction->type === 'income')
@@ -128,7 +130,8 @@
                                             @endif
                                         </td>
                                         <td class="px-4 py-2">
-                                            <span class="{{ $transaction->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
+                                            <span
+                                                class="{{ $transaction->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
                                                 ₹{{ number_format($transaction->amount, 2) }}
                                             </span>
                                         </td>
@@ -139,7 +142,8 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center py-4 text-gray-400">No transactions found.</td>
+                                        <td colspan="7" class="text-center py-4 text-gray-400">No transactions found.
+                                        </td>
                                     </tr>
                                 @endforelse
                             </tbody>
