@@ -146,7 +146,7 @@
             x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
             x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0"
             x-transition:leave-end="-translate-x-full" style="display: none;">
-   
+
             <div class="flex items-center justify-between px-4 py-4 border-b">
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
                     <x-application-logo class="w-auto h-8" />
@@ -268,7 +268,7 @@
                 </li>
             </ul>
 
-            <div class="mt-auto w-full">
+            <div class="w-full">
                 <form id="sidebar-logout-form" action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit"
