@@ -9,7 +9,7 @@
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                 <div>
                     <h1 class="text-3xl lg:text-4xl font-bold mb-2">
-                        Good <span id="greeting"></span>, {{ auth()->user()->name }}! 👋
+                        Good <span id="greeting"></span>, {{ auth()->user()->name }}!
                     </h1>
                     <p class="text-blue-100 text-lg mb-4 lg:mb-0">
                         Here's your financial overview for this month
@@ -46,11 +46,11 @@
                 <div class="flex items-end justify-between">
                     <div>
                         <p class="text-3xl font-bold text-green-600">₹{{ number_format($totalIncome, 2) }}</p>
-                        <p class="text-sm text-gray-500 mt-1">+12% from last month</p>
+                        <p class="text-sm text-gray-500 mt-1">{{ $insights['income_change'] >= 0 ? '+'.$insights['income_change'].'%' : ' '.$insights['income_change'].'%' }} from last month</p>
                     </div>
                     <div class="text-right">
                         <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            ↗ +12%
+                            {{ $insights['income_change'] >= 0 ? '📈 +'.$insights['income_change'].'%' : '📉 '.$insights['income_change'].'%' }}
                         </div>
                     </div>
                 </div>
@@ -77,11 +77,11 @@
                 <div class="flex items-end justify-between">
                     <div>
                         <p class="text-3xl font-bold text-red-600">₹{{ number_format($totalExpense, 2) }}</p>
-                        <p class="text-sm text-gray-500 mt-1">-8% from last month</p>
+                        <p class="text-sm text-gray-500 mt-1">{{ $insights['expense_change'] >= 0 ? '+'.$insights['expense_change'].'%' : ' '.$insights['expense_change'].'%' }} from last month</p>
                     </div>
                     <div class="text-right">
                         <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                            ↘ -8%
+                            {{ $insights['expense_change'] >= 0 ? '📈 +'.$insights['expense_change'].'%' : '📉 '.$insights['expense_change'].'%' }}
                         </div>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
                     </div>
                     <div class="text-right">
                         <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $monthlyNetBalance >= 0 ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800' }}">
-                            {{ $monthlyNetBalance >= 0 ? '📈 Profit' : '📉 Loss' }}
+                            {{ $monthlyNetBalance >= 0 ? 'Profit' : 'Loss' }}
                         </div>
                     </div>
                 </div>
@@ -165,17 +165,14 @@
                                     </td>
                                     <td class="py-4 px-4">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $expense->type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                            {{ $expense->type === 'income' ? '↗ Income' : '↘ Expense' }}
+                                            {{ $expense->type === 'income' ? 'Income' : 'Expense' }}
                                         </span>
                                     </td>
                                     <td class="py-4 px-4">
                                         <div class="flex items-center">
-                                            @if ($expense->payment_method === 'cash')
-                                                <div class="w-2 h-2 bg-yellow-400 rounded-full mr-2"></div>
-                                                <span class="text-sm text-gray-600">Cash</span>
-                                            @else
+                                            @if ($expense->wallet)
                                                 <div class="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
-                                                <span class="text-sm text-gray-600">Bank</span>
+                                                <span class="text-sm text-gray-600">{{ $expense->wallet->name }}</span>
                                             @endif
                                         </div>
                                     </td>

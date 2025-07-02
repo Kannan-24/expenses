@@ -71,13 +71,6 @@
             <form method="POST" action="{{ route('register') }}" class="space-y-6" x-data="registerForm()" @submit="handleSubmit">
                 @csrf
 
-                <!-- Debug Info (Remove in production) -->
-                @if(app()->environment('local'))
-                    <div class="text-xs text-gray-500 bg-gray-50 p-2 rounded">
-                        Debug: Route = {{ route('register') }} | CSRF = {{ csrf_token() }}
-                    </div>
-                @endif
-
                 <!-- Full Name Field -->
                 <div class="space-y-2">
                     <label for="name" class="block text-sm font-semibold text-gray-900">
@@ -366,7 +359,7 @@
     </div>
 
     <!-- Enhanced Right Panel (Illustration) -->
-    <div class="flex-1 bg-gradient-to-br from-green-500 via-blue-600 to-purple-700 relative hidden lg:flex items-center justify-center overflow-hidden">
+    <div class="flex-1 bg-gradient-to-br from-green-500 via-blue-600 to-purple-700 relative hidden lg:flex items-start justify-center overflow-hidden min-h-screen">
         <!-- Enhanced Background Effects -->
         <div class="absolute inset-0">
             <!-- Animated gradient overlay -->
@@ -382,9 +375,9 @@
         </div>
 
         <!-- Enhanced Content -->
-        <div class="relative z-10 w-full max-w-lg px-8">
+        <div class="relative z-10 w-full px-8 pt-10 pb-16 min-h-screen">
             <!-- Main heading -->
-            <div class="text-center mb-12">
+            <div class="text-center mb-8">
                 <h1 class="text-5xl font-bold text-white mb-4 leading-tight">
                     Start Your
                     <span class="block bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
@@ -397,7 +390,7 @@
             </div>
 
             <!-- Enhanced floating cards container -->
-            <div class="relative h-96">
+            <div class="relative h-[24rem]">
                 <!-- Expense Tracking Card -->
                 <div class="absolute top-0 right-0 w-72 bg-white/15 backdrop-blur-xl rounded-3xl p-6 text-white border border-white/20 shadow-2xl animate-float" style="animation-delay: 0s;">
                     <div class="flex items-center justify-between mb-4">
@@ -457,7 +450,7 @@
                 </div>
 
                 <!-- Smart Insights Card -->
-                <div class="absolute top-20 left-20 w-64 bg-white/10 backdrop-blur-xl rounded-2xl p-5 text-white border border-white/20 shadow-xl animate-float" style="animation-delay: 2s;">
+                <div class="absolute top-20 left-36 w-64 bg-white/10 backdrop-blur-xl rounded-2xl p-5 text-white border border-white/20 shadow-xl animate-float" style="animation-delay: 2s;">
                     <div class="text-center">
                         <div class="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                             <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

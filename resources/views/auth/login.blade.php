@@ -4,7 +4,7 @@
     </x-slot>
     
     <!-- Enhanced Left Panel (Illustration) -->
-    <div class="flex-1 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 relative hidden lg:flex items-center justify-center overflow-hidden">
+    <div class="flex-1 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 relative hidden lg:flex items-start justify-center overflow-hidden">
         <!-- Enhanced Background Effects -->
         <div class="absolute inset-0">
             <!-- Animated gradient overlay -->
@@ -20,9 +20,9 @@
         </div>
 
         <!-- Enhanced Content -->
-        <div class="relative z-10 w-full max-w-lg px-8">
+        <div class="relative z-10 w-full max-w-lg px-8 pt-10 pb-16 h-[calc(100vh - 2rem)]">
             <!-- Main heading -->
-            <div class="text-center mb-12">
+            <div class="text-center mb-10">
                 <h1 class="text-5xl font-bold text-white mb-4 leading-tight">
                     Welcome to Your
                     <span class="block bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
@@ -37,7 +37,8 @@
             <!-- Enhanced floating cards container -->
             <div class="relative h-96">
                 <!-- Balance Card -->
-                <div class="absolute top-0 right-0 w-72 bg-white/15 backdrop-blur-xl rounded-3xl p-6 text-white border border-white/20 shadow-2xl animate-float" style="animation-delay: 0s;">
+                <div class="absolute -top-5 right-0 w-72 bg-white/15 backdrop-blur-xl rounded-3xl p-6 text-white border border-white/20 shadow-2xl animate-float" style="animation-delay: 0s;">
+
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <div class="text-sm opacity-80 mb-1">Total Balance</div>
@@ -68,7 +69,7 @@
                 </div>
 
                 <!-- Expense Categories Card -->
-                <div class="absolute bottom-0 left-0 w-80 bg-white/15 backdrop-blur-xl rounded-3xl p-6 text-white border border-white/20 shadow-2xl animate-float" style="animation-delay: 1s;">
+                <div class="absolute bottom-2 left-0 w-80 bg-white/15 backdrop-blur-xl rounded-3xl p-6 text-white border border-white/20 shadow-2xl animate-float" style="animation-delay: 1s;">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold">Recent Expenses</h3>
                         <div class="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
@@ -108,7 +109,7 @@
                 </div>
 
                 <!-- Welcome Message Card -->
-                <div class="absolute top-20 left-20 w-64 bg-white/10 backdrop-blur-xl rounded-2xl p-5 text-white border border-white/20 shadow-xl animate-float" style="animation-delay: 2s;">
+                <div class="absolute top-10 left-0 w-64 bg-white/10 backdrop-blur-xl rounded-2xl p-5 text-white border border-white/20 shadow-xl animate-float" style="animation-delay: 2s;">
                     <div class="text-center">
                         <div class="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                             <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -124,7 +125,7 @@
             </div>
 
             <!-- Feature highlights -->
-            <div class="absolute bottom-8 left-8 right-8">
+            <div class="absolute bottom-1 left-8 right-8">
                 <div class="flex items-center justify-center space-x-8 text-white/80">
                     <div class="flex items-center space-x-2">
                         <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -181,10 +182,8 @@
             <!-- Enhanced Header -->
             <div class="text-center lg:text-left mb-8">
                 <!-- Brand Logo/Icon -->
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl mb-6 shadow-lg">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                    </svg>
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 shadow-lg">
+                    <x-application-logo class="w-10 h-10 text-white" />
                 </div>
                 
                 <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Welcome Back!</h1>
@@ -370,8 +369,8 @@
     <!-- Enhanced Styles -->
     <style>
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(1deg); }
+            0%, 100%{ transform: translateY(0px) rotate(1deg); }
+            50% { transform: translateY(0px) rotate(-1deg); }
         }
         
         @keyframes grow-bar {

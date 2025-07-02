@@ -400,7 +400,7 @@
                 <!-- Quick Links -->
                 <div>
                     <h3 class="text-lg font-bold mb-6 flex items-center">
-                        
+
                         Quick Links
                     </h3>
                     <ul class="space-y-3">
@@ -580,7 +580,11 @@
                                     const sectionName = href.split('#')[1];
                                     if (sectionName === activeSection) {
                                         link.classList.add('active', 'text-blue-600');
+                                        link.querySelector('svg').classList.remove('opacity-0');
+                                        link.querySelector('svg').classList.add('opacity-100');
                                     } else {
+                                        link.querySelector('svg').classList.add('opacity-0');
+                                        link.querySelector('svg').classList.remove('opacity-100');
                                         link.classList.remove('active', 'text-blue-600');
                                     }
                                 }
