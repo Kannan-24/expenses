@@ -494,7 +494,7 @@
                         </p>
                     </div>
                     <div class="flex items-center space-x-4 text-sm text-gray-400">
-                        <span>Duo Dev Expenses — A personal finance management product by Duo Dev Technologies.</span>
+                        <p><span class="text-white font-medium">Duo Dev Expenses</span>  — A personal finance management product by <a href="https://duodev.in/" target="_blank"><span class="text-white font-medium">Duo Dev Technologies</span></a>.</p>
                     </div>
                 </div>
             </div>
