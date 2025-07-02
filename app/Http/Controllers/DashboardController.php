@@ -137,6 +137,36 @@ class DashboardController extends Controller
         $totalExpense = $totals->total_expense ?? 0;
         $monthlyNetBalance = $totalIncome - $totalExpense;
 
+        $lastMonthStart = $now->subMonth()->startOfMonth()->toDateString();
+        $lastMonthEnd = $now->subMonth()->endOfMonth()->toDateString();
+
+        // Fetch last month's total income & expense
+        $lastMonthTotals = Transaction::selectRaw("
+            SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as total_income,
+            SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as total_expense
+        ")
+            ->where('user_id', $userId)
+            ->whereBetween('date', [$lastMonthStart, $lastMonthEnd])
+            ->first();
+
+        $lastMonthIncome = $lastMonthTotals->total_income ?? 0;
+        $lastMonthExpense = $lastMonthTotals->total_expense ?? 0;
+
+        // Calculate monthly net balance for last month
+        $lastMonthNetBalance = $lastMonthIncome - $lastMonthExpense;
+
+        // Insight calculation comparing this month to last month
+        $incomePercentageChange = $lastMonthIncome > 0
+            ? round((($totalIncome - $lastMonthIncome) / $lastMonthIncome) * 100, 2)
+            : 0;
+        $expensePercentageChange = $lastMonthExpense > 0
+            ? round((($totalExpense - $lastMonthExpense) / $lastMonthExpense) * 100, 2)
+            : 0;
+        $insights = [
+            'income_change' => $incomePercentageChange,
+            'expense_change' => $expensePercentageChange,
+        ];
+
         // Recent expenses with eager loading (limit to expenses only)
         $recentExpenses = Transaction::with('category')
             ->where('user_id', $userId)
@@ -215,7 +245,8 @@ class DashboardController extends Controller
             'expenseData',
             'wallets',
             'topCategories',
-            'budgetData'
+            'budgetData',
+            'insights'
         ));
     }
 
