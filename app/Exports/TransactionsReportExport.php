@@ -212,7 +212,7 @@ class TransactionsDetailSheet implements FromCollection, WithHeadings, WithStyle
                 'category' => $transaction->category->name ?? 'Uncategorized',
                 'wallet' => $transaction->wallet->name ?? 'Default',
                 'person' => $transaction->person->name ?? '',
-                'notes' => $transaction->notes ?? '',
+                'notes' => $transaction->note ?? '',
             ];
         });
     }
