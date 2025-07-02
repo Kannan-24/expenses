@@ -76,11 +76,22 @@ class WalletController extends Controller
     {
         $request->validate([
             'wallet_type_id' => 'required|exists:wallet_types,id',
-            'name' => 'required|string|max:255|unique:wallets,name,NULL,id,user_id,' . $request->user_id . ',wallet_type_id,' . $request->wallet_type_id,
+            'name' => 'required|string|max:255',
             'balance' => 'required|numeric|min:0',
             'currency_id' => 'required|exists:currencies,id',
             'is_active' => 'boolean',
         ]);
+
+        // Check if a wallet with the same name already exists for the user and wallet type
+        $existingWallet = Wallet::where('user_id', Auth::id())
+            ->where('wallet_type_id', $request->input('wallet_type_id'))
+            ->where('name', $request->input('name'))
+            ->first();
+
+        if ($existingWallet) {
+            return redirect()->back()->withErrors(['name' => 'A wallet with this name already exists for this wallet type.'])
+                ->withInput();
+        }
 
         $wallet = Wallet::create([
             'user_id' => Auth::id(),
@@ -166,7 +177,7 @@ class WalletController extends Controller
         $wallet->delete();
         return redirect()->route('wallets.index')->with('success', 'Wallet deleted successfully.');
     }
-    
+
     public function authorizeWallet(Wallet $wallet)
     {
         if ($wallet->user_id !== Auth::id()) {
