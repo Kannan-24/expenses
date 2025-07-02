@@ -142,4 +142,26 @@ class User extends Authenticatable
     {
         return $this->hasMany(ExpensePerson::class);
     }
+
+    public function activities(): HasMany
+    {
+        return $this->hasMany(UserActivity::class)->latest();
+    }
+
+    public function recentActivities(int $limit = 10): HasMany
+    {
+        return $this->hasMany(UserActivity::class)
+            ->latest()
+            ->limit($limit);
+    }
+
+    // Boot method to log account creation
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::created(function ($user) {
+            \App\Services\ActivityTracker::logAccountCreated($user->id);
+        });
+    }
 }

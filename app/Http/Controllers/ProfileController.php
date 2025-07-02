@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
+use App\Services\ActivityTracker;
 
 class ProfileController extends Controller
 {
@@ -33,6 +34,7 @@ class ProfileController extends Controller
             'address' => 'nullable|string|max:255',
         ]);
 
+        $oldData = $user->toArray();
         // Update user table fields
         $user->update([
             'name' => $request->name,
@@ -40,6 +42,12 @@ class ProfileController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
         ]);
+
+        $newData = auth()->user()->fresh()->toArray();
+        $changes = array_diff_assoc($newData, $oldData);
+        
+        // Log the activity
+        ActivityTracker::logProfileUpdate(array_keys($changes));
 
         return redirect()->route('profile.show')->with('success', 'Profile updated successfully.');
     }

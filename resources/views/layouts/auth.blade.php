@@ -26,7 +26,7 @@
 <body class="font-sans antialiased bg-blue-200 min-h-screen">
     <x-google-analytics-body />
 
-    <main class="flex w-full bg-white relative z-10 h-screen">
+    <main class="flex w-full bg-white relative z-10 ">
         {{ $slot }}
     </main>
 

@@ -1,287 +1,489 @@
-<div x-data="{ sidebarOpen: false }">
-    <nav class="fixed top-0 z-80 w-full p-1 bg-white border-b border-gray-200 shadow">
-        <div class="px-4 py-2 flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <button x-show="!sidebarOpen" @click="sidebarOpen = true" type="button"
-                    class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200"
-                    x-cloak>
-                    <span class="sr-only">Open sidebar</span>
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"></path>
+<div x-data="{ 
+    sidebarOpen: false,
+    notificationOpen: false,
+    profileOpen: false,
+    currentTime: new Date().toLocaleString(),
+    
+    init() {
+        // Update time every minute
+        setInterval(() => {
+            this.currentTime = new Date().toLocaleString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }, 60000);
+        
+        // Close sidebar on route change (for mobile)
+        this.$nextTick(() => {
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('a[href]') && window.innerWidth < 1024) {
+                    this.sidebarOpen = false;
+                }
+            });
+        });
+    },
+    
+    toggleSidebar() {
+        this.sidebarOpen = !this.sidebarOpen;
+    }
+}">
+
+    <!-- Mobile Overlay -->
+    <div x-show="sidebarOpen" 
+         x-transition.opacity.duration.300ms 
+         class="fixed inset-0 z-[60] bg-black/50 lg:hidden" 
+         @click="sidebarOpen = false">
+    </div>
+
+    <!-- Enhanced Unified Sidebar -->
+    <aside x-show="sidebarOpen || window.innerWidth >= 1024"
+           :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+           class="fixed top-0 left-0 z-[70] w-80 h-screen bg-white shadow-2xl border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 flex flex-col overflow-hidden"
+           x-transition:enter="transition ease-out duration-300"
+           x-transition:enter-start="-translate-x-full"
+           x-transition:enter-end="translate-x-0"
+           x-transition:leave="transition ease-in duration-300"
+           x-transition:leave-start="translate-x-0"
+           x-transition:leave-end="-translate-x-full">
+
+        <!-- Sidebar Header -->
+        <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-6 border-b border-blue-500">
+            <div class="flex items-center justify-between mb-4">
+                <!-- Logo and Brand -->
+                <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 group">
+                    <div class="p-2 bg-white/20 rounded-xl group-hover:bg-white/30 transition-all duration-200">
+                        <x-application-logo class="w-8 h-8 text-white" />
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white group-hover:text-blue-100 transition-colors">
+                            Duo Dev Expenses
+                        </h1>
+                        <p class="text-blue-200 text-sm">Financial Management</p>
+                    </div>
+                </a>
+                
+                <!-- Mobile Close Button -->
+                <button @click="sidebarOpen = false" 
+                        class="lg:hidden p-2 text-white/80 hover:text-white hover:bg-white/20 rounded-lg transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
-                    <x-application-logo class="w-auto h-8" />
-                    <span class="hidden text-2xl font-semibold text-gray-900 sm:inline">Duo Dev Expenses</span>
-                </a>
             </div>
-            <div class="flex items-center space-x-4">
-                <div class="relative" x-data="{ dropdownOpen: false }">
-                    <a href="{{ route('profile.show') }}" class="focus:outline-none flex items-center space-x-2">
-                        @if (Auth::user()->profile_photo)
-                            <img class="w-10 h-10 rounded-full"
-                                src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="User photo" />
-                        @else
-                            <div
-                                class="flex items-center justify-center w-10 h-10 text-sm font-bold text-white uppercase bg-gray-500 rounded-full">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                            </div>
-                        @endif
-                        <div class="hidden sm:flex flex-col items-start">
-                            <span class="text-sm font-medium text-gray-900">
-                                {{ Auth::user()->name }}
-                            </span>
-                            <span class="text-xs text-gray-500 hidden sm:inline">{{ Auth::user()->email }}</span>
+
+            <!-- User Profile Section -->
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                <div class="flex items-center space-x-3 mb-3">
+                    @if (Auth::user()->profile_photo)
+                        <img class="w-12 h-12 rounded-full object-cover ring-2 ring-white/30" 
+                             src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile" />
+                    @else
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-600 rounded-full flex items-center justify-center ring-2 ring-white/30">
+                            <span class="text-white font-bold text-lg">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
                         </div>
+                    @endif
+                    <div class="flex-1 min-w-0">
+                        <p class="text-white font-semibold truncate">{{ Auth::user()->name }}</p>
+                        <p class="text-blue-200 text-sm truncate">{{ Auth::user()->email }}</p>
+                    </div>
+                    
+                    <!-- Profile Dropdown Toggle -->
+                    <button @click="profileOpen = !profileOpen" 
+                            class="p-1 text-white/80 hover:text-white hover:bg-white/20 rounded-lg transition-colors">
+                        <svg class="w-5 h-5 transition-transform" :class="profileOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Quick Profile Actions -->
+                <div x-show="profileOpen" x-collapse class="space-y-2">
+                    <a href="{{ route('profile.show') }}" 
+                       class="flex items-center space-x-2 w-full px-3 py-2 text-sm text-white/90 hover:text-white hover:bg-white/20 rounded-lg transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        <span>View Profile</span>
+                    </a>
+                    <a href="{{ route('account.settings') }}" 
+                       class="flex items-center space-x-2 w-full px-3 py-2 text-sm text-white/90 hover:text-white hover:bg-white/20 rounded-lg transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Account Settings</span>
                     </a>
                 </div>
-                <a href="{{ route('account.settings') }}" class="text-gray-600 hover:text-blue-600">
-                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <circle cx="12" cy="12" r="3" stroke="#1C274C" stroke-width="1.5"></circle>
-                            <path
-                                d="M3.66122 10.6392C4.13377 10.9361 4.43782 11.4419 4.43782 11.9999C4.43781 12.558 4.13376 13.0638 3.66122 13.3607C3.33966 13.5627 3.13248 13.7242 2.98508 13.9163C2.66217 14.3372 2.51966 14.869 2.5889 15.3949C2.64082 15.7893 2.87379 16.1928 3.33973 16.9999C3.80568 17.8069 4.03865 18.2104 4.35426 18.4526C4.77508 18.7755 5.30694 18.918 5.83284 18.8488C6.07287 18.8172 6.31628 18.7185 6.65196 18.5411C7.14544 18.2803 7.73558 18.2699 8.21895 18.549C8.70227 18.8281 8.98827 19.3443 9.00912 19.902C9.02332 20.2815 9.05958 20.5417 9.15224 20.7654C9.35523 21.2554 9.74458 21.6448 10.2346 21.8478C10.6022 22 11.0681 22 12 22C12.9319 22 13.3978 22 13.7654 21.8478C14.2554 21.6448 14.6448 21.2554 14.8478 20.7654C14.9404 20.5417 14.9767 20.2815 14.9909 19.9021C15.0117 19.3443 15.2977 18.8281 15.7811 18.549C16.2644 18.27 16.8545 18.2804 17.3479 18.5412C17.6837 18.7186 17.9271 18.8173 18.1671 18.8489C18.693 18.9182 19.2249 18.7756 19.6457 18.4527C19.9613 18.2106 20.1943 17.807 20.6603 17C20.8677 16.6407 21.029 16.3614 21.1486 16.1272M20.3387 13.3608C19.8662 13.0639 19.5622 12.5581 19.5621 12.0001C19.5621 11.442 19.8662 10.9361 20.3387 10.6392C20.6603 10.4372 20.8674 10.2757 21.0148 10.0836C21.3377 9.66278 21.4802 9.13092 21.411 8.60502C21.3591 8.2106 21.1261 7.80708 20.6601 7.00005C20.1942 6.19301 19.9612 5.7895 19.6456 5.54732C19.2248 5.22441 18.6929 5.0819 18.167 5.15113C17.927 5.18274 17.6836 5.2814 17.3479 5.45883C16.8544 5.71964 16.2643 5.73004 15.781 5.45096C15.2977 5.1719 15.0117 4.6557 14.9909 4.09803C14.9767 3.71852 14.9404 3.45835 14.8478 3.23463C14.6448 2.74458 14.2554 2.35523 13.7654 2.15224C13.3978 2 12.9319 2 12 2C11.0681 2 10.6022 2 10.2346 2.15224C9.74458 2.35523 9.35523 2.74458 9.15224 3.23463C9.05958 3.45833 9.02332 3.71848 9.00912 4.09794C8.98826 4.65566 8.70225 5.17191 8.21891 5.45096C7.73557 5.73002 7.14548 5.71959 6.65205 5.4588C6.31633 5.28136 6.0729 5.18269 5.83285 5.15108C5.30695 5.08185 4.77509 5.22436 4.35427 5.54727C4.03866 5.78945 3.80569 6.19297 3.33974 7C3.13231 7.35929 2.97105 7.63859 2.85138 7.87273"
-                                stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"></path>
-                        </g>
-                    </svg>
-                </a>
-                <div x-data="{ notificationOpen: false }" class="relative z-50">
-                    <button @click="notificationOpen = true"
-                        class="relative p-1 text-gray-600 hover:text-blue-600 focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a2 2 0 00-4 0v.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m7 0v1a3 3 0 01-6 0v-1m6 0H9" />
-                        </svg>
-                        @if (Auth::user()->unreadNotifications->count() > 0)
-                            <span
-                                class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full animate-ping"></span>
-                            <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
-                        @endif
-                    </button>
-                    <div x-show="notificationOpen" @click.away="notificationOpen = false" x-transition
-                        class="fixed top-0 right-0 w-80 mt-16 h-full bg-white border-l border-gray-200 shadow-lg flex flex-col z-[9999]"
-                        style="display: none; isolation: isolate; transform: translateZ(0);">
-                        <div class="flex items-center justify-between px-4 py-3 border-b">
-                            <span class="font-semibold text-lg">Notifications</span>
-                            <button @click="notificationOpen = false" class="text-gray-500 hover:text-gray-700">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
+                
+                <!-- Status and Time -->
+                <div class="mt-3 pt-3 border-t border-white/20">
+                    <div class="flex items-center justify-between text-xs text-blue-200">
+                        <div class="flex items-center space-x-1">
+                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span>Online</span>
                         </div>
-                        <div class="flex-1 overflow-y-auto p-4">
-                            @forelse (Auth::user()->unreadNotifications as $notification)
-                                @php
-                                    $type = $notification->data['type'] ?? 'info';
-
-                                    $styles = [
-                                        'info' => 'border-blue-400 bg-blue-50 text-blue-700',
-                                        'success' => 'border-green-400 bg-green-50 text-green-700',
-                                        'warning' => 'border-yellow-400 bg-yellow-50 text-yellow-800',
-                                        'danger' => 'border-red-400 bg-red-50 text-red-700',
-                                        'secondary' => 'border-gray-400 bg-gray-50 text-gray-700',
-                                    ];
-
-                                    $style = $styles[$type] ?? $styles['info'];
-                                @endphp
-                                <div class="p-4 border-l-4 rounded mb-3 shadow-sm {{ $style }}">
-                                    <div class="flex flex-col items-end justify-between">
-                                        <div>
-                                            <div class="font-semibold text-sm">
-                                                {{ $notification->data['title'] ?? 'Notification' }}
-                                            </div>
-                                            <div class="text-xs text-yellow-700 mt-1">
-                                                {{ $notification->data['message'] ?? '' }}
-                                            </div>
-                                        </div>
-                                        @if (isset($notification->data['action_url']))
-                                            <a href="{{ $notification->data['action_url'] }}"
-                                                class="text-sm underline font-medium hover:opacity-75">
-                                                {{ $notification->data['action_text'] ?? 'View' }}
-                                            </a>
-                                        @endif
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="bg-blue-50 border-l-4 border-blue-400 text-blue-700 p-3 rounded mb-2">
-                                    <div class="font-medium">No new notifications</div>
-                                    <div class="text-xs text-blue-600">You are all caught up!</div>
-                                </div>
-                            @endforelse
-                            @if (Auth::user()->unreadNotifications->count() > 0)
-                                <div class="text-center mt-4">
-                                    <form action="{{ route('notifications.markAllAsRead') }}" method="POST">
-                                        @csrf
-                                        <button type="submit"
-                                            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">
-                                            Mark all as read
-                                        </button>
-                                    </form>
-                                </div>
-                            @endif
-                        </div>
+                        <span x-text="currentTime">{{ now()->format('M d, H:i') }}</span>
                     </div>
                 </div>
             </div>
         </div>
-    </nav>
 
-    <div class="fixed top-0 z-50">
-        <div x-show="sidebarOpen" x-transition.opacity class="fixed inset-0 z-40 bg-black bg-opacity-40 sm:hidden"
-            @click="sidebarOpen = false" style="display: none;">
-        </div>
-
-        <aside id="logo-sidebar" x-show="sidebarOpen || window.innerWidth >= 640"
-            @keydown.window.escape="sidebarOpen = false" @click.away="sidebarOpen = false"
-            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-            class="fixed top-0 left-0 z-40 w-64 h-screen pt-0 transition-transform bg-white border-r border-gray-200
-            transform sm:translate-x-0 sm:static sm:inset-0 flex flex-col overflow-y-auto"
-            aria-label="Sidebar" x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
-            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0"
-            x-transition:leave-end="-translate-x-full" style="display: none;">
-
-            <div class="flex items-center justify-between px-4 py-4 border-b">
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
-                    <x-application-logo class="w-auto h-8" />
-                    <span class="text-2xl font-semibold text-gray-900">Duo Dev Expenses</span>
-                </a>
-                <button @click="sidebarOpen = false"
-                    class="sm:hidden text-gray-500 hover:text-gray-700 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+        <!-- Navigation Section -->
+        <div class="flex-1 overflow-y-auto">
+            <!-- Navigation Header -->
+            <div class="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider">Navigation</h3>
+                    
+                    <!-- Notifications Button -->
+                    <button @click="notificationOpen = !notificationOpen" 
+                            class="relative p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a2 2 0 00-4 0v.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m7 0v1a3 3 0 01-6 0v-1m6 0H9"></path>
+                        </svg>
+                        @if (Auth::user()->unreadNotifications->count() > 0)
+                            <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                                <span class="text-xs font-bold text-white">
+                                    {{ Auth::user()->unreadNotifications->count() > 9 ? '9+' : Auth::user()->unreadNotifications->count() }}
+                                </span>
+                            </div>
+                        @endif
+                    </button>
+                </div>
             </div>
 
-            <ul class="text-l font-medium">
-                <li>
-                    <a href="{{ route('dashboard') }}"
-                        class="flex items-center px-4 py-4
-                        {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
-                        <span class="ml-3">Dashboard</span>
-                    </a>
-                </li>
-                @can('manage transactions')
-                    <li>
-                        <a href="{{ route('transactions.index') }}"
-                            class="flex items-center px-4 py-4
-                            {{ request()->routeIs('transactions.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
-                            <span class="ml-3">Transactions</span>
-                        </a>
-                    </li>
-                @endcan
-                @can('manage categories')
-                    <li>
-                        <a href="{{ route('categories.index') }}"
-                            class="flex items-center px-4 py-4
-                            {{ request()->routeIs('categories.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
-                            <span class="ml-3">Categories</span>
-                        </a>
-                    </li>
-                @endcan
-                @can('manage expense people')
-                    <li>
-                        <a href="{{ route('expense-people.index') }}"
-                            class="flex items-center px-4 py-4
-                            {{ request()->routeIs('expense-people.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
-                            <span class="ml-3">Persons</span>
-                        </a>
-                    </li>
-                @endcan
-                @can('manage wallets')
-                    <li>
-                        <a href="{{ route('wallets.index') }}"
-                            class="flex items-center px-4 py-4
-                            {{ request()->routeIs('wallets.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
-                            <span class="ml-3">Wallets</span>
-                        </a>
-                    </li>
-                @endcan
-                @can('manage budgets')
-                    <li>
-                        <a href="{{ route('budgets.index') }}"
-                            class="flex items-center px-4 py-4
-                            {{ request()->routeIs('budgets.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
-                            <span class="ml-3">Budgets</span>
-                        </a>
-                    </li>
-                @endcan
-                @can('generate reports')
-                    <li>
-                        <a href="{{ route('reports.index') }}"
-                            class="flex items-center px-4 py-4
-                            {{ request()->routeIs('reports.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
-                            <span class="ml-3">Reports</span>
-                        </a>
-                    </li>
-                @endcan
-                @can('manage wallet types')
-                    <li>
-                        <a href="{{ route('wallet-types.index') }}"
-                            class="flex items-center px-4 py-4
-                            {{ request()->routeIs('wallet-types.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
-                            <span class="ml-3">Wallet Types</span>
-                        </a>
-                    </li>
-                @endcan
-                @can('manage currencies')
-                    <li>
-                        <a href="{{ route('currencies.index') }}"
-                            class="flex items-center px-4 py-4
-                            {{ request()->routeIs('currencies.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
-                            <span class="ml-3">Currencies</span>
-                        </a>
-                    </li>
-                @endcan
-                @can('manage users')
-                    <li>
-                        <a href="{{ route('user.index') }}"
-                            class="flex items-center px-4 py-4
-                            {{ request()->routeIs('users.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
-                            <span class="ml-3">Users</span>
-                        </a>
-                    </li>
-                @endcan
-                @can('manage roles')
-                    <li>
-                        <a href="{{ route('roles.index') }}"
-                            class="flex items-center px-4 py-4
-                            {{ request()->routeIs('roles.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
-                            <span class="ml-3">Roles</span>
-                        </a>
-                    </li>
-                @endcan
-                <li>
-                    <a href="{{ route('support_tickets.index') }}"
-                        class="flex items-center px-4 py-4
-                        {{ request()->routeIs('support_tickets.*') ? 'bg-blue-50 text-blue-700 font-semibold border-l-8 border-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">
-                        <span class="ml-3">Support</span>
-                    </a>
-                </li>
-            </ul>
-
-            <div class="w-full mt-auto">
-                <form id="sidebar-logout-form" action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit"
-                        class="w-full flex items-center px-4 py-3 text-red-50 bg-red-600 transition font-medium">
-                        <svg class="w-5 h-5 mr-2 " fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" />
+            <!-- Main Navigation Menu -->
+            <nav class="p-4 space-y-2">
+                <!-- Dashboard -->
+                <a href="{{ route('dashboard') }}" 
+                   class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('dashboard') ? 'bg-blue-100 text-blue-700 shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                    <div class="p-2 rounded-lg {{ request()->routeIs('dashboard') ? 'bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100' }} transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
                         </svg>
-                        Log Out
+                    </div>
+                    <span class="ml-3 font-medium">Dashboard</span>
+                    @if(request()->routeIs('dashboard'))
+                        <div class="ml-auto w-1 h-8 bg-blue-600 rounded-full"></div>
+                    @endif
+                </a>
+
+                <!-- Core Features Section -->
+                <div class="pt-4">
+                    <h4 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Core Features</h4>
+                    
+                    @can('manage transactions')
+                    <a href="{{ route('transactions.index') }}" 
+                       class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('transactions.*') ? 'bg-blue-100 text-blue-700 shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <div class="p-2 rounded-lg {{ request()->routeIs('transactions.*') ? 'bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100' }} transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-3 font-medium">Transactions</span>
+                        @if(request()->routeIs('transactions.*'))
+                            <div class="ml-auto w-1 h-8 bg-blue-600 rounded-full"></div>
+                        @endif
+                    </a>
+                    @endcan
+
+                    @can('manage categories')
+                    <a href="{{ route('categories.index') }}" 
+                       class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('categories.*') ? 'bg-blue-100 text-blue-700 shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <div class="p-2 rounded-lg {{ request()->routeIs('categories.*') ? 'bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100' }} transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-3 font-medium">Categories</span>
+                        @if(request()->routeIs('categories.*'))
+                            <div class="ml-auto w-1 h-8 bg-blue-600 rounded-full"></div>
+                        @endif
+                    </a>
+                    @endcan
+
+                    @can('manage wallets')
+                    <a href="{{ route('wallets.index') }}" 
+                       class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('wallets.*') ? 'bg-blue-100 text-blue-700 shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <div class="p-2 rounded-lg {{ request()->routeIs('wallets.*') ? 'bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100' }} transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-3 font-medium">Wallets</span>
+                        @if(request()->routeIs('wallets.*'))
+                            <div class="ml-auto w-1 h-8 bg-blue-600 rounded-full"></div>
+                        @endif
+                    </a>
+                    @endcan
+
+                    @can('manage budgets')
+                    <a href="{{ route('budgets.index') }}" 
+                       class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('budgets.*') ? 'bg-blue-100 text-blue-700 shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <div class="p-2 rounded-lg {{ request()->routeIs('budgets.*') ? 'bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100' }} transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-3 font-medium">Budgets</span>
+                        @if(request()->routeIs('budgets.*'))
+                            <div class="ml-auto w-1 h-8 bg-blue-600 rounded-full"></div>
+                        @endif
+                    </a>
+                    @endcan
+                </div>
+
+                <!-- Management Section -->
+                <div class="pt-4">
+                    <h4 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Management</h4>
+                    
+                    @can('manage expense people')
+                    <a href="{{ route('expense-people.index') }}" 
+                       class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('expense-people.*') ? 'bg-blue-100 text-blue-700 shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <div class="p-2 rounded-lg {{ request()->routeIs('expense-people.*') ? 'bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100' }} transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-3 font-medium">Expense People</span>
+                        @if(request()->routeIs('expense-people.*'))
+                            <div class="ml-auto w-1 h-8 bg-blue-600 rounded-full"></div>
+                        @endif
+                    </a>
+                    @endcan
+
+                    @can('generate reports')
+                    <a href="{{ route('reports.index') }}" 
+                       class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('reports.*') ? 'bg-blue-100 text-blue-700 shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <div class="p-2 rounded-lg {{ request()->routeIs('reports.*') ? 'bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100' }} transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-3 font-medium">Reports</span>
+                        @if(request()->routeIs('reports.*'))
+                            <div class="ml-auto w-1 h-8 bg-blue-600 rounded-full"></div>
+                        @endif
+                    </a>
+                    @endcan
+                </div>
+
+                <!-- System Configuration -->
+                @if(Auth::user()->can('manage wallet types') || Auth::user()->can('manage currencies') || Auth::user()->can('manage users') || Auth::user()->can('manage roles'))
+                <div class="pt-4">
+                    <h4 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">System</h4>
+                    
+                    @can('manage currencies')
+                    <a href="{{ route('currencies.index') }}" 
+                       class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('currencies.*') ? 'bg-blue-100 text-blue-700 shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <div class="p-2 rounded-lg {{ request()->routeIs('currencies.*') ? 'bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100' }} transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-3 font-medium">Currencies</span>
+                        @if(request()->routeIs('currencies.*'))
+                            <div class="ml-auto w-1 h-8 bg-blue-600 rounded-full"></div>
+                        @endif
+                    </a>
+                    @endcan
+
+                    @can('manage wallet types')
+                    <a href="{{ route('wallet-types.index') }}" 
+                       class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('wallet-types.*') ? 'bg-blue-100 text-blue-700 shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <div class="p-2 rounded-lg {{ request()->routeIs('wallet-types.*') ? 'bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100' }} transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-3 font-medium">Wallet Types</span>
+                        @if(request()->routeIs('wallet-types.*'))
+                            <div class="ml-auto w-1 h-8 bg-blue-600 rounded-full"></div>
+                        @endif
+                    </a>
+                    @endcan
+
+                    @can('manage users')
+                    <a href="{{ route('user.index') }}" 
+                       class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('users.*') ? 'bg-blue-100 text-blue-700 shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <div class="p-2 rounded-lg {{ request()->routeIs('users.*') ? 'bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100' }} transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-3 font-medium">Users</span>
+                        @if(request()->routeIs('users.*'))
+                            <div class="ml-auto w-1 h-8 bg-blue-600 rounded-full"></div>
+                        @endif
+                    </a>
+                    @endcan
+
+                    @can('manage roles')
+                    <a href="{{ route('roles.index') }}" 
+                       class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('roles.*') ? 'bg-blue-100 text-blue-700 shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <div class="p-2 rounded-lg {{ request()->routeIs('roles.*') ? 'bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100' }} transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-3 font-medium">Roles</span>
+                        @if(request()->routeIs('roles.*'))
+                            <div class="ml-auto w-1 h-8 bg-blue-600 rounded-full"></div>
+                        @endif
+                    </a>
+                    @endcan
+                </div>
+                @endif
+
+                <!-- Support -->
+                <div class="pt-4">
+                    <h4 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Support</h4>
+                    
+                    <a href="{{ route('support_tickets.index') }}" 
+                       class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('support_tickets.*') ? 'bg-blue-100 text-blue-700 shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600' }}">
+                        <div class="p-2 rounded-lg {{ request()->routeIs('support_tickets.*') ? 'bg-blue-200' : 'bg-gray-100 group-hover:bg-blue-100' }} transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                        </div>
+                        <span class="ml-3 font-medium">Support Tickets</span>
+                        @if(request()->routeIs('support_tickets.*'))
+                            <div class="ml-auto w-1 h-8 bg-blue-600 rounded-full"></div>
+                        @endif
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="border-t border-gray-200 p-4 space-y-2">
+            <!-- Logout Button -->
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" 
+                        class="w-full flex items-center px-4 py-3 text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-all duration-200 group">
+                    <div class="p-2 bg-red-100 group-hover:bg-red-200 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"></path>
+                        </svg>
+                    </div>
+                    <span class="ml-3 font-medium">Sign Out</span>
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Notifications Panel -->
+    <div x-show="notificationOpen" 
+         @click.away="notificationOpen = false" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 transform translate-x-full"
+         x-transition:enter-end="opacity-100 transform translate-x-0"
+         x-transition:leave="transition ease-in duration-300"
+         x-transition:leave-start="opacity-100 transform translate-x-0"
+         x-transition:leave-end="opacity-0 transform translate-x-full"
+         class="fixed right-0 top-0 z-[80] w-96 h-full bg-white shadow-2xl border-l border-gray-200 flex flex-col">
+        
+        <!-- Notifications Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <div>
+                <h3 class="text-lg font-bold text-gray-900">Notifications</h3>
+                @if (Auth::user()->unreadNotifications->count() > 0)
+                    <p class="text-sm text-gray-600">{{ Auth::user()->unreadNotifications->count() }} unread</p>
+                @else
+                    <p class="text-sm text-gray-600">All caught up!</p>
+                @endif
+            </div>
+            <button @click="notificationOpen = false" 
+                    class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Notifications Content -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-3">
+            @forelse (Auth::user()->unreadNotifications as $notification)
+                @php
+                    $type = $notification->data['type'] ?? 'info';
+                    $styles = [
+                        'info' => 'border-blue-200 bg-blue-50',
+                        'success' => 'border-green-200 bg-green-50',
+                        'warning' => 'border-yellow-200 bg-yellow-50',
+                        'danger' => 'border-red-200 bg-red-50',
+                        'secondary' => 'border-gray-200 bg-gray-50',
+                    ];
+                    $style = $styles[$type] ?? $styles['info'];
+                @endphp
+                <div class="p-4 border-l-4 rounded-lg {{ $style }} hover:shadow-sm transition-shadow">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-semibold text-gray-900 text-sm">
+                            {{ $notification->data['title'] ?? 'Notification' }}
+                        </h4>
+                        <span class="text-xs text-gray-500">
+                            {{ $notification->created_at->diffForHumans() }}
+                        </span>
+                    </div>
+                    <p class="text-sm text-gray-700 mb-3">
+                        {{ $notification->data['message'] ?? '' }}
+                    </p>
+                    @if (isset($notification->data['action_url']))
+                        <a href="{{ $notification->data['action_url'] }}"
+                           class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
+                            {{ $notification->data['action_text'] ?? 'View' }}
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    @endif
+                </div>
+            @empty
+                <div class="text-center py-12">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a2 2 0 00-4 0v.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m7 0v1a3 3 0 01-6 0v-1m6 0H9"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">All caught up!</h3>
+                    <p class="text-gray-600">No new notifications to show.</p>
+                </div>
+            @endforelse
+        </div>
+        
+        <!-- Notifications Footer -->
+        @if (Auth::user()->unreadNotifications->count() > 0)
+            <div class="border-t border-gray-200 p-4">
+                <form action="{{ route('notifications.markAllAsRead') }}" method="POST">
+                    @csrf
+                    <button type="submit" 
+                            class="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                        Mark All as Read
                     </button>
                 </form>
             </div>
-        </aside>
+        @endif
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button @click="toggleSidebar()" 
+            class="lg:hidden fixed top-4 left-4 z-[65] p-3 bg-white shadow-lg rounded-xl border border-gray-200 text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
+        <svg x-show="!sidebarOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <svg x-show="sidebarOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+    </button>
+
+    <!-- Main Content Area -->
+    <div class="lg:ml-80 min-h-screen">
+        <!-- Your page content goes here -->
+        <div class="p-4 lg:p-6">
+            <!-- Content will be inserted here -->
+        </div>
     </div>
 </div>

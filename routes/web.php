@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AccountSettingsController;
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CategoryController;
@@ -48,6 +49,8 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
     Route::get('/account-settings', [AccountSettingsController::class, 'index'])->name('account.settings');
     Route::patch('/account-settings/password', [AccountSettingsController::class, 'updatePassword'])->name('account.update.password');
     Route::delete('/account-settings/delete', [AccountSettingsController::class, 'destroy'])->name('account.destroy');
+
+    Route::get('/account/activity', [ActivityController::class, 'index'])->name('account.activity');
 
     Route::post('/notifications/{id}/read', function ($id) {
         Auth::user()->notifications()->where('id', $id)->first()?->markAsRead();
