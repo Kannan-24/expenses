@@ -366,6 +366,9 @@ class TransactionController extends Controller
         }
 
         // Notify user if budget is exceeded above 100% or 90%
+        if ($budgetHistory->allocated_amount <= 0) {
+            return;
+        }
         $exceededPercent =  ($budgetHistory->spent_amount / $budgetHistory->allocated_amount) * 100;
         $user = User::find($userId);
         if ($exceededPercent >= 100) {

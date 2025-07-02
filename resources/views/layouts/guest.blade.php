@@ -731,6 +731,8 @@
         // Initialize everything when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
             navigationManager.init();
+
+            
         });
     </script>
 </body>

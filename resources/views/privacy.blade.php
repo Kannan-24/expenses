@@ -459,9 +459,6 @@
                     </div>
                 </section>
 
-                <!-- Continue with remaining sections... -->
-                <!-- I'll add the remaining sections following the same pattern -->
-
                 <!-- Section 5: Data Retention -->
                 <section id="data-retention" class="scroll-mt-24">
                     <div class="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
@@ -522,8 +519,6 @@
                         </div>
                     </div>
                 </section>
-
-                <!-- Add remaining sections following the same pattern... -->
 
                 <!-- Section 11: Contact -->
                 <section id="contact-privacy" class="scroll-mt-24">

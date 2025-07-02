@@ -592,6 +592,16 @@
                     }
                 });
             });
+
+             // Reading progress indicator
+            const progressBar = document.createElement('div');
+            progressBar.className = 'fixed top-0 left-0 h-1 z-50 transition-all duration-300 bg-gradient-to-r from-blue-500 to-purple-500';
+            document.body.appendChild(progressBar);
+
+            window.addEventListener('scroll', () => {
+                const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                progressBar.style.width = `${Math.min(scrolled, 100)}%`;
+            });
         });
     </script>
 </x-guest-layout>
