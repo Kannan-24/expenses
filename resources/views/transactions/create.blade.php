@@ -21,11 +21,20 @@
                         </a>
                     </li>
                     <li class="flex items-center">
+                        <a href="{{ route('transactions.index') }}" class="inline-flex items-center hover:text-blue-600">
+                            <svg class="w-4 h-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
+                            </svg>
+                            Transactions
+                        </a>
+                    </li>
+                    <li class="inline-flex items-center">
                         <svg class="w-4 h-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path
                                 d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
                         </svg>
-                        <span class="text-gray-700">Transactions</span>
+                        <span class="text-gray-700">Add Transaction</span>
                     </li>
                 </ol>
             </nav>

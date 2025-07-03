@@ -33,7 +33,7 @@
                             <path
                                 d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
                         </svg>
-                        <span class="text-gray-700">Create Category</span>
+                        <span class="text-gray-700">Add Category</span>
                     </li>
                 </ol>
             </nav>
