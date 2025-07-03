@@ -22,6 +22,13 @@ class OnboardingController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+
+        // Check if the user is already onboarded
+        if ($user->hasCompletedAllOnboardingSteps()) {
+            return redirect()->route('dashboard')->with('info', 'You have already completed the onboarding process.');
+        }
+
         $walletTypes = WalletType::all();
         $currencies = Currency::all();
 
