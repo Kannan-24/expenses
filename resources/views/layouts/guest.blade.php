@@ -372,7 +372,7 @@
                                 </svg>
                             @endfor
                         </div>
-                        <span class="text-gray-400 text-sm">4.9/5 from 1,200+ users</span>
+                        <span class="text-gray-400 text-sm">4.9/5 from 500+ users</span>
                     </div>
                 </div>
 
