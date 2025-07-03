@@ -95,7 +95,8 @@ class ActivityTracker
             return $userActivity->location;
         }
 
-        $response = file_get_contents("https://ipapi.co/{$ip}/json/");
+
+        $response = @file_get_contents("https://ipapi.co/{$ip}/json/");
         if ($response) {
             $data = json_decode($response, true);
             if (isset($data['city']) && isset($data['country_name'])) {
