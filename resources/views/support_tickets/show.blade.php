@@ -256,76 +256,98 @@
                 @endif
 
                 <!-- Messages Thread -->
-                <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                        </svg>
-                        Conversation History
-                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                            {{ $supportTicket->messages->count() }} messages
-                        </span>
-                    </h3>
-
-                    <div class="space-y-6">
-                        @forelse ($supportTicket->messages->sortByDesc('created_at') as $message)
-                            <div class="flex space-x-4">
-                                <!-- Avatar -->
-                                <div class="flex-shrink-0">
-                                    @if($message->user->hasRole('admin'))
-                                        <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center shadow-lg">
-                                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                                            </svg>
-                                        </div>
-                                    @else
-                                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
-                                            <span class="text-white font-bold">{{ strtoupper(substr($message->user->name, 0, 1)) }}</span>
-                                        </div>
-                                    @endif
-                                </div>
-
-                                <!-- Message Content -->
-                                <div class="flex-1 min-w-0">
-                                    <div class="bg-gray-50 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-                                        <!-- Message Header -->
-                                        <div class="flex items-center justify-between mb-4">
-                                            <div class="flex items-center space-x-2">
-                                                <span class="font-bold text-gray-900">
-                                                    {{ $message->user->hasRole('admin') ? '👑 Admin' : '👤 User' }}: {{ $message->user->name }}
-                                                </span>
-                                                @if($message->user->hasRole('admin'))
-                                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                        Staff
-                                                    </span>
-                                                @endif
-                                            </div>
-                                            <div class="text-right">
-                                                <p class="text-sm font-medium text-gray-900">{{ $message->created_at->format('M d, Y') }}</p>
-                                                <p class="text-xs text-gray-500">{{ $message->created_at->format('H:i') }} • {{ $message->created_at->diffForHumans() }}</p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Message Body -->
-                                        <div class="prose prose-sm max-w-none text-gray-800">
-                                            {!! $message->message !!}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="text-center py-12">
-                                <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 sm:p-6 border-b border-gray-100">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center mr-3 sm:mr-4">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                                     </svg>
                                 </div>
-                                <h3 class="text-lg font-semibold text-gray-900 mb-2">No Messages Yet</h3>
-                                <p class="text-gray-600">Be the first to reply to this ticket.</p>
+                                <div>
+                                    <h3 class="text-lg sm:text-xl font-bold text-gray-900">Conversation History</h3>
+                                    <p class="text-sm text-gray-600 mt-1 sm:hidden">{{ $supportTicket->messages->count() }} messages in this thread</p>
+                                </div>
                             </div>
-                        @endforelse
+                            <div class="hidden sm:flex items-center space-x-2">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                                    {{ $supportTicket->messages->count() }} messages
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Messages Container -->
+                    <div class="max-h-96 sm:max-h-[500px] overflow-y-auto">
+                        <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
+                            @forelse ($supportTicket->messages->sortByDesc('created_at') as $message)
+                                <div class="group">
+                                    <div class="flex space-x-3 sm:space-x-4">
+                                        <!-- Avatar -->
+                                        <div class="flex-shrink-0">
+                                            @if($message->user->hasRole('admin'))
+                                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white">
+                                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                                    </svg>
+                                                </div>
+                                            @else
+                                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white">
+                                                    <span class="text-white font-bold text-sm sm:text-base">{{ strtoupper(substr($message->user->name, 0, 1)) }}</span>
+                                                </div>
+                                            @endif
+                                        </div>
+                
+                                        <!-- Message Content -->
+                                        <div class="flex-1 min-w-0">
+                                            <!-- Message Bubble -->
+                                            <div class="bg-gray-50 group-hover:bg-gray-100 rounded-2xl p-4 sm:p-5 shadow-sm transition-all duration-200">
+                                                <!-- Message Header -->
+                                                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 space-y-1 sm:space-y-0">
+                                                    <div class="flex items-center space-x-2">
+                                                        <span class="font-semibold text-gray-900 text-sm sm:text-base">
+                                                            {{ $message->user->name }}
+                                                        </span>
+                                                        @if($message->user->hasRole('admin'))
+                                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700 border border-red-200">
+                                                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                                Staff
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                    <div class="text-left sm:text-right">
+                                                        <p class="text-sm font-medium text-gray-700">{{ $message->created_at->format('M d, Y') }}</p>
+                                                        <p class="text-xs text-gray-500">{{ $message->created_at->format('H:i') }} • {{ $message->created_at->diffForHumans() }}</p>
+                                                    </div>
+                                                </div>
+                
+                                                <!-- Message Body -->
+                                                <div class="prose prose-sm max-w-none text-gray-800 break-words leading-relaxed">
+                                                    {!! $message->message !!}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="text-center py-8 sm:py-12">
+                                    <div class="mx-auto w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-4">
+                                        <svg class="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">No Messages Yet</h3>
+                                    <p class="text-sm sm:text-base text-gray-600 max-w-sm mx-auto">This conversation is waiting for the first message. Start the discussion!</p>
+                                </div>
+                            @endforelse
+                        </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>

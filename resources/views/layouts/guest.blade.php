@@ -228,21 +228,18 @@
                             [
                                 'href' => '/#home',
                                 'label' => 'Home',
-                                'icon' =>
-                                    'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
                             ],
-                            ['href' => '/#features', 'label' => 'Features', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z'],
+                            [
+                                'href' => '/#features', 
+                                'label' => 'Features',
+                            ],
                             [
                                 'href' => '/#how-it-works',
                                 'label' => 'How It Works',
-                                'icon' =>
-                                    'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z',
                             ],
                             [
                                 'href' => '/#faq',
                                 'label' => 'FAQ',
-                                'icon' =>
-                                    'M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
                             ],
                         ];
                     @endphp
@@ -251,11 +248,6 @@
                         <a href="{{ $item['href'] }}"
                             class="nav-link group flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors focus-visible:focus"
                             @click="closeNav()">
-                            <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="{{ $item['icon'] }}"></path>
-                            </svg>
                             <span>{{ $item['label'] }}</span>
                         </a>
                     @endforeach
@@ -279,11 +271,7 @@
                             </a>
                             <a href="{{ route('register') }}"
                                 class="inline-flex items-center px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
-                                    </path>
-                                </svg>
+                                <svg fill="#ffffff" class="h-4 w-4 mr-2" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff" stroke-width="1.472"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>user-plus</title> <path d="M13.5 15.824c3.48-0 6.302-2.822 6.302-6.302s-2.822-6.302-6.302-6.302-6.302 2.822-6.302 6.302c0 0 0 0 0 0.001v-0c0.004 3.479 2.824 6.298 6.302 6.302h0zM13.5 4.72c2.652 0 4.802 2.15 4.802 4.802s-2.15 4.802-4.802 4.802c-2.652 0-4.802-2.15-4.802-4.802v-0c0.003-2.651 2.151-4.8 4.802-4.803h0zM13.5 18.033c-5.956 0.025-10.935 4.183-12.216 9.753l-0.016 0.085c-0.011 0.048-0.017 0.103-0.017 0.16 0 0.414 0.336 0.75 0.75 0.75 0.357 0 0.656-0.25 0.731-0.585l0.001-0.005c1.124-4.988 5.517-8.658 10.768-8.658s9.643 3.67 10.754 8.584l0.014 0.074c0.072 0.34 0.37 0.591 0.726 0.591 0.059 0 0.117-0.007 0.172-0.020l-0.005 0.001c0.34-0.076 0.59-0.375 0.59-0.733 0-0.057-0.006-0.112-0.018-0.165l0.001 0.005c-1.299-5.654-6.276-9.812-12.23-9.838h-0.003zM30 13.753h-2.752v-2.753c0-0.414-0.336-0.75-0.75-0.75s-0.75 0.336-0.75 0.75v0 2.753h-2.754c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0h2.754v2.753c0 0.414 0.336 0.75 0.75 0.75s0.75-0.336 0.75-0.75v0-2.753h2.752c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0z"></path> </g></svg>
                                 Get Started
                             </a>
                         @endauth
@@ -308,10 +296,6 @@
                     <a href="{{ $item['href'] }}"
                         class="mobile-nav-item flex items-center space-x-3 px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
                         @click="closeNav()">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="{{ $item['icon'] }}"></path>
-                        </svg>
                         <span class="font-medium">{{ $item['label'] }}</span>
                     </a>
                 @endforeach
@@ -333,11 +317,6 @@
                         <a href="{{ route('login') }}"
                             class="mobile-nav-item flex items-center space-x-3 px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
                             @click="closeNav()">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
-                                </path>
-                            </svg>
                             <span class="font-medium">Sign In</span>
                         </a>
                         <a href="{{ route('register') }}"

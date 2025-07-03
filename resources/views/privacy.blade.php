@@ -164,10 +164,10 @@
                     @foreach ($sections as $section)
                         <a href="#{{ $section['id'] }}" class="block p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 group border border-gray-200 hover:border-green-300">
                             <div class="flex items-start space-x-3">
-                                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
-                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $section['icon'] }}"></path>
-                                    </svg>
+                                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
+                                    <span class="text-xs font-bold text-green-600">
+                                        {{ $loop->iteration }} <!-- Display section number -->
+                                    </span>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <h3 class="font-semibold text-gray-900 text-sm group-hover:text-green-600 transition-colors">{{ $section['title'] }}</h3>
@@ -201,9 +201,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
                                     <h4 class="font-bold text-blue-900 mb-4 flex items-center">
-                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                        </svg>
+                                        <svg viewBox="0 0 24 24" class="w-4 h-4 mr-2" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z" stroke="#1e3a8a" stroke-width="1.6799999999999997" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22" stroke="#1e3a8a" stroke-width="1.6799999999999997" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                                         Account Information
                                     </h4>
                                     <ul class="text-blue-800 space-y-2 text-sm">
@@ -562,7 +560,7 @@
                     <div class="flex items-center justify-center space-x-3 mb-4">
                         <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                             <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h4a1 1 0 011 1v12a2 2 0 01-2 2H5a2 2 0 01-2-2V8a1 1 0 011-1h4z"></path>
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 6V19C4 20.6569 5.34315 22 7 22H17C18.6569 22 20 20.6569 20 19V9C20 7.34315 18.6569 6 17 6H4ZM4 6V5" stroke="currentColor" stroke-width="1.5"></path> <path d="M18 6.00002V6.75002H18.75V6.00002H18ZM15.7172 2.32614L15.6111 1.58368L15.7172 2.32614ZM4.91959 3.86865L4.81353 3.12619H4.81353L4.91959 3.86865ZM5.07107 6.75002H18V5.25002H5.07107V6.75002ZM18.75 6.00002V4.30604H17.25V6.00002H18.75ZM15.6111 1.58368L4.81353 3.12619L5.02566 4.61111L15.8232 3.0686L15.6111 1.58368ZM4.81353 3.12619C3.91638 3.25435 3.25 4.0227 3.25 4.92895H4.75C4.75 4.76917 4.86749 4.63371 5.02566 4.61111L4.81353 3.12619ZM18.75 4.30604C18.75 2.63253 17.2678 1.34701 15.6111 1.58368L15.8232 3.0686C16.5763 2.96103 17.25 3.54535 17.25 4.30604H18.75ZM5.07107 5.25002C4.89375 5.25002 4.75 5.10627 4.75 4.92895H3.25C3.25 5.9347 4.06532 6.75002 5.07107 6.75002V5.25002Z" fill="currentColor"></path> <path d="M8 12H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path> <path d="M8 15.5H13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path> </g>
                             </svg>
                         </div>
                         <h3 class="text-lg font-bold text-gray-900">Privacy Policy Information</h3>
@@ -570,15 +568,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
                         <div>
                             <p class="font-medium text-gray-900">Last Updated</p>
-                            <p>{{ \Carbon\Carbon::parse('2025-07-02')->format('F j, Y') }}</p>
+                            <p>{{ \Carbon\Carbon::parse('2025-06-28')->format('F j, Y') }}</p>
                         </div>
                         <div>
                             <p class="font-medium text-gray-900">Effective Date</p>
-                            <p>{{ \Carbon\Carbon::parse('2025-07-02')->format('F j, Y') }}</p>
+                            <p>{{ \Carbon\Carbon::parse('2025-06-28')->format('F j, Y') }}</p>
                         </div>
                         <div>
                             <p class="font-medium text-gray-900">Version</p>
-                            <p>2.0</p>
+                            <p>1.0</p>
                         </div>
                     </div>
                 </div>

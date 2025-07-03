@@ -221,9 +221,7 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                                         <h4 class="font-semibold text-blue-800 mb-2 flex items-center">
-                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                            </svg>
+                                            <svg viewBox="0 0 24 24" class="w-4 h-4 mr-2" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z" stroke="#1e40af" stroke-width="1.6799999999999997" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22" stroke="#1e40af" stroke-width="1.6799999999999997" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                                             Your Responsibilities
                                         </h4>
                                         <ul class="text-blue-700 text-sm space-y-1">
@@ -513,7 +511,7 @@
                     <div class="flex items-center justify-center space-x-3 mb-4">
                         <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                             <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h4a1 1 0 011 1v12a2 2 0 01-2 2H5a2 2 0 01-2-2V8a1 1 0 011-1h4z"></path>
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 6V19C4 20.6569 5.34315 22 7 22H17C18.6569 22 20 20.6569 20 19V9C20 7.34315 18.6569 6 17 6H4ZM4 6V5" stroke="currentColor" stroke-width="1.5"></path> <path d="M18 6.00002V6.75002H18.75V6.00002H18ZM15.7172 2.32614L15.6111 1.58368L15.7172 2.32614ZM4.91959 3.86865L4.81353 3.12619H4.81353L4.91959 3.86865ZM5.07107 6.75002H18V5.25002H5.07107V6.75002ZM18.75 6.00002V4.30604H17.25V6.00002H18.75ZM15.6111 1.58368L4.81353 3.12619L5.02566 4.61111L15.8232 3.0686L15.6111 1.58368ZM4.81353 3.12619C3.91638 3.25435 3.25 4.0227 3.25 4.92895H4.75C4.75 4.76917 4.86749 4.63371 5.02566 4.61111L4.81353 3.12619ZM18.75 4.30604C18.75 2.63253 17.2678 1.34701 15.6111 1.58368L15.8232 3.0686C16.5763 2.96103 17.25 3.54535 17.25 4.30604H18.75ZM5.07107 5.25002C4.89375 5.25002 4.75 5.10627 4.75 4.92895H3.25C3.25 5.9347 4.06532 6.75002 5.07107 6.75002V5.25002Z" fill="currentColor"></path> <path d="M8 12H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path> <path d="M8 15.5H13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path> </g>
                             </svg>
                         </div>
                         <h3 class="text-lg font-bold text-gray-900">Document Information</h3>
@@ -544,8 +542,8 @@
                     </p>
                     <a href="{{ route('register') }}" 
                        class="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" stroke="currentColor" viewBox="0 0 32 32">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>user-plus</title> <path d="M13.5 15.824c3.48-0 6.302-2.822 6.302-6.302s-2.822-6.302-6.302-6.302-6.302 2.822-6.302 6.302c0 0 0 0 0 0.001v-0c0.004 3.479 2.824 6.298 6.302 6.302h0zM13.5 4.72c2.652 0 4.802 2.15 4.802 4.802s-2.15 4.802-4.802 4.802c-2.652 0-4.802-2.15-4.802-4.802v-0c0.003-2.651 2.151-4.8 4.802-4.803h0zM13.5 18.033c-5.956 0.025-10.935 4.183-12.216 9.753l-0.016 0.085c-0.011 0.048-0.017 0.103-0.017 0.16 0 0.414 0.336 0.75 0.75 0.75 0.357 0 0.656-0.25 0.731-0.585l0.001-0.005c1.124-4.988 5.517-8.658 10.768-8.658s9.643 3.67 10.754 8.584l0.014 0.074c0.072 0.34 0.37 0.591 0.726 0.591 0.059 0 0.117-0.007 0.172-0.020l-0.005 0.001c0.34-0.076 0.59-0.375 0.59-0.733 0-0.057-0.006-0.112-0.018-0.165l0.001 0.005c-1.299-5.654-6.276-9.812-12.23-9.838h-0.003zM30 13.753h-2.752v-2.753c0-0.414-0.336-0.75-0.75-0.75s-0.75 0.336-0.75 0.75v0 2.753h-2.754c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0h2.754v2.753c0 0.414 0.336 0.75 0.75 0.75s0.75-0.336 0.75-0.75v0-2.753h2.752c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0z"></path> </g>
                         </svg>
                         Create Free Account
                     </a>

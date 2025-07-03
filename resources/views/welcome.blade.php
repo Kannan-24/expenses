@@ -26,7 +26,7 @@
                     <div
                         class="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg border border-gray-200">
                         <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                        <span class="text-sm font-semibold text-gray-700">Trusted by 10,000+ users</span>
+                        <span class="text-sm font-semibold text-gray-700">Trusted by 500+ users</span>
                     </div>
 
                     <!-- Main Headline -->
@@ -83,19 +83,11 @@
                         <a href="{{ route('register') }}"
                             class="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
                             <span>Get Started Free</span>
-                            <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                            </svg>
+                            <svg viewBox="0 0 24 24" class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M12.2929 4.29289C12.6834 3.90237 13.3166 3.90237 13.7071 4.29289L20.7071 11.2929C21.0976 11.6834 21.0976 12.3166 20.7071 12.7071L13.7071 19.7071C13.3166 20.0976 12.6834 20.0976 12.2929 19.7071C11.9024 19.3166 11.9024 18.6834 12.2929 18.2929L17.5858 13H4C3.44772 13 3 12.5523 3 12C3 11.4477 3.44772 11 4 11H17.5858L12.2929 5.70711C11.9024 5.31658 11.9024 4.68342 12.2929 4.29289Z" fill="#ffffff"></path> </g></svg>
                         </a>
                         <a href="#features"
                             class="inline-flex items-center justify-center px-8 py-4 bg-white text-gray-700 font-semibold rounded-2xl shadow-lg hover:shadow-xl border-2 border-gray-200 hover:border-blue-300 transition-all duration-300">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M19 10a9 9 0 11-18 0 9 9 0 0118 0z">
-                                </path>
-                            </svg>
+                            <svg viewBox="0 0 24 24" class="w-5 h-5 mr-2" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cx="12" cy="12" r="10" stroke="#374151" stroke-width="1.5"></circle> <path d="M15.4137 10.941C16.1954 11.4026 16.1954 12.5974 15.4137 13.059L10.6935 15.8458C9.93371 16.2944 9 15.7105 9 14.7868L9 9.21316C9 8.28947 9.93371 7.70561 10.6935 8.15419L15.4137 10.941Z" stroke="#374151" stroke-width="1.5"></path> </g></svg>
                             Watch Demo
                         </a>
                     </div>
@@ -135,7 +127,7 @@
                                     </svg>
                                 @endfor
                             </div>
-                            <span class="font-semibold">4.9/5</span> from 1,200+ reviews
+                            <span class="font-semibold">4.9/5</span> from 127+ reviews
                         </div>
                     </div>
                 </div>
@@ -631,15 +623,15 @@
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                 <div class="space-y-2">
-                    <div class="text-3xl font-bold text-blue-600">10,000+</div>
+                    <div class="text-3xl font-bold text-blue-600">500+</div>
                     <div class="text-sm text-gray-600">Active Users</div>
                 </div>
                 <div class="space-y-2">
-                    <div class="text-3xl font-bold text-green-600">₹50M+</div>
+                    <div class="text-3xl font-bold text-green-600">₹2.7M+</div>
                     <div class="text-sm text-gray-600">Money Tracked</div>
                 </div>
                 <div class="space-y-2">
-                    <div class="text-3xl font-bold text-purple-600">4.9/5</div>
+                    <div class="text-3xl font-bold text-purple-600">4.7/5</div>
                     <div class="text-sm text-gray-600">User Rating</div>
                 </div>
                 <div class="space-y-2">
