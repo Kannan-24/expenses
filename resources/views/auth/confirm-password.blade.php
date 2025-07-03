@@ -117,7 +117,7 @@
                     <!-- Enhanced Submit Button -->
                     <div class="space-y-4">
                         <button type="submit" 
-                                :disabled="!password || isSubmitting"
+                                :disabled="!password"
                                 :class="(!password || isSubmitting) ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 shadow-lg hover:shadow-xl transform hover:scale-105'"
                                 class="w-full py-4 px-6 text-white font-bold text-lg rounded-xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-indigo-200 disabled:transform-none disabled:shadow-none"
                                 @click="isSubmitting = true">
