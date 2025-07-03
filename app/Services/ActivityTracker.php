@@ -17,7 +17,7 @@ class ActivityTracker
     ): UserActivity {
         $request = request();
         $user = $userId ? \App\Models\User::find($userId) : Auth::user();
-        
+
         if (!$user) {
             throw new \Exception('User not found for activity logging');
         }
@@ -90,11 +90,19 @@ class ActivityTracker
             return 'Local Development';
         }
 
-        // You can integrate with IP geolocation services like:
-        // - ipapi.co
-        // - ip-api.com
-        // - ipstack.com
-        // For now, we'll return a simple location
+        $userActivity = UserActivity::where('ip_address', $ip)->first();
+        if ($userActivity && $userActivity->location) {
+            return $userActivity->location;
+        }
+
+        $response = file_get_contents("https://ipapi.co/{$ip}/json/");
+        if ($response) {
+            $data = json_decode($response, true);
+            if (isset($data['city']) && isset($data['country_name'])) {
+                return "{$data['city']}, {$data['country_name']}";
+            }
+        }
+
         return 'Unknown Location';
     }
 }
