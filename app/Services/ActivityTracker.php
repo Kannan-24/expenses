@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ActivityTracker
 {
@@ -95,15 +96,23 @@ class ActivityTracker
             return $userActivity->location;
         }
 
+        try {
 
-        $response = @file_get_contents("https://ipapi.co/{$ip}/json/");
-        if ($response) {
-            $data = json_decode($response, true);
-            if (isset($data['city']) && isset($data['country_name'])) {
-                return "{$data['city']}, {$data['country_name']}";
+            $response = @file_get_contents("https://ipapi.co/{$ip}/json/");
+            if ($response) {
+                $data = json_decode($response, true);
+                if (isset($data['city']) && isset($data['country_name'])) {
+                    return "{$data['city']}, {$data['country_name']}";
+                }
             }
-        }
 
-        return 'Unknown Location';
+            return 'Unknown Location';
+        } catch (\Exception $e) {
+            Log::error('Failed to retrieve location from IP', [
+                'ip' => $ip,
+                'error' => $e->getMessage(),
+            ]);
+            return 'Unknown Location';
+        }
     }
 }
