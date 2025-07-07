@@ -164,4 +164,9 @@ class User extends Authenticatable
             \App\Services\ActivityTracker::logAccountCreated($user->id);
         });
     }
+
+    public function preferences()
+    {
+        return $this->hasOne(UserPreference::class);
+    }
 }

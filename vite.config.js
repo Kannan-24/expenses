@@ -14,4 +14,11 @@ export default defineConfig({
             tinymce: path.resolve(__dirname, 'node_modules/tinymce'),
         },
     },
+    server: {
+        host: '0.0.0.0', // Allow external connections
+        port: 5173,
+        hmr: {
+            host: 'localhost', // or your actual IP like '192.168.1.10'
+        },
+    },
 });

@@ -3,64 +3,257 @@
         {{ __('Edit Person') }} - {{ config('app.name', 'expenses') }}
     </x-slot>
 
-    <div class="bg-white p-6 rounded-2xl shadow flex flex-col"
-        style="height: auto; overflow: auto;">
-        <!-- Breadcrumb -->
-        <div class="flex justify-between items-center mb-4">
-            <nav class="flex text-sm text-gray-500" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                    <li class="inline-flex items-center">
-                        <a href="{{ route('dashboard') }}" class="inline-flex items-center hover:text-blue-600">
-                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    d="M10 2a1 1 0 01.7.3l7 7a1 1 0 01-1.4 1.4L16 10.42V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3H9v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6.58l-.3.28a1 1 0 01-1.4-1.44l7-7A1 1 0 0110 2z" />
+    <div class="min-h-screen ">
+        <div class="max-w-6xl mx-auto">
+            <!-- Enhanced Header Section -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 mb-6 overflow-hidden">
+                <div class="bg-gradient-to-r from-pink-600 via-rose-600 to-red-700 dark:from-pink-800 dark:via-rose-800 dark:to-red-900 p-4 sm:p-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <!-- Title and Breadcrumb -->
+                        <div>
+                            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">Edit Person</h1>
+                            <nav class="flex text-sm" aria-label="Breadcrumb">
+                                <ol class="inline-flex items-center space-x-1 md:space-x-2 flex-wrap">
+                                    <li class="inline-flex items-center">
+                                        <a href="{{ route('dashboard') }}" class="inline-flex items-center text-pink-200 hover:text-white transition-colors">
+                                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 2a1 1 0 01.7.3l7 7a1 1 0 01-1.4 1.4L16 10.42V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3H9v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6.58l-.3.28a1 1 0 01-1.4-1.44l7-7A1 1 0 0110 2z" />
+                                            </svg>
+                                            Dashboard
+                                        </a>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="w-4 h-4 mx-2 text-pink-300" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
+                                        </svg>
+                                        <a href="{{ route('expense-people.index') }}" class="text-pink-200 hover:text-white transition-colors">
+                                            People
+                                        </a>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="w-4 h-4 mx-2 text-pink-300" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
+                                        </svg>
+                                        <span class="text-pink-100 font-medium">Edit Person</span>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+
+                        <!-- Person Info Badge -->
+                        <div class="flex items-center space-x-3">
+                            <div class="text-center">
+                                <p class="text-sm text-pink-200">Person ID</p>
+                                <p class="text-lg font-bold text-white">#{{ $person->id }}</p>
+                            </div>
+                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Form Section -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                        <div class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-600 p-4 sm:p-6">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-2 bg-pink-100 dark:bg-pink-900 rounded-lg">
+                                    <svg class="w-6 h-6 text-pink-600 dark:text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Edit Person Information</h2>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Update the person details below</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 sm:p-6 lg:p-8">
+                            <form action="{{ route('expense-people.update', $person->id) }}" method="POST" x-data="personForm()" @submit="handleSubmit">
+                                @csrf
+                                @method('PUT')
+
+                                <div class="space-y-6">
+                                    <!-- Form Fields -->
+                                    <div class="space-y-6">
+                                        <!-- Person Name -->
+                                        <div class="space-y-2">
+                                            <label for="name" class="flex items-center text-sm font-bold text-gray-900 dark:text-white">
+                                                <svg class="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                                </svg>
+                                                Person Name
+                                                <span class="text-red-500 ml-1">*</span>
+                                            </label>
+                                            <input type="text" 
+                                                   name="name" 
+                                                   id="name" 
+                                                   value="{{ old('name', $person->name) }}"
+                                                   required 
+                                                   maxlength="255"
+                                                   placeholder="Enter person's full name"
+                                                   x-ref="nameInput"
+                                                   class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800 focus:border-blue-600 dark:focus:border-blue-400 transition-all duration-200 text-gray-900 dark:text-white bg-white dark:bg-gray-800 font-medium shadow-sm placeholder-gray-500 dark:placeholder-gray-400">
+                                            @error('name')
+                                                <p class="text-sm text-red-700 dark:text-red-400 flex items-center mt-2 font-semibold">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                    {{ $message }}
+                                                </p>
+                                            @enderror
+                                        </div>
+
+                                        <!-- Character Counter -->
+                                        <div class="text-right">
+                                            <span class="text-xs text-gray-500 dark:text-gray-400" x-text="$refs.nameInput ? $refs.nameInput.value.length : 0"></span>
+                                            <span class="text-xs text-gray-400 dark:text-gray-500">/255 characters</span>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Form Actions -->
+                                    <div class="flex flex-col sm:flex-row justify-between items-center pt-8 border-t border-gray-200 dark:border-gray-600 space-y-4 sm:space-y-0">
+                                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                                            <span class="text-red-500">*</span> Required fields
+                                        </div>
+                                        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+                                            <a href="{{ route('expense-people.index') }}" 
+                                               class="inline-flex items-center justify-center px-6 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 font-medium">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                                Cancel
+                                            </a>
+                                            <button type="submit" 
+                                                    :disabled="isSubmitting"
+                                                    :class="isSubmitting ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed' : 'bg-gradient-to-r from-pink-600 to-rose-700 hover:from-pink-700 hover:to-rose-800 shadow-lg hover:shadow-xl transform hover:scale-105'"
+                                                    class="inline-flex items-center justify-center px-8 py-3 text-white font-bold rounded-xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-pink-200 dark:focus:ring-pink-800 disabled:transform-none disabled:shadow-none">
+                                                <span x-show="!isSubmitting" class="flex items-center">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                    </svg>
+                                                    Update Person
+                                                </span>
+                                                <span x-show="isSubmitting" class="flex items-center">
+                                                    <svg class="animate-spin w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24">
+                                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                    Updating...
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="lg:col-span-1 space-y-6">
+                    <!-- Edit Tips -->
+                    <div class="bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900 dark:to-rose-900 rounded-2xl border border-pink-200 dark:border-pink-700 p-6">
+                        <h3 class="text-lg font-bold text-pink-900 dark:text-pink-100 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-pink-600 dark:text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                             </svg>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="flex items-center">
-                        <a href="{{ route('expense-people.index') }}"
-                            class="inline-flex items-center hover:text-blue-600">
-                            <svg class="w-4 h-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
+                            Editing Tips
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-start space-x-2">
+                                <span class="text-pink-600 dark:text-pink-400 mt-0.5">•</span>
+                                <p class="text-pink-800 dark:text-pink-200">Double-check spelling before saving</p>
+                            </div>
+                            <div class="flex items-start space-x-2">
+                                <span class="text-pink-600 dark:text-pink-400 mt-0.5">•</span>
+                                <p class="text-pink-800 dark:text-pink-200">Use consistent name format across all records</p>
+                            </div>
+                            <div class="flex items-start space-x-2">
+                                <span class="text-pink-600 dark:text-pink-400 mt-0.5">•</span>
+                                <p class="text-pink-800 dark:text-pink-200">Changes will be reflected in all related expenses</p>
+                            </div>
+                            <div class="flex items-start space-x-2">
+                                <span class="text-pink-600 dark:text-pink-400 mt-0.5">•</span>
+                                <p class="text-pink-800 dark:text-pink-200">Avoid using nicknames for better tracking</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
-                            Expense People
-                        </a>
-                    </li>
-                    <li class="flex items-center">
-                        <svg class="w-4 h-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
-                        </svg>
-                        <span class="text-gray-700">Edit Person</span>
-                    </li>
-                </ol>
-            </nav>
+                            Quick Actions
+                        </h3>
+                        <div class="space-y-3">
+                            <a href="{{ route('expense-people.index') }}"
+                               class="w-full flex items-center justify-center px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                View All People
+                            </a>
+                            <a href="{{ route('expense-people.create') }}"
+                               class="w-full flex items-center justify-center px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Add New Person
+                            </a>
+                            <form action="{{ route('expense-people.destroy', $person->id) }}" method="POST" 
+                                  onsubmit="return confirm('Are you sure you want to delete this person? This action cannot be undone.')"
+                                  class="w-full">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                        class="w-full flex items-center justify-center px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                    Delete Person
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    
+
+
+                </div>
+            </div>
         </div>
-
-        <!-- Form -->
-        <form action="{{ route('expense-people.update', $person->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            <!-- Person Name -->
-            <div class="mb-5 mt-3">
-                <label for="name" class="block text-sm font-semibold text-gray-700">Person Name</label>
-                <input type="text" name="name" id="name" value="{{ old('name', $person->name) }}"
-                    class="w-full p-2 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                    required maxlength="255">
-                @error('name')
-                    <span class="text-sm text-red-600">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <div class="flex justify-end">
-                <x-primary-button>
-                    {{ __('Update Person') }}
-                </x-primary-button>
-            </div>
-        </form>
     </div>
+
+    <script>
+        function personForm() {
+            return {
+                isSubmitting: false,
+                
+                handleSubmit(event) {
+                    this.isSubmitting = true;
+                }
+            }
+        }
+
+        // Auto-focus and select the name field
+        document.addEventListener('DOMContentLoaded', function() {
+            const nameInput = document.getElementById('name');
+            if (nameInput) {
+                nameInput.focus();
+                nameInput.select(); // Select all text for easy replacement
+            }
+        });
+    </script>
     
 </x-app-layout>

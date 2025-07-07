@@ -39,6 +39,10 @@ tinymce.init({
             .then(res => res.json())
             .then(data => success(data.location))
             .catch(() => failure('Upload failed'));
-    }
+    },
+    content_css: "dark",
+    skin: "oxide-dark",
+
+
 
 });

@@ -1,27 +1,27 @@
 <section class="space-y-6">
     <!-- Enhanced Header -->
-    <header class="border-b border-gray-200 pb-6">
+    <header class="border-b border-gray-200 dark:border-gray-600 pb-6">
         <div class="flex items-start space-x-4">
-            <div class="p-3 bg-blue-100 rounded-xl">
-                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="p-3 bg-blue-100 dark:bg-blue-900 rounded-xl">
+                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                 </svg>
             </div>
             <div class="flex-1">
-                <h2 class="text-xl font-bold text-gray-900">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white">
                     {{ __('Update Password') }}
                 </h2>
-                <p class="mt-2 text-sm text-gray-600 leading-relaxed">
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                     {{ __('Ensure your account is using a long, random password to stay secure. We recommend using a password manager.') }}
                 </p>
                 
                 <!-- Security Tip -->
-                <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <div class="mt-4 p-3 bg-amber-50 dark:bg-amber-900 border border-amber-200 dark:border-amber-700 rounded-lg">
                     <div class="flex items-start space-x-2">
-                        <svg class="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <p class="text-xs text-amber-800">
+                        <p class="text-xs text-amber-800 dark:text-amber-200">
                             <strong>Security Tip:</strong> After updating your password, you'll be automatically logged out for security purposes.
                         </p>
                     </div>
@@ -38,21 +38,21 @@
 
         <!-- Current Password Field -->
         <div class="space-y-2">
-            <label for="update_password_current_password" class="block text-sm font-semibold text-gray-700">
+            <label for="update_password_current_password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                 {{ __('Current Password') }}
-                <span class="text-red-500">*</span>
+                <span class="text-red-500 dark:text-red-400">*</span>
             </label>
             <div class="relative">
                 <input id="update_password_current_password" 
                        name="current_password" 
                        type="password"
-                       class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white"
+                       class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                        autocomplete="current-password"
                        placeholder="Enter your current password"
                        required />
                 <button type="button" 
                         @click="togglePasswordVisibility('update_password_current_password')"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors">
+                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
                     <svg x-show="!showCurrentPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -63,7 +63,7 @@
                 </button>
             </div>
             @if($errors->updatePassword->has('current_password'))
-                <div class="flex items-center space-x-2 text-red-600 text-sm">
+                <div class="flex items-center space-x-2 text-red-600 dark:text-red-400 text-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
@@ -74,15 +74,15 @@
 
         <!-- New Password Field -->
         <div class="space-y-2">
-            <label for="update_password_password" class="block text-sm font-semibold text-gray-700">
+            <label for="update_password_password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                 {{ __('New Password') }}
-                <span class="text-red-500">*</span>
+                <span class="text-red-500 dark:text-red-400">*</span>
             </label>
             <div class="relative">
                 <input id="update_password_password" 
                        name="password" 
                        type="password"
-                       class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white"
+                       class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                        autocomplete="new-password"
                        placeholder="Create a strong new password"
                        x-model="newPassword"
@@ -90,7 +90,7 @@
                        required />
                 <button type="button" 
                         @click="togglePasswordVisibility('update_password_password')"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors">
+                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
                     <svg x-show="!showNewPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -104,10 +104,10 @@
             <!-- Password Strength Indicator -->
             <div x-show="newPassword" class="space-y-2">
                 <div class="flex items-center space-x-2">
-                    <span class="text-xs font-medium text-gray-600">Password Strength:</span>
+                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400">Password Strength:</span>
                     <span class="text-xs font-bold" :class="strengthColor" x-text="strengthText"></span>
                 </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                     <div class="h-2 rounded-full transition-all duration-300" 
                          :class="strengthBarColor" 
                          :style="`width: ${strengthPercentage}%`"></div>
@@ -115,7 +115,7 @@
             </div>
 
             @if($errors->updatePassword->has('password'))
-                <div class="flex items-center space-x-2 text-red-600 text-sm">
+                <div class="flex items-center space-x-2 text-red-600 dark:text-red-400 text-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
@@ -126,22 +126,22 @@
 
         <!-- Confirm Password Field -->
         <div class="space-y-2">
-            <label for="update_password_password_confirmation" class="block text-sm font-semibold text-gray-700">
+            <label for="update_password_password_confirmation" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                 {{ __('Confirm New Password') }}
-                <span class="text-red-500">*</span>
+                <span class="text-red-500 dark:text-red-400">*</span>
             </label>
             <div class="relative">
                 <input id="update_password_password_confirmation" 
                        name="password_confirmation" 
                        type="password"
-                       class="block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white"
+                       class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 transition-all duration-200 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                        autocomplete="new-password"
                        placeholder="Confirm your new password"
                        x-model="confirmPassword"
                        required />
                 <button type="button" 
                         @click="togglePasswordVisibility('update_password_password_confirmation')"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors">
+                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
                     <svg x-show="!showConfirmPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -154,18 +154,18 @@
             
             <!-- Password Match Indicator -->
             <div x-show="confirmPassword" class="flex items-center space-x-2 text-sm">
-                <svg x-show="newPassword === confirmPassword && confirmPassword" class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg x-show="newPassword === confirmPassword && confirmPassword" class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
-                <svg x-show="newPassword !== confirmPassword && confirmPassword" class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg x-show="newPassword !== confirmPassword && confirmPassword" class="w-4 h-4 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
-                <span x-show="newPassword === confirmPassword && confirmPassword" class="text-green-600">Passwords match</span>
-                <span x-show="newPassword !== confirmPassword && confirmPassword" class="text-red-600">Passwords don't match</span>
+                <span x-show="newPassword === confirmPassword && confirmPassword" class="text-green-600 dark:text-green-400">Passwords match</span>
+                <span x-show="newPassword !== confirmPassword && confirmPassword" class="text-red-600 dark:text-red-400">Passwords don't match</span>
             </div>
 
             @if($errors->updatePassword->has('password_confirmation'))
-                <div class="flex items-center space-x-2 text-red-600 text-sm">
+                <div class="flex items-center space-x-2 text-red-600 dark:text-red-400 text-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
@@ -175,8 +175,8 @@
         </div>
 
         <!-- Password Requirements Checklist -->
-        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3">
-            <h4 class="text-sm font-semibold text-blue-900 flex items-center">
+        <div class="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-xl p-4 space-y-3">
+            <h4 class="text-sm font-semibold text-blue-900 dark:text-blue-100 flex items-center">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
@@ -184,44 +184,44 @@
             </h4>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div class="flex items-center space-x-2 text-sm">
-                    <svg :class="hasMinLength ? 'text-green-500' : 'text-gray-400'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg :class="hasMinLength ? 'text-green-500 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span :class="hasMinLength ? 'text-green-700' : 'text-gray-600'">At least 8 characters</span>
+                    <span :class="hasMinLength ? 'text-green-700 dark:text-green-300' : 'text-gray-600 dark:text-gray-400'">At least 8 characters</span>
                 </div>
                 <div class="flex items-center space-x-2 text-sm">
-                    <svg :class="hasUppercase ? 'text-green-500' : 'text-gray-400'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg :class="hasUppercase ? 'text-green-500 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span :class="hasUppercase ? 'text-green-700' : 'text-gray-600'">Uppercase letter</span>
+                    <span :class="hasUppercase ? 'text-green-700 dark:text-green-300' : 'text-gray-600 dark:text-gray-400'">Uppercase letter</span>
                 </div>
                 <div class="flex items-center space-x-2 text-sm">
-                    <svg :class="hasLowercase ? 'text-green-500' : 'text-gray-400'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg :class="hasLowercase ? 'text-green-500 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span :class="hasLowercase ? 'text-green-700' : 'text-gray-600'">Lowercase letter</span>
+                    <span :class="hasLowercase ? 'text-green-700 dark:text-green-300' : 'text-gray-600 dark:text-gray-400'">Lowercase letter</span>
                 </div>
                 <div class="flex items-center space-x-2 text-sm">
-                    <svg :class="hasNumber ? 'text-green-500' : 'text-gray-400'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg :class="hasNumber ? 'text-green-500 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span :class="hasNumber ? 'text-green-700' : 'text-gray-600'">Number (0-9)</span>
+                    <span :class="hasNumber ? 'text-green-700 dark:text-green-300' : 'text-gray-600 dark:text-gray-400'">Number (0-9)</span>
                 </div>
                 <div class="flex items-center space-x-2 text-sm">
-                    <svg :class="hasSpecialChar ? 'text-green-500' : 'text-gray-400'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg :class="hasSpecialChar ? 'text-green-500 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span :class="hasSpecialChar ? 'text-green-700' : 'text-gray-600'">Special character (!@#$%^&*)</span>
+                    <span :class="hasSpecialChar ? 'text-green-700 dark:text-green-300' : 'text-gray-600 dark:text-gray-400'">Special character (!@#$%^&*)</span>
                 </div>
             </div>
         </div>
 
         <!-- Submit Button and Status -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 pt-6 border-t border-gray-200">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 pt-6 border-t border-gray-200 dark:border-gray-600">
             <button type="submit" 
                     :disabled="!isFormValid"
-                    :class="isFormValid ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500' : 'bg-gray-400 cursor-not-allowed'"
-                    class="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50">
+                    :class="isFormValid ? 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-400' : 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed'"
+                    class="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 disabled:opacity-50">
                 <svg x-show="!isSubmitting" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                 </svg>
@@ -237,7 +237,7 @@
                      x-show="show" 
                      x-transition 
                      x-init="setTimeout(() => show = false, 3000); setTimeout(() => logoutUser(), 3000);"
-                     class="flex items-center space-x-2 text-green-600 bg-green-50 border border-green-200 rounded-lg px-4 py-2">
+                     class="flex items-center space-x-2 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg px-4 py-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
@@ -317,20 +317,20 @@
                     
                     if (strength < 40) {
                         this.strengthText = 'Weak';
-                        this.strengthColor = 'text-red-600';
-                        this.strengthBarColor = 'bg-red-500';
+                        this.strengthColor = 'text-red-600 dark:text-red-400';
+                        this.strengthBarColor = 'bg-red-500 dark:bg-red-400';
                     } else if (strength < 80) {
                         this.strengthText = 'Fair';
-                        this.strengthColor = 'text-yellow-600';
-                        this.strengthBarColor = 'bg-yellow-500';
+                        this.strengthColor = 'text-yellow-600 dark:text-yellow-400';
+                        this.strengthBarColor = 'bg-yellow-500 dark:bg-yellow-400';
                     } else if (strength < 100) {
                         this.strengthText = 'Good';
-                        this.strengthColor = 'text-blue-600';
-                        this.strengthBarColor = 'bg-blue-500';
+                        this.strengthColor = 'text-blue-600 dark:text-blue-400';
+                        this.strengthBarColor = 'bg-blue-500 dark:bg-blue-400';
                     } else {
                         this.strengthText = 'Strong';
-                        this.strengthColor = 'text-green-600';
-                        this.strengthBarColor = 'bg-green-500';
+                        this.strengthColor = 'text-green-600 dark:text-green-400';
+                        this.strengthBarColor = 'bg-green-500 dark:bg-green-400';
                     }
                 },
 

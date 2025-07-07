@@ -6,25 +6,25 @@
     <div class="py-6 space-y-8" style="min-height: 88vh;">
         
         <!-- Enhanced Header Section -->
-        <div class="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-700 rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-700 dark:from-purple-800 dark:via-blue-800 dark:to-indigo-900 rounded-2xl shadow-xl overflow-hidden">
             <div class="px-6 sm:px-8 py-8 relative">
                 <!-- Background Pattern -->
-                <div class="absolute inset-0 bg-black/10"></div>
-                <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
+                <div class="absolute inset-0 bg-black/10 dark:bg-black/20"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent dark:from-white/10 dark:to-transparent"></div>
                 
                 <!-- Content -->
                 <div class="relative z-10">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                         <div>
                             <h1 class="text-2xl sm:text-3xl font-bold text-white flex items-center">
-                                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mr-3 backdrop-blur-sm">
+                                <div class="w-10 h-10 bg-white/20 dark:bg-white/30 rounded-xl flex items-center justify-center mr-3 backdrop-blur-sm">
                                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                                     </svg>
                                 </div>
                                 Account Activity
                             </h1>
-                            <p class="text-purple-100 mt-2 text-lg">
+                            <p class="text-purple-100 dark:text-purple-200 mt-2 text-lg">
                                 Monitor your account security and recent actions for 
                                 <span class="font-semibold text-white">{{ Auth::user()->name }}</span>
                             </p>
@@ -32,13 +32,13 @@
                         
                         <!-- Quick Stats -->
                         <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                            <div class="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 text-center border border-white/20">
+                            <div class="bg-white/10 dark:bg-white/20 backdrop-blur-sm rounded-xl px-4 py-3 text-center border border-white/20 dark:border-white/30">
                                 <div class="text-2xl font-bold text-white">{{ $activities->count() }}</div>
-                                <div class="text-xs text-purple-200">Recent Activities</div>
+                                <div class="text-xs text-purple-200 dark:text-purple-300">Recent Activities</div>
                             </div>
-                            <div class="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 text-center border border-white/20">
+                            <div class="bg-white/10 dark:bg-white/20 backdrop-blur-sm rounded-xl px-4 py-3 text-center border border-white/20 dark:border-white/30">
                                 <div class="text-2xl font-bold text-white">{{ $activities->where('created_at', '>=', now()->subDays(7))->count() }}</div>
-                                <div class="text-xs text-purple-200">Last 7 Days</div>
+                                <div class="text-xs text-purple-200 dark:text-purple-300">Last 7 Days</div>
                             </div>
                         </div>
                     </div>
@@ -47,7 +47,7 @@
         </div>
 
         <!-- Activity Filter & Search -->
-        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div class="p-6">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
                     <!-- Search & Filter -->
@@ -55,20 +55,20 @@
                         <!-- Search -->
                         <div class="relative flex-1 max-w-md">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="h-5 w-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
                             </div>
                             <input type="text" 
                                    id="activitySearch"
                                    placeholder="Search activities..."
-                                   class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent sm:text-sm transition-all">
+                                   class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-600 rounded-xl leading-5 bg-gray-50 dark:bg-gray-800 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 dark:focus:placeholder-gray-300 focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent sm:text-sm transition-all text-gray-900 dark:text-white">
                         </div>
                         
                         <!-- Time Filter -->
                         <div class="relative">
                             <select id="timeFilter" 
-                                    class="block w-full px-4 py-3 pr-8 border border-gray-200 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent sm:text-sm transition-all">
+                                    class="block w-full px-4 py-3 pr-8 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent sm:text-sm transition-all text-gray-900 dark:text-white">
                                 <option value="all">All Time</option>
                                 <option value="today">Today</option>
                                 <option value="week">Last 7 Days</option>
@@ -80,7 +80,7 @@
                     <!-- Export & Settings -->
                     <div class="flex space-x-3">
                         <button onclick="exportActivities()" 
-                                class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-all duration-200 shadow-lg hover:shadow-xl">
+                                class="inline-flex items-center px-4 py-2 bg-green-600 dark:bg-green-700 text-white font-semibold rounded-xl hover:bg-green-700 dark:hover:bg-green-800 transition-all duration-200 shadow-lg hover:shadow-xl">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
@@ -88,7 +88,7 @@
                         </button>
                         
                         <button x-data="" x-on:click="$dispatch('open-modal', 'activity-settings')"
-                                class="inline-flex items-center px-4 py-2 bg-gray-600 text-white font-semibold rounded-xl hover:bg-gray-700 transition-all duration-200 shadow-lg hover:shadow-xl">
+                                class="inline-flex items-center px-4 py-2 bg-gray-600 dark:bg-gray-800 text-white font-semibold rounded-xl hover:bg-gray-700 dark:hover:bg-gray-800 transition-all duration-200 shadow-lg hover:shadow-xl">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -101,18 +101,18 @@
         </div>
 
         <!-- Enhanced Activity Timeline -->
-        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-            <div class="p-6 border-b border-gray-100">
-                <h2 class="text-xl font-bold text-gray-900 flex items-center">
-                    <svg class="w-6 h-6 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div class="p-6 border-b border-gray-100 dark:border-gray-600">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                    <svg class="w-6 h-6 mr-3 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     Activity Timeline
                 </h2>
-                <p class="text-gray-600 mt-1">Recent account activities and security events</p>
+                <p class="text-gray-600 dark:text-gray-400 mt-1">Recent account activities and security events</p>
             </div>
             
-            <div class="divide-y divide-gray-100" id="activityContainer">
+            <div class="divide-y divide-gray-100 dark:divide-gray-600" id="activityContainer">
                 @forelse($activities as $index => $activity)
                     @php
                         $activityIcon = $activity->activity_icon;
@@ -120,28 +120,28 @@
                         $isToday = $activity->created_at->isToday();
                     @endphp
                     
-                    <div class="activity-item p-6 hover:bg-gray-50 transition-all duration-200 group" 
+                    <div class="activity-item p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 group" 
                          data-activity="{{ strtolower($activity->description) }}"
                          data-date="{{ $activity->created_at->format('Y-m-d') }}">
                         <div class="flex items-start space-x-4">
                             <!-- Timeline Indicator -->
                             <div class="relative flex-shrink-0">
-                                <div class="w-12 h-12 {{ $activityIcon['bg_color'] }} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200">
-                                    <svg class="w-6 h-6 {{ $activityIcon['text_color'] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-12 h-12 {{ $activityIcon['bg_color'] }} dark:{{ str_replace('bg-', 'bg-', $activityIcon['bg_color']) }} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200">
+                                    <svg class="w-6 h-6 {{ $activityIcon['text_color'] }} dark:{{ str_replace('text-', 'text-', $activityIcon['text_color']) }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $activityIcon['icon'] }}"></path>
                                     </svg>
                                 </div>
                                 
                                 <!-- Timeline Line -->
                                 @if(!$loop->last)
-                                    <div class="absolute top-12 left-1/2 w-0.5 h-8 bg-gray-200 transform -translate-x-1/2"></div>
+                                    <div class="absolute top-12 left-1/2 w-0.5 h-8 bg-gray-200 dark:bg-gray-600 transform -translate-x-1/2"></div>
                                 @endif
                                 
                                 <!-- Recent Activity Pulse -->
                                 @if($isRecent)
-                                    <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full">
-                                        <div class="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-75"></div>
-                                        <div class="absolute inset-0 bg-green-500 rounded-full"></div>
+                                    <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 dark:bg-green-400 rounded-full">
+                                        <div class="absolute inset-0 bg-green-500 dark:bg-green-400 rounded-full animate-ping opacity-75"></div>
+                                        <div class="absolute inset-0 bg-green-500 dark:bg-green-400 rounded-full"></div>
                                     </div>
                                 @endif
                             </div>
@@ -150,15 +150,15 @@
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-2 sm:space-y-0">
                                     <div class="flex-1">
-                                        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">
+                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
                                             {{ $activity->description }}
                                         </h3>
                                         
                                         <!-- Activity Details -->
-                                        <div class="mt-2 flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4 text-sm text-gray-600">
+                                        <div class="mt-2 flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4 text-sm text-gray-600 dark:text-gray-400">
                                             <!-- Location -->
                                             <div class="flex items-center">
-                                                <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-4 h-4 mr-1.5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                 </svg>
@@ -167,14 +167,14 @@
                                             
                                             <!-- Date & Time -->
                                             <div class="flex items-center">
-                                                <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-4 h-4 mr-1.5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                 </svg>
                                                 <span>{{ $activity->created_at->format('M d, Y \a\t H:i') }}</span>
                                             </div>
                                             
                                             @if($isRecent)
-                                                <div class="flex items-center text-green-600 font-medium">
+                                                <div class="flex items-center text-green-600 dark:text-green-400 font-medium">
                                                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                                                     </svg>
@@ -185,9 +185,9 @@
 
                                         <!-- Additional Info (if available) -->
                                         @if(isset($activity->metadata) && !empty($activity->metadata))
-                                            <div class="mt-3 p-3 bg-gray-50 rounded-lg">
-                                                <h4 class="text-sm font-medium text-gray-900 mb-2">Additional Details:</h4>
-                                                <div class="text-sm text-gray-600 space-y-1">
+                                            <div class="mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                                <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-2">Additional Details:</h4>
+                                                <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
                                                     @foreach($activity->metadata as $key => $value)
                                                         <div class="flex justify-between">
                                                             <span class="font-medium">{{ ucfirst(str_replace('_', ' ', $key)) }}:</span>
@@ -201,12 +201,12 @@
 
                                     <!-- Activity Badge -->
                                     <div class="flex flex-col items-end space-y-2">
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $activityIcon['badge_color'] }} whitespace-nowrap">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $activityIcon['badge_color'] }} dark:{{ str_replace('text-', 'text-', $activityIcon['badge_color']) }} whitespace-nowrap">
                                             {{ $activityIcon['badge_text'] }}
                                         </span>
                                         
                                         @if($isToday)
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
                                                 Today
                                             </span>
                                         @endif
@@ -215,7 +215,7 @@
                                         @if(isset($activity->risk_level))
                                             <div class="flex items-center space-x-1">
                                                 @for($i = 1; $i <= 3; $i++)
-                                                    <div class="w-2 h-2 rounded-full {{ $i <= $activity->risk_level ? 'bg-red-500' : 'bg-gray-200' }}"></div>
+                                                    <div class="w-2 h-2 rounded-full {{ $i <= $activity->risk_level ? 'bg-red-500 dark:bg-red-400' : 'bg-gray-200 dark:bg-gray-600' }}"></div>
                                                 @endfor
                                             </div>
                                         @endif
@@ -230,33 +230,33 @@
                         <div class="relative">
                             <!-- Animated Background -->
                             <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="w-32 h-32 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full opacity-50 animate-pulse"></div>
+                                <div class="w-32 h-32 bg-gradient-to-br from-purple-100 to-blue-100 dark:from-purple-900 dark:to-blue-900 rounded-full opacity-50 animate-pulse"></div>
                             </div>
                             
                             <!-- Main Icon -->
-                            <div class="relative w-20 h-20 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl">
+                            <div class="relative w-20 h-20 bg-gradient-to-br from-purple-500 to-blue-600 dark:from-purple-600 dark:to-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl">
                                 <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                                 </svg>
                             </div>
                         </div>
                         
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">No Recent Activity</h3>
-                        <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">No Recent Activity</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
                             Your account activity and security events will appear here as you use the application.
                         </p>
                         
                         <!-- Helpful Actions -->
                         <div class="flex flex-col sm:flex-row gap-4 justify-center">
                             <a href="{{ route('dashboard') }}" 
-                               class="inline-flex items-center px-6 py-3 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition-all shadow-lg hover:shadow-xl">
+                               class="inline-flex items-center px-6 py-3 bg-purple-600 dark:bg-purple-700 text-white font-semibold rounded-xl hover:bg-purple-700 dark:hover:bg-purple-800 transition-all shadow-lg hover:shadow-xl">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2H3z"></path>
                                 </svg>
                                 Go to Dashboard
                             </a>
                             <button onclick="refreshActivities()" 
-                                    class="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all">
+                                    class="inline-flex items-center px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                 </svg>
@@ -269,9 +269,9 @@
             
             @if($activities->count() > 0)
                 <!-- Load More Button -->
-                <div class="p-6 border-t border-gray-100 text-center">
+                <div class="p-6 border-t border-gray-100 dark:border-gray-600 text-center">
                     <button onclick="loadMoreActivities()" 
-                            class="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all">
+                            class="inline-flex items-center px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
@@ -282,50 +282,50 @@
         </div>
 
         <!-- Security Insights Card -->
-        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-            <div class="p-6 border-b border-gray-100">
-                <h2 class="text-xl font-bold text-gray-900 flex items-center">
-                    <svg class="w-6 h-6 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div class="p-6 border-b border-gray-100 dark:border-gray-600">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                    <svg class="w-6 h-6 mr-3 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                     </svg>
                     Security Insights
                 </h2>
-                <p class="text-gray-600 mt-1">Account security overview and recommendations</p>
+                <p class="text-gray-600 dark:text-gray-400 mt-1">Account security overview and recommendations</p>
             </div>
             
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Login Security -->
-                    <div class="text-center p-4 bg-green-50 rounded-xl border border-green-200">
-                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-center p-4 bg-green-50 dark:bg-green-900 rounded-xl border border-green-200 dark:border-green-700">
+                        <div class="w-12 h-12 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <h3 class="font-semibold text-green-800 mb-1">Secure Logins</h3>
-                        <p class="text-sm text-green-600">All recent logins verified</p>
+                        <h3 class="font-semibold text-green-800 dark:text-green-200 mb-1">Secure Logins</h3>
+                        <p class="text-sm text-green-600 dark:text-green-400">All recent logins verified</p>
                     </div>
                     
                     <!-- Device Security -->
-                    <div class="text-center p-4 bg-blue-50 rounded-xl border border-blue-200">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-center p-4 bg-blue-50 dark:bg-blue-900 rounded-xl border border-blue-200 dark:border-blue-700">
+                        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                             </svg>
                         </div>
-                        <h3 class="font-semibold text-blue-800 mb-1">Trusted Devices</h3>
-                        <p class="text-sm text-blue-600">{{ $activities->pluck('ip_address')->unique()->count() ?? 1 }} active device(s)</p>
+                        <h3 class="font-semibold text-blue-800 dark:text-blue-200 mb-1">Trusted Devices</h3>
+                        <p class="text-sm text-blue-600 dark:text-blue-400">{{ $activities->pluck('ip_address')->unique()->count() ?? 1 }} active device(s)</p>
                     </div>
                     
                     <!-- Account Health -->
-                    <div class="text-center p-4 bg-purple-50 rounded-xl border border-purple-200">
-                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-center p-4 bg-purple-50 dark:bg-purple-900 rounded-xl border border-purple-200 dark:border-purple-700">
+                        <div class="w-12 h-12 bg-purple-100 dark:bg-purple-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                             </svg>
                         </div>
-                        <h3 class="font-semibold text-purple-800 mb-1">Account Health</h3>
-                        <p class="text-sm text-purple-600">Excellent security status</p>
+                        <h3 class="font-semibold text-purple-800 dark:text-purple-200 mb-1">Account Health</h3>
+                        <p class="text-sm text-purple-600 dark:text-purple-400">Excellent security status</p>
                     </div>
                 </div>
             </div>
@@ -334,35 +334,35 @@
 
     <!-- Activity Settings Modal -->
     <x-modal name="activity-settings" focusable>
-        <div class="p-6">
-            <h2 class="text-xl font-bold text-gray-900 mb-6">Activity Settings</h2>
+        <div class="p-6 bg-white dark:bg-gray-900">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Activity Settings</h2>
             
             <form class="space-y-6">
                 <!-- Notification Preferences -->
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Notification Preferences</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Notification Preferences</h3>
                     <div class="space-y-3">
                         <label class="flex items-center">
-                            <input type="checkbox" class="rounded border-gray-300 text-purple-600 shadow-sm focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50" checked>
-                            <span class="ml-3 text-sm text-gray-700">Email notifications for suspicious activity</span>
+                            <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-purple-600 dark:text-purple-500 shadow-sm focus:border-purple-300 dark:focus:border-purple-500 focus:ring focus:ring-purple-200 dark:focus:ring-purple-800 focus:ring-opacity-50 dark:bg-gray-800" checked>
+                            <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Email notifications for suspicious activity</span>
                         </label>
                         <label class="flex items-center">
-                            <input type="checkbox" class="rounded border-gray-300 text-purple-600 shadow-sm focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50" checked>
-                            <span class="ml-3 text-sm text-gray-700">Browser notifications for new logins</span>
+                            <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-purple-600 dark:text-purple-500 shadow-sm focus:border-purple-300 dark:focus:border-purple-500 focus:ring focus:ring-purple-200 dark:focus:ring-purple-800 focus:ring-opacity-50 dark:bg-gray-800" checked>
+                            <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Browser notifications for new logins</span>
                         </label>
                         <label class="flex items-center">
-                            <input type="checkbox" class="rounded border-gray-300 text-purple-600 shadow-sm focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50">
-                            <span class="ml-3 text-sm text-gray-700">Weekly activity summary</span>
+                            <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-purple-600 dark:text-purple-500 shadow-sm focus:border-purple-300 dark:focus:border-purple-500 focus:ring focus:ring-purple-200 dark:focus:ring-purple-800 focus:ring-opacity-50 dark:bg-gray-800">
+                            <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Weekly activity summary</span>
                         </label>
                     </div>
                 </div>
                 
                 <!-- Data Retention -->
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Data Retention</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Data Retention</h3>
                     <div class="space-y-3">
-                        <label class="block text-sm font-medium text-gray-700">Keep activity logs for:</label>
-                        <select class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm rounded-md">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Keep activity logs for:</label>
+                        <select class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-purple-500 dark:focus:border-purple-400 sm:text-sm rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                             <option>30 days</option>
                             <option selected>90 days</option>
                             <option>6 months</option>
@@ -372,10 +372,10 @@
                 </div>
                 
                 <div class="flex justify-end space-x-3">
-                    <button type="button" x-on:click="$dispatch('close')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                    <button type="button" x-on:click="$dispatch('close')" class="px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors">
                         Cancel
                     </button>
-                    <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                    <button type="submit" class="px-4 py-2 bg-purple-600 dark:bg-purple-700 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-800 transition-colors">
                         Save Settings
                     </button>
                 </div>
@@ -581,6 +581,13 @@
         
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(to bottom, #7c3aed, #2563eb);
+        }
+
+        /* Dark mode scrollbar */
+        @media (prefers-color-scheme: dark) {
+            ::-webkit-scrollbar-track {
+                background: #374151;
+            }
         }
     </style>
 </x-app-layout>
