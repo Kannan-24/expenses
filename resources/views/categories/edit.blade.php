@@ -7,7 +7,7 @@
         <div class="max-w-6xl mx-auto">
             <!-- Enhanced Header Section -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 mb-6 overflow-hidden">
-                <div class="bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-700 dark:from-purple-800 dark:via-violet-800 dark:to-indigo-900 p-4 sm:p-6">
+                <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 p-4 sm:p-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <!-- Title and Breadcrumb -->
                         <div>
@@ -15,7 +15,7 @@
                             <nav class="flex text-sm" aria-label="Breadcrumb">
                                 <ol class="inline-flex items-center space-x-1 md:space-x-2 flex-wrap">
                                     <li class="inline-flex items-center">
-                                        <a href="{{ route('dashboard') }}" class="inline-flex items-center text-purple-200 hover:text-white transition-colors">
+                                        <a href="{{ route('dashboard') }}" class="inline-flex items-center text-blue-200 hover:text-white transition-colors">
                                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M10 2a1 1 0 01.7.3l7 7a1 1 0 01-1.4 1.4L16 10.42V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3H9v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6.58l-.3.28a1 1 0 01-1.4-1.44l7-7A1 1 0 0110 2z" />
                                             </svg>
@@ -23,18 +23,18 @@
                                         </a>
                                     </li>
                                     <li class="flex items-center">
-                                        <svg class="w-4 h-4 mx-2 text-purple-300" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-4 h-4 mx-2 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
                                         </svg>
-                                        <a href="{{ route('categories.index') }}" class="text-purple-200 hover:text-white transition-colors">
+                                        <a href="{{ route('categories.index') }}" class="text-blue-200 hover:text-white transition-colors">
                                             Categories
                                         </a>
                                     </li>
                                     <li class="flex items-center">
-                                        <svg class="w-4 h-4 mx-2 text-purple-300" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-4 h-4 mx-2 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
                                         </svg>
-                                        <span class="text-purple-100 font-medium">Edit Category</span>
+                                        <span class="text-blue-100 font-medium">Edit Category</span>
                                     </li>
                                 </ol>
                             </nav>
@@ -43,7 +43,7 @@
                         <!-- Category Info Badge -->
                         <div class="flex items-center space-x-3">
                             <div class="text-center">
-                                <p class="text-sm text-purple-200">Category ID</p>
+                                <p class="text-sm text-blue-200">Category ID</p>
                                 <p class="text-lg font-bold text-white">#{{ $category->id }}</p>
                             </div>
                             <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
@@ -63,8 +63,8 @@
                     <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                         <div class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-600 p-4 sm:p-6">
                             <div class="flex items-center space-x-3">
-                                <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                                    <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                     </svg>
                                 </div>
@@ -127,8 +127,8 @@
                                             </a>
                                             <button type="submit" 
                                                     :disabled="isSubmitting"
-                                                    :class="isSubmitting ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed' : 'bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 shadow-lg hover:shadow-xl transform hover:scale-105'"
-                                                    class="inline-flex items-center justify-center px-8 py-3 text-white font-bold rounded-xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-purple-200 dark:focus:ring-purple-800 disabled:transform-none disabled:shadow-none">
+                                                    :class="isSubmitting ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 shadow-lg hover:shadow-xl transform hover:scale-105'"
+                                                    class="inline-flex items-center justify-center px-8 py-3 text-white font-bold rounded-xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800 disabled:transform-none disabled:shadow-none">
                                                 <span x-show="!isSubmitting" class="flex items-center">
                                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -154,25 +154,25 @@
                 <!-- Sidebar -->
                 <div class="lg:col-span-1 space-y-6">
                     <!-- Edit Tips -->
-                    <div class="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900 dark:to-indigo-900 rounded-2xl border border-purple-200 dark:border-purple-700 p-6">
-                        <h3 class="text-lg font-bold text-purple-900 dark:text-purple-100 mb-4 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-50 dark:from-blue-900 dark:to-blue-900 rounded-2xl border border-blue-200 dark:border-blue-700 p-6">
+                        <h3 class="text-lg font-bold text-blue-900 dark:text-blue-100 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                             </svg>
                             Editing Tips
                         </h3>
                         <div class="space-y-3 text-sm">
                             <div class="flex items-start space-x-2">
-                                <span class="text-purple-600 dark:text-purple-400 mt-0.5">•</span>
-                                <p class="text-purple-800 dark:text-purple-200">Choose a clear, descriptive name for your category</p>
+                                <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+                                <p class="text-blue-800 dark:text-blue-200">Choose a clear, descriptive name for your category</p>
                             </div>
                             <div class="flex items-start space-x-2">
-                                <span class="text-purple-600 dark:text-purple-400 mt-0.5">•</span>
-                                <p class="text-purple-800 dark:text-purple-200">Keep category names concise but meaningful</p>
+                                <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+                                <p class="text-blue-800 dark:text-blue-200">Keep category names concise but meaningful</p>
                             </div>
                             <div class="flex items-start space-x-2">
-                                <span class="text-purple-600 dark:text-purple-400 mt-0.5">•</span>
-                                <p class="text-purple-800 dark:text-purple-200">Consider how this category will help organize your transactions</p>
+                                <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+                                <p class="text-blue-800 dark:text-blue-200">Consider how this category will help organize your transactions</p>
                             </div>
                         </div>
                     </div>

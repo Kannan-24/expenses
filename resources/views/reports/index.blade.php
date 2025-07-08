@@ -6,7 +6,7 @@
     <div class="py-6 space-y-8" style="min-height: 88vh;">
         
         <!-- Enhanced Header Section -->
-        <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 dark:from-blue-900 dark:via-purple-900 dark:to-indigo-950 rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 rounded-2xl shadow-xl overflow-hidden">
             <div class="px-6 sm:px-8 py-8 relative">
                 <!-- Background Pattern -->
                 <div class="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
@@ -259,7 +259,7 @@
                 </form>
             </div>
         
-            {{-- <!-- Budget Report Card -->
+            <!-- Budget Report Card -->
             <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-xl transition-all duration-300 group">
                 <!-- Card Header -->
                 <div class="bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-700 dark:to-indigo-900 px-6 py-4">
@@ -513,7 +513,7 @@
                         </span>
                     </button>
                 </form>
-            </div> --}}
+            </div>
         </div>
 
         <!-- Recent Reports Section -->

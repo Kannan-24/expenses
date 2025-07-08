@@ -7,7 +7,7 @@
         <div class="max-w-6xl mx-auto">
             <!-- Enhanced Header Section -->
             <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 mb-6 overflow-hidden">
-                <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 dark:from-blue-800 dark:via-indigo-800 dark:to-purple-900 p-4 sm:p-6">
+                <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 p-4 sm:p-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <!-- Title and Breadcrumb -->
                         <div>
@@ -253,33 +253,6 @@
                         </div>
                     </div>
 
-                    <!-- Session Info -->
-                    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h4a1 1 0 011 1v12a2 2 0 01-2 2H5a2 2 0 01-2-2V8a1 1 0 011-1h4z"></path>
-                            </svg>
-                            Session Info
-                        </h3>
-                        <div class="space-y-3 text-sm">
-                            <div class="flex justify-between">
-                                <span class="text-gray-600 dark:text-gray-400">User:</span>
-                                <span class="font-medium text-gray-900 dark:text-white">harithelord47</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600 dark:text-gray-400">Date:</span>
-                                <span class="font-medium text-gray-900 dark:text-white">Jul 07, 2025</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600 dark:text-gray-400">Time:</span>
-                                <span class="font-medium text-gray-900 dark:text-white">13:45 UTC</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600 dark:text-gray-400">Timezone:</span>
-                                <span class="font-medium text-gray-900 dark:text-white">UTC</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -288,8 +261,8 @@
                 <div class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-600 p-4 sm:p-6">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-3">
-                            <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                                <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                 </svg>
                             </div>

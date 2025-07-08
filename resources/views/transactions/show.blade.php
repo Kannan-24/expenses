@@ -7,7 +7,7 @@
         <div class="max-w-6xl mx-auto">
             <!-- Enhanced Header Section -->
             <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 mb-6 overflow-hidden">
-                <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 dark:from-blue-800 dark:via-purple-800 dark:to-indigo-900 p-6">
+                <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 p-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <!-- Title and Breadcrumb -->
                         <div>
@@ -98,9 +98,6 @@
                                 <!-- Transaction Type -->
                                 <div class="space-y-2">
                                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2h4a1 1 0 110 2h-1v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6H3a1 1 0 110-2h4z"></path>
-                                        </svg>
                                         Transaction Type
                                     </label>
                                     <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -113,9 +110,6 @@
                                 <!-- Category -->
                                 <div class="space-y-2">
                                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                                        </svg>
                                         Category
                                     </label>
                                     <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -128,9 +122,6 @@
                                 <!-- Person -->
                                 <div class="space-y-2">
                                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                        </svg>
                                         Person
                                     </label>
                                     <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -143,9 +134,6 @@
                                 <!-- Wallet -->
                                 <div class="space-y-2">
                                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                                        </svg>
                                         Wallet
                                     </label>
                                     <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -158,9 +146,6 @@
                                 <!-- Date -->
                                 <div class="space-y-2">
                                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h4a1 1 0 011 1v12a2 2 0 01-2 2H5a2 2 0 01-2-2V8a1 1 0 011-1h4z"></path>
-                                        </svg>
                                         Transaction Date
                                     </label>
                                     <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -178,9 +163,6 @@
                                 <!-- Note -->
                                 <div class="space-y-2 md:col-span-2">
                                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
-                                        </svg>
                                         Notes
                                     </label>
                                     <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -196,6 +178,30 @@
 
                 <!-- Action Panel -->
                 <div class="lg:col-span-1 space-y-6">
+                    <!-- Transaction Tips Card -->
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-50 dark:from-blue-900 dark:to-blue-900 rounded-2xl border border-blue-200 dark:border-blue-700 p-6">
+                        <h3 class="text-lg font-bold text-blue-900 dark:text-blue-100 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                            Quick Tips
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-start space-x-2">
+                                <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+                                <p class="text-blue-800 dark:text-blue-200">Keep your transaction records organized for better financial tracking</p>
+                            </div>
+                            <div class="flex items-start space-x-2">
+                                <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+                                <p class="text-blue-800 dark:text-blue-200">Add notes to remember important details about transactions</p>
+                            </div>
+                            <div class="flex items-start space-x-2">
+                                <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
+                                <p class="text-blue-800 dark:text-blue-200">Regular review of your transactions helps maintain budget control</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Quick Actions Card -->
                     <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
@@ -253,15 +259,6 @@
                                 <span class="text-sm text-gray-600 dark:text-gray-400 font-mono">#{{ $transaction->id }}</span>
                             </div>
                             <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Status</span>
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
-                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    Completed
-                                </span>
-                            </div>
-                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Created</span>
                                 <span class="text-sm text-gray-600 dark:text-gray-400">
                                     {{ $transaction->created_at->format('M d, Y') }}
@@ -278,29 +275,7 @@
                         </div>
                     </div>
 
-                    <!-- Transaction Tips Card -->
-                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 rounded-2xl border border-blue-200 dark:border-blue-700 p-6">
-                        <h3 class="text-lg font-bold text-blue-900 dark:text-blue-100 mb-4 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                            </svg>
-                            Quick Tips
-                        </h3>
-                        <div class="space-y-3 text-sm">
-                            <div class="flex items-start space-x-2">
-                                <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
-                                <p class="text-blue-800 dark:text-blue-200">Keep your transaction records organized for better financial tracking</p>
-                            </div>
-                            <div class="flex items-start space-x-2">
-                                <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
-                                <p class="text-blue-800 dark:text-blue-200">Add notes to remember important details about transactions</p>
-                            </div>
-                            <div class="flex items-start space-x-2">
-                                <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
-                                <p class="text-blue-800 dark:text-blue-200">Regular review of your transactions helps maintain budget control</p>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>

@@ -7,7 +7,7 @@
         <div class="max-w-7xl mx-auto">
             <!-- Enhanced Header Section -->
             <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 mb-6 overflow-hidden">
-                <div class="bg-blue-800 dark:bg-gray-900 p-4 sm:p-6">
+                <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 p-4 sm:p-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <!-- Title and Breadcrumb -->
                         <div>
@@ -15,7 +15,7 @@
                             <nav class="flex text-sm" aria-label="Breadcrumb">
                                 <ol class="inline-flex items-center space-x-1 md:space-x-2">
                                     <li class="inline-flex items-center">
-                                        <a href="{{ route('dashboard') }}" class="inline-flex items-center text-pink-200 hover:text-white transition-colors">
+                                        <a href="{{ route('dashboard') }}" class="inline-flex items-center text-blue-200 hover:text-white transition-colors">
                                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M10 2a1 1 0 01.7.3l7 7a1 1 0 01-1.4 1.4L16 10.42V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3H9v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6.58l-.3.28a1 1 0 01-1.4-1.44l7-7A1 1 0 0110 2z" />
                                             </svg>
@@ -23,10 +23,10 @@
                                         </a>
                                     </li>
                                     <li class="flex items-center">
-                                        <svg class="w-4 h-4 mx-2 text-pink-300" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-4 h-4 mx-2 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
                                         </svg>
-                                        <span class="text-pink-100 font-medium">People</span>
+                                        <span class="text-blue-100 font-medium">People</span>
                                     </li>
                                 </ol>
                             </nav>
@@ -35,12 +35,12 @@
                         <!-- Stats and Create Button -->
                         <div class="flex items-center space-x-4">
                             <div class="text-center">
-                                <p class="text-sm text-pink-200">Total People</p>
+                                <p class="text-sm text-blue-200">Total People</p>
                                 <p class="text-2xl font-bold text-white">{{ $people->total() }}</p>
                             </div>
-                            <div class="w-px h-12 bg-pink-300 opacity-50"></div>
+                            <div class="w-px h-12 bg-blue-300 opacity-50"></div>
                             <a href="{{ route('expense-people.create') }}"
-                               class="inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-white dark:bg-gray-100 text-rose-700 dark:text-rose-800 font-semibold rounded-xl hover:bg-pink-50 dark:hover:bg-gray-200 transition-all duration-200 shadow-lg hover:shadow-xl">
+                               class="inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-white dark:bg-gray-100 text-blue-700 dark:text-blue-800 font-semibold rounded-xl hover:bg-blue-50 dark:hover:bg-gray-200 transition-all duration-200 shadow-lg hover:shadow-xl">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                                 </svg>
@@ -64,7 +64,7 @@
                         </div>
                         <input type="text" name="search" value="{{ request('search') }}" 
                                placeholder="Search people by name..."
-                               class="w-full pl-12 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
+                               class="w-full pl-12 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                                autocomplete="off" />
                         
                         @if(request('search'))
@@ -81,7 +81,7 @@
                     @if(request('search'))
                         <div class="text-center">
                             <p class="text-sm text-gray-600 dark:text-gray-400">
-                                Showing results for "<span class="font-semibold text-pink-600 dark:text-pink-400">{{ request('search') }}</span>"
+                                Showing results for "<span class="font-semibold text-blue-600 dark:text-blue-400">{{ request('search') }}</span>"
                                 <span class="mx-2">•</span>
                                 {{ $people->total() }} {{ Str::plural('person', $people->total()) }} found
                             </p>
@@ -166,14 +166,14 @@
                                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No people found</h3>
                                                 <p class="text-gray-500 dark:text-gray-400 mb-4">No people match your search criteria.</p>
                                                 <a href="{{ route('expense-people.index') }}"
-                                                   class="inline-flex items-center px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white font-medium rounded-lg transition-colors">
+                                                   class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
                                                     Clear Search
                                                 </a>
                                             @else
                                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No people found</h3>
                                                 <p class="text-gray-500 dark:text-gray-400 mb-4">Get started by adding your first person.</p>
                                                 <a href="{{ route('expense-people.create') }}"
-                                                   class="inline-flex items-center px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white font-medium rounded-lg transition-colors">
+                                                   class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
                                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                                     </svg>
@@ -198,7 +198,7 @@
                                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $person->name }}</h3>
                                     </div>
                                 </div>
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
                                     #{{ $loop->iteration + ($people->currentPage() - 1) * $people->perPage() }}
                                 </span>
                             </div>
@@ -250,14 +250,14 @@
                                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No people found</h3>
                                     <p class="text-gray-500 dark:text-gray-400 mb-4">No people match your search criteria.</p>
                                     <a href="{{ route('expense-people.index') }}"
-                                       class="inline-flex items-center px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white font-medium rounded-lg transition-colors">
+                                       class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
                                         Clear Search
                                     </a>
                                 @else
                                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No people found</h3>
                                     <p class="text-gray-500 dark:text-gray-400 mb-4">Get started by adding your first person.</p>
                                     <a href="{{ route('expense-people.create') }}"
-                                       class="inline-flex items-center px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white font-medium rounded-lg transition-colors">
+                                       class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                         </svg>
