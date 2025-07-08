@@ -72,7 +72,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Date Range</label>
                             <select name="date_range" x-model="dateRange"
-                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
+                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
                                 @php
                                     $dateRanges = [
                                         'all' => 'All Time',
@@ -105,7 +105,7 @@
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Start Date</label>
                                 <input type="date" name="start_date" value="{{ old('start_date') }}" max="{{ date('Y-m-d') }}"
-                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                                 @error('start_date')
                                     <span class="text-sm text-red-600 mt-1">{{ $message }}</span>
                                 @enderror
@@ -113,7 +113,7 @@
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">End Date</label>
                                 <input type="date" name="end_date" value="{{ old('end_date') }}" max="{{ date('Y-m-d') }}"
-                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                                 @error('end_date')
                                     <span class="text-sm text-red-600 mt-1">{{ $message }}</span>
                                 @enderror
@@ -126,7 +126,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Transaction Type</label>
                             <select name="transaction_type"
-                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
+                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
                                 <option value="all" {{ old('transaction_type') == 'all' ? 'selected' : '' }}>All Types</option>
                                 <option value="income" {{ old('transaction_type') == 'income' ? 'selected' : '' }}>Income</option>
                                 <option value="expense" {{ old('transaction_type') == 'expense' ? 'selected' : '' }}>Expense</option>
@@ -139,7 +139,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Category</label>
                             <select name="category_id"
-                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
+                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
                                 <option value="all" {{ old('category_id') == 'all' ? 'selected' : '' }}>All Categories</option>
                                 @foreach ($categories as $id => $name)
                                     <option value="{{ $id }}" {{ old('category_id') == $id ? 'selected' : '' }}>
@@ -155,7 +155,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Wallet</label>
                             <select name="wallet_id"
-                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
+                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
                                 <option value="all" {{ old('wallet_id') == 'all' ? 'selected' : '' }}>All Wallets</option>
                                 @foreach ($wallets as $id => $name)
                                     <option value="{{ $id }}" {{ old('wallet_id') == $id ? 'selected' : '' }}>
@@ -171,7 +171,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Person</label>
                             <select name="person_id"
-                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
+                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
                                 <option value="all" {{ old('person_id') == 'all' ? 'selected' : '' }}>All People</option>
                                 @foreach ($people as $id => $name)
                                     <option value="{{ $id }}" {{ old('person_id') == $id ? 'selected' : '' }}>
@@ -192,7 +192,7 @@
                                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Amount</label>
                                 <input type="number" min="0" max="1000000" step="0.01" name="amount"
                                        value="{{ old('amount') }}" placeholder="e.g., 100.00"
-                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                                 @error('amount')
                                     <span class="text-sm text-red-600 mt-1">{{ $message }}</span>
                                 @enderror
@@ -200,7 +200,7 @@
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Filter Type</label>
                                 <select name="amount_filter"
-                                        class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                                        class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                                     <option value="=" {{ old('amount_filter') == '=' ? 'selected' : '' }}>Equal To</option>
                                     <option value="<" {{ old('amount_filter') == '<' ? 'selected' : '' }}>Less Than</option>
                                     <option value=">" {{ old('amount_filter') == '>' ? 'selected' : '' }}>Greater Than</option>
@@ -284,7 +284,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Date Range</label>
                             <select name="date_range" x-model="dateRange"
-                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
+                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
                                 @foreach ($dateRanges as $value => $label)
                                     <option value="{{ $value }}" {{ old('date_range') == $value ? 'selected' : '' }}>
                                         {{ $label }}
@@ -304,7 +304,7 @@
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Start Date</label>
                                 <input type="date" name="start_date" value="{{ old('start_date') }}" max="{{ date('Y-m-d') }}"
-                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                                 @error('start_date')
                                     <span class="text-sm text-red-600 mt-1">{{ $message }}</span>
                                 @enderror
@@ -312,7 +312,7 @@
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">End Date</label>
                                 <input type="date" name="end_date" value="{{ old('end_date') }}" max="{{ date('Y-m-d') }}"
-                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                                 @error('end_date')
                                     <span class="text-sm text-red-600 mt-1">{{ $message }}</span>
                                 @enderror
@@ -323,7 +323,7 @@
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Category</label>
                         <select name="budget_category_id"
-                                class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
+                                class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
                             <option value="all" {{ old('budget_category_id') == 'all' ? 'selected' : '' }}>All Categories</option>
                             @foreach ($categories as $id => $name)
                                 <option value="{{ $id }}" {{ old('budget_category_id') == $id ? 'selected' : '' }}>
@@ -413,7 +413,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Date Range</label>
                             <select name="date_range" x-model="dateRange"
-                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
+                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-1 focus:ring-purple-500 focus:border-purple-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
                                 @foreach ($dateRanges as $value => $label)
                                     <option value="{{ $value }}" {{ old('date_range') == $value ? 'selected' : '' }}>
                                         {{ $label }}
@@ -433,7 +433,7 @@
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Start Date</label>
                                 <input type="date" name="start_date" value="{{ old('start_date') }}" max="{{ date('Y-m-d') }}"
-                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-purple-500 focus:border-purple-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                                 @error('start_date')
                                     <span class="text-sm text-red-600 mt-1">{{ $message }}</span>
                                 @enderror
@@ -441,7 +441,7 @@
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">End Date</label>
                                 <input type="date" name="end_date" value="{{ old('end_date') }}" max="{{ date('Y-m-d') }}"
-                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                                       class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-purple-500 focus:border-purple-500 transition-all bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                                 @error('end_date')
                                     <span class="text-sm text-red-600 mt-1">{{ $message }}</span>
                                 @enderror
@@ -454,7 +454,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Ticket Status</label>
                             <select name="status"
-                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
+                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-1 focus:ring-purple-500 focus:border-purple-500 transition-all bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200">
                                 <option value="all" {{ old('status') == 'all' ? 'selected' : '' }}>All Statuses</option>
                                 <option value="opened" {{ old('status') == 'opened' ? 'selected' : '' }}>Open</option>
                                 <option value="admin_replied" {{ old('status') == 'admin_replied' ? 'selected' : '' }}>Admin Replied</option>
@@ -469,7 +469,7 @@
                         <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
                             <label class="flex items-center cursor-pointer">
                                 <input type="checkbox" name="is_trashed" value="1" {{ old('is_trashed') ? 'checked' : '' }}
-                                       class="w-4 h-4 text-purple-600 dark:text-purple-400 bg-gray-100 dark:bg-gray-900 border-gray-300 dark:border-gray-600 rounded focus:ring-purple-500 focus:ring-2">
+                                       class="w-4 h-4 text-purple-600 dark:text-purple-400 bg-gray-100 dark:bg-gray-900 border-gray-300 dark:border-gray-600 rounded focus:ring-purple-500 focus:ring-1">
                                 <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-200">Include deleted tickets</span>
                             </label>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-7">Check this to include soft-deleted tickets in the report</p>
