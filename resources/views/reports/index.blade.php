@@ -33,11 +33,11 @@
                         <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
                             <div class="bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 text-center border border-white/20 dark:border-white/10">
                                 <div class="text-2xl font-bold text-white">{{ now()->format('M Y') }}</div>
-                                <div class="text-xs text-purple-200 dark:text-purple-300">Current Period</div>
+                                <div class="text-xs text-blue-200 dark:text-blue-300">Current Period</div>
                             </div>
                             <div class="bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-xl px-4 py-3 text-center border border-white/20 dark:border-white/10">
                                 <div class="text-2xl font-bold text-white">4</div>
-                                <div class="text-xs text-purple-200 dark:text-purple-300">Report Types</div>
+                                <div class="text-xs text-blue-200 dark:text-blue-300">Report Types</div>
                             </div>
                         </div>
                     </div>
