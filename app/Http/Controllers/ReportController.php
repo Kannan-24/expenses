@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Models\ExpensePerson;
 use App\Models\SupportTicket;
 use App\Models\Wallet;
+use App\Services\BudgetReportService;
 use App\Services\TransactionReportService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -15,11 +16,15 @@ use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
-    protected $reportService;
+    protected $transactionReportService;
+    protected $budgetReportService;
+    protected $ticketReportService;
+
 
     public function __construct()
     {
-        $this->reportService = new TransactionReportService();
+        $this->transactionReportService = new TransactionReportService();
+        $this->budgetReportService = new BudgetReportService();
     }
 
     // Show report index page
@@ -52,9 +57,6 @@ class ReportController extends Controller
             'amount' => 'nullable|numeric',
             'amount_filter' => 'nullable|in:<,>,=',
 
-            // Budgets specific filters
-            'budget_category_id' => 'nullable|exists:categories,id',
-
             // Support tickets specific filters
             'status' => 'nullable|in:all,opened,closed,admin_replied,customer_replied',
             'is_trashed' => 'nullable|boolean',
@@ -79,43 +81,13 @@ class ReportController extends Controller
     // Generate transactions report
     private function generateTransactionsReport(Request $request)
     {
-        return $this->reportService->generateTransactionsReport($request);
+        return $this->transactionReportService->generateTransactionsReport($request);
     }
 
     // Generate budgets report
     private function generateBudgetsReport(Request $request)
     {
-        $dateRange = $this->getDateRange($request->date_range, $request->start_date, $request->end_date);
-        $query = Category::where('user_id', Auth::id())
-            ->whereBetween('created_at', $dateRange);
-
-        // Filter by category
-        if ($request->budget_category_id) {
-            $query->where('id', $request->budget_category_id);
-        }
-
-        // Get categories
-        $categories = $query->with(['transactions' => function ($q) use ($dateRange) {
-            $q->whereBetween('date', $dateRange);
-        }])->get();
-
-        // Generate report based on format
-        switch ($request->report_format) {
-            case 'pdf':
-                return Pdf::loadView('reports.budgets.pdf', compact('dateRange', 'categories'))
-                    ->setPaper('a4', 'portrait')
-                    ->stream('budgets_report.pdf');
-                break;
-            case 'html':
-                return view('reports.budgets.html', compact('categories'));
-                break;
-            case 'csv':
-                $filename = 'budgets_report_' . now()->format('Ymd_His') . '.csv';
-                break;
-            case 'xlsx':
-                $filename = 'budgets_report_' . now()->format('Ymd_His') . '.xlsx';
-                break;
-        }
+        return $this->budgetReportService->generateBudgetsReport($request);
     }
 
     // Generate tickets report
