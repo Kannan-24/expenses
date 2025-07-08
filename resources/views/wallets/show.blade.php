@@ -7,7 +7,7 @@
         <div class="max-w-6xl mx-auto">
             <!-- Enhanced Header Section -->
             <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 mb-6 overflow-hidden">
-                <div class="bg-gradient-to-r from-yellow-600 via-orange-600 to-red-700 dark:from-yellow-800 dark:via-orange-800 dark:to-red-900 p-4 sm:p-6">
+                <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 p-4 sm:p-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <!-- Title and Breadcrumb -->
                         <div>
@@ -15,7 +15,7 @@
                             <nav class="flex text-sm" aria-label="Breadcrumb">
                                 <ol class="inline-flex items-center space-x-1 md:space-x-2 flex-wrap">
                                     <li class="inline-flex items-center">
-                                        <a href="{{ route('dashboard') }}" class="inline-flex items-center text-yellow-200 hover:text-white transition-colors">
+                                        <a href="{{ route('dashboard') }}" class="inline-flex items-center text-blue-200 hover:text-white transition-colors">
                                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M10 2a1 1 0 01.7.3l7 7a1 1 0 01-1.4 1.4L16 10.42V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3H9v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6.58l-.3.28a1 1 0 01-1.4-1.44l7-7A1 1 0 0110 2z" />
                                             </svg>
@@ -23,18 +23,18 @@
                                         </a>
                                     </li>
                                     <li class="flex items-center">
-                                        <svg class="w-4 h-4 mx-2 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-4 h-4 mx-2 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
                                         </svg>
-                                        <a href="{{ route('wallets.index') }}" class="text-yellow-200 hover:text-white transition-colors">
+                                        <a href="{{ route('wallets.index') }}" class="text-blue-200 hover:text-white transition-colors">
                                             Wallets
                                         </a>
                                     </li>
                                     <li class="flex items-center">
-                                        <svg class="w-4 h-4 mx-2 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-4 h-4 mx-2 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
                                         </svg>
-                                        <span class="text-yellow-100 font-medium">Details</span>
+                                        <span class="text-blue-100 font-medium">Details</span>
                                     </li>
                                 </ol>
                             </nav>
@@ -68,8 +68,8 @@
                 <div class="lg:col-span-2 bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-600 p-4 sm:p-6">
                         <div class="flex items-center space-x-3">
-                            <div class="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
-                                <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                                 </svg>
                             </div>
@@ -98,9 +98,6 @@
                                 <!-- Wallet Name -->
                                 <div class="space-y-2">
                                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2h4a1 1 0 011 1v12a2 2 0 01-2 2H6a2 2 0 01-2-2V5a1 1 0 011-1h4z"></path>
-                                        </svg>
                                         Wallet Name
                                     </label>
                                     <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -113,9 +110,6 @@
                                 <!-- Wallet Type -->
                                 <div class="space-y-2">
                                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                                        </svg>
                                         Wallet Type
                                     </label>
                                     <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -128,9 +122,6 @@
                                 <!-- Currency -->
                                 <div class="space-y-2">
                                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                                        </svg>
                                         Currency
                                     </label>
                                     <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -148,9 +139,6 @@
                                 <!-- Status -->
                                 <div class="space-y-2">
                                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
                                         Status
                                     </label>
                                     <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -252,34 +240,6 @@
                             @endif
                         </div>
                     </div>
-
-                    <!-- Session Info -->
-                    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h4a1 1 0 011 1v12a2 2 0 01-2 2H5a2 2 0 01-2-2V8a1 1 0 011-1h4z"></path>
-                            </svg>
-                            Session Info
-                        </h3>
-                        <div class="space-y-3 text-sm">
-                            <div class="flex justify-between">
-                                <span class="text-gray-600 dark:text-gray-400">User:</span>
-                                <span class="font-medium text-gray-900 dark:text-white">harithelord47</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600 dark:text-gray-400">Date:</span>
-                                <span class="font-medium text-gray-900 dark:text-white">Jul 07, 2025</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600 dark:text-gray-400">Time:</span>
-                                <span class="font-medium text-gray-900 dark:text-white">12:49 UTC</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600 dark:text-gray-400">Timezone:</span>
-                                <span class="font-medium text-gray-900 dark:text-white">UTC</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -357,8 +317,9 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                                         <a href="{{ route('transactions.show', $transaction->id) }}"
                                            class="inline-flex items-center px-3 py-1.5 bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-200 text-xs font-medium rounded-lg hover:bg-yellow-200 dark:hover:bg-yellow-800 transition-colors">
-                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                           <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                             </svg>
                                             View
                                         </a>
@@ -427,8 +388,9 @@
                                 </span>
                                 <a href="{{ route('transactions.show', $transaction->id) }}" 
                                    class="inline-flex items-center text-yellow-600 dark:text-yellow-400 text-sm font-medium">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                     </svg>
                                     View Details
                                 </a>

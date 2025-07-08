@@ -6,7 +6,7 @@
     <div class="space-y-6" style="min-height: 88vh;">
 
         <!-- Enhanced Header Section -->
-        <div class="relative bg-gradient-to-br from-gray-800 via-gray-900 to-black dark:from-gray-900 dark:via-black dark:to-gray-900 rounded-2xl shadow-xl overflow-hidden">
+        <div class="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 rounded-2xl shadow-xl overflow-hidden">
             <div class="absolute inset-0 bg-black opacity-10 dark:opacity-20"></div>
             <div class="absolute -top-8 -right-8 w-40 h-40 bg-white opacity-5 dark:opacity-10 rounded-full"></div>
             <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-white opacity-5 dark:opacity-10 rounded-full"></div>

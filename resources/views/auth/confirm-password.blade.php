@@ -9,7 +9,7 @@
         <div class="w-full max-w-7xl">
             
             <!-- Enhanced Header Card -->
-            <div class="bg-gradient-to-r from-indigo-600 via-blue-700 to-purple-800 dark:from-indigo-800 dark:via-blue-900 dark:to-purple-900 rounded-t-3xl p-8 text-white relative overflow-hidden">
+            <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 rounded-t-3xl p-8 text-white relative overflow-hidden">
                 <!-- Background Decorations -->
                 <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 dark:opacity-20 rounded-full transform translate-x-16 -translate-y-16"></div>
                 <div class="absolute bottom-0 left-0 w-24 h-24 bg-white opacity-5 dark:opacity-10 rounded-full transform -translate-x-12 translate-y-12"></div>

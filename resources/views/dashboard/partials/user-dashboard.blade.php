@@ -1,7 +1,7 @@
 <div class=" space-y-6">
 
     <!-- Enhanced Welcome Message with Time-based Greeting -->
-    <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-900 dark:via-blue-950 dark:to-indigo-950 rounded-2xl shadow-xl">
+    <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 rounded-2xl shadow-xl">
         <div class="absolute inset-0 bg-black opacity-10 dark:opacity-30"></div>
         <div class="absolute -top-4 -right-4 w-32 h-32 bg-white opacity-10 dark:bg-gray-300 dark:opacity-10 rounded-full"></div>
         <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-white opacity-10 dark:bg-gray-300 dark:opacity-10 rounded-full"></div>

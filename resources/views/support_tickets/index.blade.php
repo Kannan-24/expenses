@@ -28,7 +28,7 @@
         </div>
 
         <!-- Enhanced Header Section -->
-        <div class="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-900 dark:via-blue-950 dark:to-indigo-900 rounded-2xl shadow-xl overflow-hidden">
+        <div class="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 rounded-2xl shadow-xl overflow-hidden">
             <div class="absolute inset-0 bg-black opacity-10 dark:opacity-30"></div>
             <div class="relative p-8 text-white">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">

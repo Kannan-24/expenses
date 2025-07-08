@@ -7,7 +7,7 @@
         <div class="max-w-7xl mx-auto">
             <!-- Enhanced Header Section -->
             <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 mb-6 overflow-hidden">
-                <div class="bg-gradient-to-r from-yellow-600 via-orange-600 to-red-700 dark:from-yellow-800 dark:via-orange-800 dark:to-red-900 p-4 sm:p-6">
+                <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 p-4 sm:p-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <!-- Title and Breadcrumb -->
                         <div>
@@ -15,7 +15,7 @@
                             <nav class="flex text-sm" aria-label="Breadcrumb">
                                 <ol class="inline-flex items-center space-x-1 md:space-x-2">
                                     <li class="inline-flex items-center">
-                                        <a href="{{ route('dashboard') }}" class="inline-flex items-center text-yellow-200 hover:text-white transition-colors">
+                                        <a href="{{ route('dashboard') }}" class="inline-flex items-center text-blue-200 hover:text-white transition-colors">
                                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M10 2a1 1 0 01.7.3l7 7a1 1 0 01-1.4 1.4L16 10.42V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3H9v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6.58l-.3.28a1 1 0 01-1.4-1.44l7-7A1 1 0 0110 2z" />
                                             </svg>
@@ -23,10 +23,10 @@
                                         </a>
                                     </li>
                                     <li class="flex items-center">
-                                        <svg class="w-4 h-4 mx-2 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-4 h-4 mx-2 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
                                         </svg>
-                                        <span class="text-yellow-100 font-medium">Wallets</span>
+                                        <span class="text-blue-100 font-medium">Wallets</span>
                                     </li>
                                 </ol>
                             </nav>
@@ -35,12 +35,12 @@
                         <!-- Stats and Create Button -->
                         <div class="flex items-center space-x-4">
                             <div class="text-center">
-                                <p class="text-sm text-yellow-200">Total Wallets</p>
+                                <p class="text-sm text-blue-200">Total Wallets</p>
                                 <p class="text-2xl font-bold text-white">{{ $wallets->total() }}</p>
                             </div>
-                            <div class="w-px h-12 bg-yellow-300 opacity-50"></div>
+                            <div class="w-px h-12 bg-blue-300 opacity-50"></div>
                             <a href="{{ route('wallets.create') }}"
-                               class="inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-white dark:bg-gray-100 text-orange-700 dark:text-orange-800 font-semibold rounded-xl hover:bg-yellow-50 dark:hover:bg-gray-200 transition-all duration-200 shadow-lg hover:shadow-xl">
+                               class="inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-white dark:bg-gray-100 text-blue-700 dark:text-blue-800 font-semibold rounded-xl hover:bg-blue-50 dark:hover:bg-gray-200 transition-all duration-200 shadow-lg hover:shadow-xl">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                                 </svg>
@@ -64,7 +64,7 @@
                         </div>
                         <input type="text" name="search" value="{{ request('search') }}" 
                                placeholder="Search wallets by name, type, or currency..."
-                               class="w-full pl-12 pr-12 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
+                               class="w-full pl-12 pr-12 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                                autocomplete="off" />
                         
                         @php
@@ -124,7 +124,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Wallet Type</label>
                             <select name="wallet_type"
-                                    class="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                    class="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">All Types</option>
                                 @foreach ($walletTypes as $type)
                                     <option value="{{ $type->id }}" {{ request('wallet_type') == $type->id ? 'selected' : '' }}>
@@ -138,7 +138,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Currency</label>
                             <select name="currency"
-                                    class="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                    class="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">All Currencies</option>
                                 @foreach ($currencies as $currency)
                                     <option value="{{ $currency->id }}" {{ request('currency') == $currency->id ? 'selected' : '' }}>
@@ -151,7 +151,7 @@
                         <!-- Action Buttons -->
                         <div class="flex flex-col items-end sm:flex-row gap-2 lg:col-span-2">
                             <button type="submit"
-                                    class="flex-1 px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-lg transition-colors">
+                                    class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
                                 Apply Filters
                             </button>
                             <a href="{{ route('wallets.index') }}"
@@ -166,7 +166,7 @@
                         <div class="text-center">
                             <p class="text-sm text-gray-600 dark:text-gray-400">
                                 @if(request('search'))
-                                    Showing results for "<span class="font-semibold text-yellow-600 dark:text-yellow-400">{{ request('search') }}</span>"
+                                    Showing results for "<span class="font-semibold text-blue-600 dark:text-blue-400">{{ request('search') }}</span>"
                                     <span class="mx-2">•</span>
                                 @endif
                                 {{ $wallets->total() }} {{ Str::plural('wallet', $wallets->total()) }} found
@@ -279,14 +279,14 @@
                                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No wallets found</h3>
                                                 <p class="text-gray-500 dark:text-gray-400 mb-4">No wallets match your search criteria.</p>
                                                 <a href="{{ route('wallets.index') }}"
-                                                   class="inline-flex items-center px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-lg transition-colors">
+                                                   class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
                                                     Clear Search
                                                 </a>
                                             @else
                                                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No wallets found</h3>
                                                 <p class="text-gray-500 dark:text-gray-400 mb-4">Get started by creating your first wallet.</p>
                                                 <a href="{{ route('wallets.create') }}"
-                                                   class="inline-flex items-center px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-lg transition-colors">
+                                                   class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
                                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                                     </svg>
@@ -339,6 +339,7 @@
                                        class="inline-flex items-center text-yellow-600 dark:text-yellow-400 text-sm font-medium">
                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                         </svg>
                                         View
                                     </a>
@@ -373,14 +374,14 @@
                                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No wallets found</h3>
                                     <p class="text-gray-500 dark:text-gray-400 mb-4">No wallets match your search criteria.</p>
                                     <a href="{{ route('wallets.index') }}"
-                                       class="inline-flex items-center px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-lg transition-colors">
+                                       class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
                                         Clear Search
                                     </a>
                                 @else
                                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No wallets found</h3>
                                     <p class="text-gray-500 dark:text-gray-400 mb-4">Get started by creating your first wallet.</p>
                                     <a href="{{ route('wallets.create') }}"
-                                       class="inline-flex items-center px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-lg transition-colors">
+                                       class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                         </svg>
