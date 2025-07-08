@@ -19,8 +19,6 @@ use Maatwebsite\Excel\Excel as ExcelExcel;
 
 class BudgetReportService
 {
-    private const CACHE_TTL = 1; // 5 minutes
-
     /**
      * Generate budgets report based on the request parameters.
      */
@@ -29,13 +27,8 @@ class BudgetReportService
         $userId = Auth::id();
         $validatedData = $this->validateRequest($request);
 
-        // Generate cache key for performance
-        $cacheKey = $this->generateCacheKey($userId, $validatedData);
-
         // Get processed budget data
-        $reportData = Cache::remember($cacheKey, self::CACHE_TTL, function () use ($userId, $validatedData) {
-            return $this->getProcessedBudgetData($userId, $validatedData);
-        });
+        $reportData = $this->getProcessedBudgetData($userId, $validatedData);
 
         return $this->generateReport($validatedData['report_format'], $reportData, $validatedData);
     }
@@ -227,14 +220,6 @@ class BudgetReportService
             'charts' => true,
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
-    }
-
-    /**
-     * Generate cache key
-     */
-    private function generateCacheKey(int $userId, array $validatedData): string
-    {
-        return 'budget_report_' . $userId . '_' . md5(serialize($validatedData));
     }
 
     /**

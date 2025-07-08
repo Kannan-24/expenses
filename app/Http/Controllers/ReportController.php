@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Models\Transaction;
 use App\Models\ExpensePerson;
-use App\Models\SupportTicket;
+use App\Models\ReportHistory;
 use App\Models\Wallet;
 use App\Services\BudgetReportService;
+use App\Services\TicketReportService;
 use App\Services\TransactionReportService;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
@@ -25,6 +23,7 @@ class ReportController extends Controller
     {
         $this->transactionReportService = new TransactionReportService();
         $this->budgetReportService = new BudgetReportService();
+        $this->ticketReportService = new TicketReportService();
     }
 
     // Show report index page
@@ -39,8 +38,51 @@ class ReportController extends Controller
         $wallets = Wallet::where('user_id', Auth::id())
             ->select('id', 'name')->distinct()->orderBy('name')->get()->pluck('name', 'id');
 
-        return view('reports.index', compact('categories', 'people', 'wallets'));
+        $reportHistories = ReportHistory::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('reports.index', compact('categories', 'people', 'wallets', 'reportHistories'));
     }
+
+    // Add this method for regenerating reports
+    public function regenerate(Request $request)
+    {
+        $reportHistory = ReportHistory::where('id', $request->report_id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        // Create a new request with the stored filters and new format
+        $regenerateRequest = new Request();
+        $regenerateRequest->replace([
+            'report_type' => $reportHistory->report_type,
+            'report_format' => $request->input('report_format', $reportHistory->report_format),
+            'date_range' => $reportHistory->date_range,
+            'start_date' => $reportHistory->start_date,
+            'end_date' => $reportHistory->end_date,
+            ...$reportHistory->filters
+        ]);
+
+        return $this->generate($regenerateRequest);
+    }
+
+    /**
+     * Delete a report from history
+     */
+    public function deleteReport($id)
+    {
+        $report = ReportHistory::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $report->delete();
+
+        return redirect()->back()->with('success', 'Report deleted successfully.');
+    }
+
+    /**
+     * Generate report using data from server
+     */
 
     public function generate(Request $request)
     {
@@ -61,6 +103,31 @@ class ReportController extends Controller
             'status' => 'nullable|in:all,opened,closed,admin_replied,customer_replied',
             'is_trashed' => 'nullable|boolean',
         ]);
+
+        ReportHistory::updateOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'report_type' => $request->report_type,
+                'report_format' => $request->report_format,
+                'date_range' => $request->date_range,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'filters' => $request->only([
+                    'transaction_type',
+                    'amount',
+                    'amount_filter',
+                    'category_id',
+                    'wallet_id',
+                    'person_id',
+                    'budget_category_id',
+                    'include_inactive',
+                    'status',
+                    'priority',
+                    'category',
+                    'is_trashed',
+                ]),
+            ]
+        );
 
 
         switch ($request->report_type) {
@@ -93,65 +160,6 @@ class ReportController extends Controller
     // Generate tickets report
     private function generateTicketsReport(Request $request)
     {
-        $dateRange = $this->getDateRange($request->date_range, $request->start_date, $request->end_date);
-
-        $query = SupportTicket::where('user_id', Auth::id())
-            ->whereBetween('created_at', $dateRange);
-
-        // Filter by status
-        if ($request->status && $request->status !== 'all') {
-            $query->where('status', $request->status);
-        }
-
-        // Filter by trashed tickets
-        if ($request->is_trashed) {
-            $query->withTrashed();
-        }
-
-        // Get tickets
-        $tickets = $query->with(['customer', 'admin'])->get();
-
-        // Generate report based on format
-        switch ($request->report_format) {
-            case 'pdf':
-                return Pdf::loadView('reports.tickets.pdf', compact('dateRange', 'tickets'))
-                    ->setPaper('a4', 'portrait')
-                    ->stream('tickets_report.pdf');
-                break;
-            case 'html':
-                return view('reports.tickets.html', compact('tickets'));
-                break;
-            case 'csv':
-                $filename = 'tickets_report_' . now()->format('Ymd_His') . '.csv';
-                break;
-            case 'xlsx':
-                $filename = 'tickets_report_' . now()->format('Ymd_His') . '.xlsx';
-                break;
-        }
-    }
-
-    // Get Date Range
-    private function getDateRange(String $dateRange, ?string $startDate = null, ?string $endDate = null): array
-    {
-        switch ($dateRange) {
-            case 'all':
-                return [null, null];
-            case 'today':
-                return [now()->startOfDay(), now()->endOfDay()];
-            case 'yesterday':
-                return [now()->subDay()->startOfDay(), now()->subDay()->endOfDay()];
-            case 'this_week':
-                return [now()->startOfWeek(), now()->endOfWeek()];
-            case 'last_week':
-                return [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()];
-            case 'this_month':
-                return [now()->startOfMonth(), now()->endOfMonth()];
-            case 'last_month':
-                return [now()->subMonth()->startOfMonth(), now()->subMonth()->endOfMonth()];
-            case 'custom':
-                return [$startDate, $endDate];
-            default:
-                return [null, null];
-        }
+        return $this->ticketReportService->generateTicketReport($request);
     }
 }

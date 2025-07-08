@@ -86,10 +86,9 @@ class WalletController extends Controller
         // Check if a wallet with the same name already exists for the user and wallet type
         $existingWallet = Wallet::where('user_id', Auth::id())
             ->where('wallet_type_id', $request->input('wallet_type_id'))
-            ->where('name', $request->input('name'))
-            ->first();
+            ->where('name', $request->input('name'));
 
-        if ($existingWallet) {
+        if ($existingWallet->exists()) {
             return redirect()->back()->withErrors(['name' => 'A wallet with this name already exists for this wallet type.'])
                 ->withInput();
         }

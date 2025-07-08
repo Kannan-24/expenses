@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-[x-cloak]{
+[x-cloak] {
   display: none !important;
+}
+
+:root {
+  --grid-color: #f3f4f6;
+}
+
+.dark {
+  --grid-color: #374151;
 }
