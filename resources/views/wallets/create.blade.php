@@ -197,7 +197,7 @@
                                                    id="is_active" 
                                                    value="1" 
                                                    {{ old('is_active', true) ? 'checked' : '' }}
-                                                   class="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 dark:focus:ring-orange-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-800 dark:border-gray-600">
+                                                   class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-1 dark:bg-gray-800 dark:border-gray-600">
                                             <label for="is_active" class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                 Make this wallet active immediately
                                             </label>
