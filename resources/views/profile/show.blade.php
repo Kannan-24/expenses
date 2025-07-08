@@ -3,7 +3,7 @@
         {{ __('User Profile') }} - {{ config('app.name', 'expenses') }}
     </x-slot>
 
-    <div class="w-full mx-auto max-w-7xl p-4 lg:p-2 space-y-6">
+    <div class="w-full mx-auto max-w-7xl space-y-6">
 
         <!-- Enhanced Header Section -->
         <div class="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 rounded-2xl shadow-xl overflow-hidden">
