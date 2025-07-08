@@ -259,7 +259,7 @@
                 </form>
             </div>
         
-            <!-- Budget Report Card -->
+            {{-- <!-- Budget Report Card -->
             <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-xl transition-all duration-300 group">
                 <!-- Card Header -->
                 <div class="bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-700 dark:to-indigo-900 px-6 py-4">
@@ -513,10 +513,10 @@
                         </span>
                     </button>
                 </form>
-            </div>
+            </div> --}}
         </div>
 
-        <!-- Recent Reports Section -->
+        {{-- <!-- Recent Reports Section -->
         <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800">
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
@@ -560,7 +560,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     <!-- Enhanced JavaScript -->
