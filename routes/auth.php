@@ -61,4 +61,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::get('/password/setup', [PasswordController::class, 'show'])
+        ->name('password.setup.show');
+    Route::post('/password/setup', [PasswordController::class, 'store'])
+        ->name('password.setup.store');
 });
