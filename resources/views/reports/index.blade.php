@@ -24,7 +24,7 @@
                                 </div>
                                 Reports & Analytics
                             </h1>
-                            <p class="text-purple-100 dark:text-purple-200 mt-2 text-lg">
+                            <p class="text-blue-100 dark:text-blue-200 mt-2 text-lg">
                                 Generate comprehensive reports to analyze your financial data and track expenses
                             </p>
                         </div>
