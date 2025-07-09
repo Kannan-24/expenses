@@ -81,6 +81,9 @@ class TransactionController extends Controller
 
         $transactions = $query->orderBy('date', 'desc')->paginate(10);
 
+        // Attach filter values to the pagination links
+        $transactions->appends($request->except('page'));
+
         return view('transactions.index', compact('transactions', 'categories', 'people'));
     }
 

@@ -22,7 +22,7 @@ class UserController extends Controller
             });
         }
 
-        $users = $query->paginate(12)->appends(['search' => $search]);
+        $users = $query->paginate(10)->appends(['search' => $search]);
 
         return view('user.index', compact('users'));
     }

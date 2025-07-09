@@ -206,7 +206,7 @@
                                         <span class="text-gray-900 dark:text-white">
                                             @if ($transaction->note)
                                                 @if (str_contains($transaction->note, '#'))
-                                                    <ol class="list-decimal pl-5">
+                                                    <ol class="list-decimal pl-10">
                                                         @foreach (explode('#', $transaction->note) as $notePart)
                                                             <li class="text-gray-700 dark:text-gray-300">
                                                                 {{ $notePart }}
