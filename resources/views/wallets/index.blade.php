@@ -395,7 +395,7 @@
             </div>
 
             <!-- Enhanced Pagination -->
-            @if($transactions->hasPages())
+            @if($wallets->hasPages())
                 <div class="mt-6 bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
                     <x-pagination :paginator="$transactions" />
                 </div>
