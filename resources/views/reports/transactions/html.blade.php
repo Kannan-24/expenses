@@ -582,9 +582,25 @@
                                         </td>
                                     @endif
                                     <td class="px-6 py-4 text-sm text-gray-900 max-w-xs">
-                                        <div class="truncate" title="{{ $transaction->note }}">
-                                            {{ $transaction->note ?? '-' }}
-                                        </div>
+                                        @if ($transaction->note)
+                                            @if (str_contains($transaction->note, '#'))
+                                                {{-- Order List --}}
+                                                <ol>
+                                                    @foreach (explode('#', $transaction->note) as $tag)
+                                                        @if (trim($tag) !== '')
+                                                            <li class="truncate" title="{{ trim($tag) }}">
+                                                                {{ trim($tag) }}</li>
+                                                        @endif
+                                                    @endforeach
+                                                </ol>
+                                            @else
+                                                <div class="truncate" title="{{ $transaction->note }}">
+                                                    {{ $transaction->note }}
+                                                </div>
+                                            @endif
+                                        @else
+                                            &hyphen;
+                                        @endif
                                     </td>
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-sm font-medium {{ $runningBalance >= 0 ? 'text-green-600' : 'text-red-600' }}">

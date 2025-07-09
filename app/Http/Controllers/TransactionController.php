@@ -34,7 +34,7 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::all();
+        $categories = Category::where('user_id', Auth::id())->get();
         $people = ExpensePerson::where('user_id', Auth::id())->get();
 
         $query = Transaction::with(['category', 'person'])->where('user_id', Auth::id());

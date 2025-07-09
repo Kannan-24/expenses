@@ -312,15 +312,18 @@
     <div class="summary-cards">
         <div class="summary-card income">
             <h3>Total Income</h3>
-            <p class="amount">{{ auth()->user()->preferences->defaultCurrency->symbol }} {{ number_format($summary['total_income'], 2) }}</p>
+            <p class="amount">{{ auth()->user()->preferences->defaultCurrency->symbol }}
+                {{ number_format($summary['total_income'], 2) }}</p>
         </div>
         <div class="summary-card expense">
             <h3>Total Expenses</h3>
-            <p class="amount">{{ auth()->user()->preferences->defaultCurrency->symbol }} {{ number_format($summary['total_expense'], 2) }}</p>
+            <p class="amount">{{ auth()->user()->preferences->defaultCurrency->symbol }}
+                {{ number_format($summary['total_expense'], 2) }}</p>
         </div>
         <div class="summary-card net">
             <h3>Net Amount</h3>
-            <p class="amount">{{ auth()->user()->preferences->defaultCurrency->symbol }} {{ number_format($summary['net_total'], 2) }}</p>
+            <p class="amount">{{ auth()->user()->preferences->defaultCurrency->symbol }}
+                {{ number_format($summary['net_total'], 2) }}</p>
         </div>
     </div>
 
@@ -355,7 +358,8 @@
                                     {{ ucfirst($transaction->type) }}
                                 </span>
                             </td>
-                            <td class="{{ $transaction->type === 'income' ? 'amount-positive' : 'amount-negative' }}" style="text-align: right; padding-right: 10px;">
+                            <td class="{{ $transaction->type === 'income' ? 'amount-positive' : 'amount-negative' }}"
+                                style="text-align: right; padding-right: 10px;">
                                 {{ auth()->user()->preferences->defaultCurrency->symbol }}&nbsp;{{ number_format($transaction->amount, 2) }}
                             </td>
                             @if ($category == null)
@@ -367,7 +371,27 @@
                             @if ($wallet == null)
                                 <td>{{ $transaction->wallet->name ?? 'Default' }}</td>
                             @endif
-                            <td class="notes" style="word-wrap: break-word; white-space:wrap; overflow-wrap: break-word;">{{ $transaction->note ?? '-' }}</td>
+                            <td class="notes"
+                                style="word-wrap: break-word; white-space:wrap; overflow-wrap: break-word;">
+                                @if ($transaction->note)
+                                    @if (str_contains($transaction->note, '#'))
+                                        {{-- Order List --}}
+                                        <ol style="list-style-type: decimal; padding-left: 20px; margin: 0;">
+                                            @foreach (explode('#', $transaction->note) as $tag)
+                                                @if (trim($tag) !== '')
+                                                    <li style="font-size: 9px; color: #374151;">
+                                                        {{ trim($tag) }}
+                                                    </li>
+                                                @endif
+                                            @endforeach
+                                        </ol>
+                                    @else
+                                        {{ $transaction->note }}
+                                    @endif
+                                @else
+                                    &hyphen;
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -390,7 +414,8 @@
                         <tbody>
                             <tr>
                                 <td>{{ $categoryName ?: 'Uncategorized' }}</td>
-                                <td class="amount-negative">{{ auth()->user()->preferences->defaultCurrency->symbol }} {{ number_format($amount['amount'], 2) }}</td>
+                                <td class="amount-negative">{{ auth()->user()->preferences->defaultCurrency->symbol }}
+                                    {{ number_format($amount['amount'], 2) }}</td>
                                 <td>{{ $amount['count'] }}</td>
                                 <td>
                                     {{ $amount['percentage'] ? number_format($amount['percentage'], 2) . '%' : '0%' }}
