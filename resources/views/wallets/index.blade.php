@@ -397,14 +397,7 @@
             <!-- Enhanced Pagination -->
             @if($wallets->hasPages())
                 <div class="mt-6 bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
-                    <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-                        <div class="text-sm text-gray-700 dark:text-gray-300">
-                            Showing {{ $wallets->firstItem() }} to {{ $wallets->lastItem() }} of {{ $wallets->total() }} wallets
-                        </div>
-                        <div>
-                            <x-pagination :paginator="$wallets" />
-                        </div>
-                    </div>
+                    <x-pagination :paginator="$transactions" />
                 </div>
             @endif
         </div>

@@ -284,7 +284,7 @@
                                                 <span class="text-red-500 ml-1">*</span>
                                             </label>
                                             <input type="date" name="date" id="date" 
-                                                   value="{{ old('date') }}"
+                                                   value="{{ old('date', date('Y-m-d')) }}"
                                                    required max="{{ date('Y-m-d') }}"
                                                    class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:ring-1 transition-all duration-200 text-gray-900 dark:text-white bg-white dark:bg-gray-800 font-medium shadow-sm">
                                             @error('date')

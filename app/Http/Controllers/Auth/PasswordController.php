@@ -63,7 +63,7 @@ class PasswordController extends Controller
         $user = Auth::user();
 
         // Validate user eligibility
-        if ($user->has_set_password || !$user->isOAuthUser()) {
+        if ($user->has_set_password || !$user->isSocialLogin()) {
             return redirect()->route('dashboard')->with('error', 'Password setup not available.');
         }
 
