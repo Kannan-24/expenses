@@ -2,9 +2,9 @@
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <!-- Header Section -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Financial Transactions Report</h1>
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                <div class="w-full">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Financial Transactions Report</h1>
                     <p class="text-gray-600 mb-2">
                         Detailed analysis of your financial activities and transaction patterns
                     </p>
@@ -16,30 +16,27 @@
                         @endif
                     </p>
                 </div>
-                <div class="flex space-x-3">
+                <div class="flex justify-end flex-wrap gap-2 sm:gap-3 w-full lg:w-auto">
                     <button onclick="window.print()"
-                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                        <i class="fas fa-print mr-2"></i>
+                        class="flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 w-full sm:w-auto">
                         Print
                     </button>
                     <a href="{{ request()->fullUrlWithQuery(['report_format' => 'pdf']) }}"
-                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
-                        <i class="fas fa-file-pdf mr-2"></i>
+                        class="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
                         Export PDF
                     </a>
                     <a href="{{ request()->fullUrlWithQuery(['report_format' => 'xlsx']) }}"
-                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700">
-                        <i class="fas fa-file-excel mr-2"></i>
+                        class="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 w-full sm:w-auto">
                         Export Excel
                     </a>
                     <a href="{{ request()->fullUrlWithQuery(['report_format' => 'csv']) }}"
-                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700">
-                        <i class="fas fa-file-csv mr-2"></i>
+                        class="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto">
                         Export CSV
                     </a>
                 </div>
             </div>
         </div>
+
 
         <!-- Report Filters -->
         <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-8">
@@ -152,8 +149,19 @@
         <!-- Financial Health Dashboard -->
         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 p-6 mb-8">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-900">
-                    <i class="fas fa-heart-pulse text-blue-600 mr-2"></i>
+                <h3 class="text-lg font-semibold text-gray-900 flex gap-2">
+                    <svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path
+                                d="M5 14.9999H6.39445C7.1804 14.9999 7.57337 14.9999 7.90501 15.1774C8.23665 15.3549 8.45463 15.6819 8.8906 16.3358L9.05039 16.5755C9.47306 17.2095 9.68439 17.5265 9.97087 17.5095C10.2573 17.4925 10.4297 17.1527 10.7743 16.4731L12.7404 12.5964C13.0987 11.8898 13.2779 11.5365 13.5711 11.5247C13.8642 11.5129 14.0711 11.8508 14.485 12.5264L15.1222 13.5668C15.5512 14.2671 15.7656 14.6172 16.1072 14.8086C16.4487 14.9999 16.8593 14.9999 17.6805 14.9999H19"
+                                stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"></path>
+                            <path
+                                d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8"
+                                stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"></path>
+                        </g>
+                    </svg>
                     Financial Health Score
                 </h3>
                 <div class="text-right">
@@ -222,12 +230,13 @@
                     <div class="ml-4">
                         <p class="text-sm font-medium text-green-600">Total Income</p>
                         <p class="text-2xl font-bold text-green-900">
-                            ${{ number_format($summary['total_income'], 2) }}
+                            {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($summary['total_income'], 2) }}
                         </p>
                         <p class="text-xs text-green-700 mt-1">
                             {{ $incomeTransactions }} transactions
                             @if ($incomeTransactions > 0)
-                                • Avg: ${{ number_format($summary['total_income'] / $incomeTransactions, 2) }}
+                                • Avg:
+                                {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($summary['total_income'] / $incomeTransactions, 2) }}
                             @endif
                         </p>
                     </div>
@@ -242,12 +251,13 @@
                     <div class="ml-4">
                         <p class="text-sm font-medium text-red-600">Total Expenses</p>
                         <p class="text-2xl font-bold text-red-900">
-                            ${{ number_format($summary['total_expense'], 2) }}
+                            {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($summary['total_expense'], 2) }}
                         </p>
                         <p class="text-xs text-red-700 mt-1">
                             {{ $expenseTransactions }} transactions
                             @if ($expenseTransactions > 0)
-                                • Avg: ${{ number_format($summary['total_expense'] / $expenseTransactions, 2) }}
+                                • Avg:
+                                {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($summary['total_expense'] / $expenseTransactions, 2) }}
                             @endif
                         </p>
                     </div>
@@ -263,7 +273,7 @@
                         <p class="text-sm font-medium text-blue-600">Net Amount</p>
                         <p
                             class="text-2xl font-bold {{ $summary['net_total'] >= 0 ? 'text-green-900' : 'text-red-900' }}">
-                            ${{ number_format($summary['net_total'], 2) }}
+                            {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($summary['net_total'], 2) }}
                         </p>
                         <p class="text-xs text-blue-700 mt-1">
                             {{ $summary['net_total'] >= 0 ? 'Surplus' : 'Deficit' }}
@@ -304,7 +314,8 @@
                         <div class="bg-white rounded-lg p-4 border-l-4 border-purple-500">
                             <h4 class="font-semibold text-gray-900">Highest Spending Category</h4>
                             <p class="text-2xl font-bold text-purple-600">
-                                ${{ number_format($topCategory['amount'], 2) }}</p>
+                                {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($topCategory['amount'], 2) }}
+                            </p>
                             <p class="text-sm text-gray-600">{{ $topCategoryName ?: 'Uncategorized' }}
                                 ({{ number_format($topCategory['percentage'], 1) }}% of expenses)</p>
                         </div>
@@ -315,7 +326,7 @@
                             <h4 class="font-semibold text-gray-900">Largest Single Transaction</h4>
                             <p
                                 class="text-2xl font-bold {{ $largestTransaction->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
-                                ${{ number_format($largestTransaction->amount, 2) }}
+                                {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($largestTransaction->amount, 2) }}
                             </p>
                             <p class="text-sm text-gray-600">{{ ucfirst($largestTransaction->type) }} on
                                 {{ $largestTransaction->date->format('M d, Y') }}</p>
@@ -435,16 +446,20 @@
                     <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="bg-green-50 rounded-lg p-4 text-center">
                             <h4 class="text-sm font-semibold text-green-700">Avg Monthly Income</h4>
-                            <p class="text-xl font-bold text-green-800">${{ number_format($avgMonthlyIncome, 2) }}</p>
+                            <p class="text-xl font-bold text-green-800">
+                                {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($avgMonthlyIncome, 2) }}
+                            </p>
                         </div>
                         <div class="bg-red-50 rounded-lg p-4 text-center">
                             <h4 class="text-sm font-semibold text-red-700">Avg Monthly Expenses</h4>
-                            <p class="text-xl font-bold text-red-800">${{ number_format($avgMonthlyExpense, 2) }}</p>
+                            <p class="text-xl font-bold text-red-800">
+                                {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($avgMonthlyExpense, 2) }}
+                            </p>
                         </div>
                         <div class="bg-blue-50 rounded-lg p-4 text-center">
                             <h4 class="text-sm font-semibold text-blue-700">Net Trend</h4>
                             <p class="text-xl font-bold {{ $trend >= 0 ? 'text-green-800' : 'text-red-800' }}">
-                                {{ $trend >= 0 ? '+' : '' }}${{ number_format($trend, 2) }}
+                                {{ $trend >= 0 ? '+' : '' }}{{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($trend, 2) }}
                             </p>
                         </div>
                     </div>
@@ -543,7 +558,7 @@
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-sm font-bold 
                                         {{ $transaction->type === 'income' ? 'text-green-600' : 'text-red-600' }}">
-                                        ${{ number_format($transaction->amount, 2) }}
+                                        {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($transaction->amount, 2) }}
                                     </td>
                                     @if ($category == null)
                                         <td class="px-6 py-4 whitespace-nowrap">
@@ -573,7 +588,7 @@
                                     </td>
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-sm font-medium {{ $runningBalance >= 0 ? 'text-green-600' : 'text-red-600' }}">
-                                        ${{ number_format($runningBalance, 2) }}
+                                        {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($runningBalance, 2) }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -637,13 +652,13 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-red-600">
-                                            ${{ number_format($data['amount'], 2) }}
+                                            {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($data['amount'], 2) }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ $data['count'] }} transactions
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                            ${{ number_format($data['amount'] / $data['count'], 2) }}
+                                            {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($data['amount'] / $data['count'], 2) }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ $data['percentage'] ? number_format($data['percentage'], 1) . '%' : '0%' }}
@@ -701,7 +716,7 @@
                             <div class="flex justify-between items-center">
                                 <span class="text-sm font-medium text-gray-600">Daily Average Income</span>
                                 <span
-                                    class="text-lg font-bold text-green-600">${{ number_format($summary['total_income'] / $daysDiff, 2) }}</span>
+                                    class="text-lg font-bold text-green-600">{{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($summary['total_income'] / $daysDiff, 2) }}</span>
                             </div>
                             <div class="text-xs text-green-600 mt-1">
                                 {{ number_format($incomeTransactions / $daysDiff, 1) }} income transactions per day
@@ -712,7 +727,7 @@
                             <div class="flex justify-between items-center">
                                 <span class="text-sm font-medium text-gray-600">Daily Average Expense</span>
                                 <span
-                                    class="text-lg font-bold text-red-600">${{ number_format($summary['total_expense'] / $daysDiff, 2) }}</span>
+                                    class="text-lg font-bold text-red-600">{{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($summary['total_expense'] / $daysDiff, 2) }}</span>
                             </div>
                             <div class="text-xs text-red-600 mt-1">
                                 {{ number_format($expenseTransactions / $daysDiff, 1) }} expense transactions per day
@@ -724,7 +739,7 @@
                                 <span class="text-sm font-medium text-gray-600">Daily Net Average</span>
                                 <span
                                     class="text-lg font-bold {{ $summary['net_total'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
-                                    ${{ number_format($summary['net_total'] / $daysDiff, 2) }}
+                                    {{ auth()->user()->preferences->defaultCurrency->symbol }}{{ number_format($summary['net_total'] / $daysDiff, 2) }}
                                 </span>
                             </div>
                             <div
@@ -880,7 +895,9 @@
                                 const value = context.parsed;
                                 const total = {{ $summary['total_income'] + $summary['total_expense'] }};
                                 const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                return context.label + ': $' + value.toLocaleString() + ' (' + percentage +
+                                return context.label +
+                                    ': {{ auth()->user()->preferences->defaultCurrency->symbol }}' + value
+                                    .toLocaleString() + ' (' + percentage +
                                     '%)';
                             }
                         }
@@ -933,7 +950,9 @@
                                 const total = Object.values(categoryData).reduce((sum, item) => sum + item
                                     .amount, 0);
                                 const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                return context.label + ': $' + value.toLocaleString() + ' (' + percentage +
+                                return context.label +
+                                    ': {{ auth()->user()->preferences->defaultCurrency->symbol }}' + value
+                                    .toLocaleString() + ' (' + percentage +
                                     '%)';
                             }
                         }
@@ -976,7 +995,8 @@
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
-                                return '$' + value.toLocaleString();
+                                return '{{ auth()->user()->preferences->defaultCurrency->symbol }}' + value
+                                    .toLocaleString();
                             }
                         }
                     }
@@ -1044,7 +1064,8 @@
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
-                                return '$' + value.toLocaleString();
+                                return '{{ auth()->user()->preferences->defaultCurrency->symbol }}' + value
+                                    .toLocaleString();
                             }
                         }
                     }

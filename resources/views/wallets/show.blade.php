@@ -217,10 +217,6 @@
                         </h3>
                         <div class="space-y-3">
                             <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Wallet ID</span>
-                                <span class="text-sm text-gray-600 dark:text-gray-400 font-mono">#{{ $wallet->id }}</span>
-                            </div>
-                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Transactions</span>
                                 <span class="text-sm text-gray-600 dark:text-gray-400">{{ $transactions->total() }} total</span>
                             </div>
