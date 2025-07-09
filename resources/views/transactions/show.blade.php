@@ -166,9 +166,32 @@
                                         Notes
                                     </label>
                                     <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
-                                        <span class="text-gray-900 dark:text-white">
-                                            {{ $transaction->note ?: 'No additional notes provided for this transaction.' }}
-                                        </span>
+                                        @php
+                                            $note = $transaction->note;
+                                            // Check if note starts with '#' (markdown ordered list)
+                                            if ($note && preg_match('/^\s*#/', $note)) {
+                                                // Convert markdown-style '#' to ordered list
+                                                $lines = preg_split('/\r\n|\r|\n/', $note);
+                                                $listItems = [];
+                                                foreach ($lines as $line) {
+                                                    if (preg_match('/^\s*#\s*(.+)$/', $line, $matches)) {
+                                                        $listItems[] = trim($matches[1]);
+                                                    }
+                                                }
+                                            }
+                                        @endphp
+
+                                        @if(isset($listItems) && count($listItems))
+                                            <ol class="list-decimal ml-6 space-y-1">
+                                                @foreach($listItems as $item)
+                                                    <li class="text-gray-900 dark:text-white">{{ $item }}</li>
+                                                @endforeach
+                                            </ol>
+                                        @else
+                                            <span class="text-gray-900 dark:text-white">
+                                                {{ $note ?: 'No additional notes provided for this transaction.' }}
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
