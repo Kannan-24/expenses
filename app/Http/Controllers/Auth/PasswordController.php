@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use DateTime;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +42,7 @@ class PasswordController extends Controller
      */
     public function show()
     {
-        $user = Auth::user();
+        $user = User::findOrFail(Auth::id());
 
         // Redirect if user already has password set
         if ($user->has_set_password) {
@@ -60,7 +62,7 @@ class PasswordController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
+        $user = User::findOrFail(Auth::id());
 
         // Validate user eligibility
         if ($user->has_set_password || !$user->isSocialLogin()) {
@@ -68,12 +70,19 @@ class PasswordController extends Controller
         }
 
         $request->validate([
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password' => ['required', 'confirmed', Password::defaults([
+                'min' => 8,
+                'mixedCase' => true,
+                'numbers' => true,
+                'symbols' => true,
+            ])],
         ]);
 
         // Update user password
         $user->update([
             'password' => Hash::make($request->password),
+            'has_set_password' => true,
+            'password_updated_at' => now(),
         ]);
 
         // Mark password as set
