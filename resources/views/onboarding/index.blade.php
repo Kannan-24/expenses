@@ -511,26 +511,18 @@
                     <!-- Enhanced Navigation Buttons -->
                     <div class="flex justify-between items-center mt-12 lg:mt-16 pt-8 border-t-2 border-gray-200">
                         <button type="button" @click="prev" :disabled="step === 1"
-                                class="inline-flex items-center px-6 py-3 border-2 border-gray-400 rounded-xl text-gray-800 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl disabled:shadow-none">
+                                class="inline-flex items-center px-8 py-4 border-2 border-gray-400 rounded-xl text-gray-800 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl disabled:shadow-none">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>
                             Back
                         </button>
 
-                        <div class="text-center">
-                            <p class="text-lg font-bold text-gray-800" x-text="`Step ${step} of 4`"></p>
-                            <div class="flex space-x-2 mt-2">
-                                <template x-for="i in 4" :key="i">
-                                    <div class="w-3 h-3 rounded-full transition-all duration-300" 
-                                         :class="step >= i ? 'bg-blue-600' : 'bg-gray-300'"></div>
-                                </template>
-                            </div>
-                        </div>
+                       
 
                         <template x-if="step < 4">
                             <button type="button" @click="next" 
-                                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-700 text-white rounded-xl hover:from-blue-700 hover:to-purple-800 transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105">
+                                    class="inline-flex items-center px-10 py-4 bg-gradient-to-r from-blue-600 to-purple-700 text-white rounded-xl hover:from-blue-700 hover:to-purple-800 transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105">
                                 Next
                                 <svg class="w-5 h-5 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
