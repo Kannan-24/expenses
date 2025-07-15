@@ -66,11 +66,6 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* High contrast focus states */
-        input:focus, select:focus, button:focus {
-            outline: 3px solid #fbbf24 !important;
-            outline-offset: 2px !important;
-        }
 
         /* Enhanced text contrast */
         .text-enhanced-contrast {
@@ -213,13 +208,10 @@
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                 <div class="space-y-3">
                                     <label for="wallet_type_id" class="flex items-center text-sm font-bold text-gray-900">
-                                        <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                                        </svg>
-                                        Wallet Type *
+                                        Wallet Type<span class="text-red-500">*</span>
                                     </label>
                                     <select name="wallet_type_id" id="wallet_type_id" required
-                                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-600 transition-all bg-white text-gray-900 font-medium text-lg shadow-sm">
+                                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-1 transition-all bg-white text-gray-900 font-medium text-lg shadow-sm">
                                         <option value="">Choose wallet type</option>
                                         @foreach ($walletTypes as $type)
                                             <option value="{{ $type->id }}" {{ old('wallet_type_id') == $type->id ? 'selected' : '' }}>
@@ -239,14 +231,11 @@
 
                                 <div class="space-y-3">
                                     <label for="wallet_name" class="flex items-center text-sm font-bold text-gray-900">
-                                        <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                                        </svg>
-                                        Wallet Name *
+                                        Wallet Name<span class="text-red-500">*</span>
                                     </label>
                                     <input type="text" name="wallet_name" id="wallet_name" value="{{ old('wallet_name') }}" required
                                            placeholder="e.g., Main Checking Account"
-                                           class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-600 transition-all text-gray-900 font-medium text-lg shadow-sm">
+                                           class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-1 transition-all text-gray-900 font-medium text-lg shadow-sm">
                                     @error('wallet_name')
                                         <p class="text-sm text-red-700 flex items-center mt-2 font-semibold">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -259,14 +248,11 @@
 
                                 <div class="space-y-3">
                                     <label for="balance" class="flex items-center text-sm font-bold text-gray-900">
-                                        <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        Initial Balance *
+                                        Initial Balance<span class="text-red-500">*</span>
                                     </label>
                                     <input type="number" name="balance" id="balance" value="{{ old('balance', 0) }}" required
                                            min="0" step="0.01" placeholder="0.00"
-                                           class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-600 transition-all text-gray-900 font-medium text-lg shadow-sm">
+                                           class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-1 transition-all text-gray-900 font-medium text-lg shadow-sm">
                                     @error('balance')
                                         <p class="text-sm text-red-700 flex items-center mt-2 font-semibold">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,13 +265,10 @@
 
                                 <div class="space-y-3">
                                     <label for="currency_id" class="flex items-center text-sm font-bold text-gray-900">
-                                        <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        Currency *
+                                        Currency<span class="text-red-500">*</span>
                                     </label>
                                     <select name="currency_id" id="currency_id" required
-                                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-200 focus:border-blue-600 transition-all bg-white text-gray-900 font-medium text-lg shadow-sm">
+                                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-1 transition-all bg-white text-gray-900 font-medium text-lg shadow-sm">
                                         <option value="">Select currency</option>
                                         @foreach ($currencies as $currency)
                                             <option value="{{ $currency->id }}" {{ old('currency_id') == $currency->id ? 'selected' : '' }}>
@@ -310,7 +293,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                     <div>
-                                        <h4 class="font-bold text-blue-900 mb-2 text-lg">💡 Pro Tip</h4>
+                                        <h4 class="font-bold text-blue-900 mb-2 text-lg">Pro Tip</h4>
                                         <p class="text-blue-800 font-medium">You can add multiple wallets later for different accounts like savings, credit cards, or cash.</p>
                                     </div>
                                 </div>
@@ -332,14 +315,11 @@
                             <div class="max-w-lg mx-auto space-y-8">
                                 <div class="space-y-3">
                                     <label for="category_name" class="flex items-center text-sm font-bold text-gray-900">
-                                        <svg class="w-5 h-5 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                                        </svg>
-                                        Category Name *
+                                        Category Name<span class="text-red-500">*</span>
                                     </label>
                                     <input type="text" name="category_name" id="category_name" value="{{ old('category_name') }}" required
                                            placeholder="e.g., Groceries, Transportation, Entertainment"
-                                           class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-green-200 focus:border-green-600 transition-all text-gray-900 font-medium text-lg shadow-sm">
+                                           class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-1  transition-all text-gray-900 font-medium text-lg shadow-sm">
                                     @error('category_name')
                                         <p class="text-sm text-red-700 flex items-center mt-2 font-semibold">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -352,23 +332,27 @@
 
                                 <!-- Enhanced Popular Categories Suggestions -->
                                 <div class="bg-green-50 border-2 border-green-200 rounded-xl p-6 shadow-sm">
-                                    <h4 class="font-bold text-green-900 mb-4 text-lg">🔥 Popular Categories</h4>
+                                    <h4 class="font-bold text-green-900 mb-4 text-lg">Popular Categories</h4>
                                     <div class="grid grid-cols-2 gap-3">
                                         <button type="button" onclick="document.getElementById('category_name').value = 'Groceries'" 
                                                 class="text-left px-4 py-3 text-sm text-green-800 bg-green-100 rounded-xl hover:bg-green-200 transition-all font-semibold border-2 border-transparent hover:border-green-300 shadow-sm">
-                                            🛒 Groceries
+                                            Groceries
+                                        </button>
+                                        <button type="button" onclick="document.getElementById('category_name').value = 'Food'" 
+                                                class="text-left px-4 py-3 text-sm text-green-800 bg-green-100 rounded-xl hover:bg-green-200 transition-all font-semibold border-2 border-transparent hover:border-green-300 shadow-sm">
+                                            Food
                                         </button>
                                         <button type="button" onclick="document.getElementById('category_name').value = 'Transportation'" 
                                                 class="text-left px-4 py-3 text-sm text-green-800 bg-green-100 rounded-xl hover:bg-green-200 transition-all font-semibold border-2 border-transparent hover:border-green-300 shadow-sm">
-                                            🚗 Transportation
+                                            Transportation
                                         </button>
                                         <button type="button" onclick="document.getElementById('category_name').value = 'Entertainment'" 
                                                 class="text-left px-4 py-3 text-sm text-green-800 bg-green-100 rounded-xl hover:bg-green-200 transition-all font-semibold border-2 border-transparent hover:border-green-300 shadow-sm">
-                                            🎬 Entertainment
+                                            Entertainment
                                         </button>
                                         <button type="button" onclick="document.getElementById('category_name').value = 'Utilities'" 
                                                 class="text-left px-4 py-3 text-sm text-green-800 bg-green-100 rounded-xl hover:bg-green-200 transition-all font-semibold border-2 border-transparent hover:border-green-300 shadow-sm">
-                                            ⚡ Utilities
+                                            Utilities
                                         </button>
                                     </div>
                                 </div>
@@ -379,7 +363,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                         </svg>
                                         <div>
-                                            <h4 class="font-bold text-amber-900 mb-2 text-lg">⚡ Quick Start</h4>
+                                            <h4 class="font-bold text-amber-900 mb-2 text-lg">Quick Start</h4>
                                             <p class="text-amber-800 font-medium">Start with one category now. You can easily add more categories later as you use the system.</p>
                                         </div>
                                     </div>
@@ -402,14 +386,11 @@
                             <div class="max-w-lg mx-auto space-y-8">
                                 <div class="space-y-3">
                                     <label for="expense_person_name" class="flex items-center text-sm font-bold text-gray-900">
-                                        <svg class="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                        </svg>
-                                        Person Name *
+                                        Person Name<span class="text-red-500">*</span>
                                     </label>
                                     <input type="text" name="expense_person_name" id="expense_person_name" value="{{ old('expense_person_name') }}" required
                                            placeholder="e.g., John Doe, My Spouse, Roommate"
-                                           class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-600 transition-all text-gray-900 font-medium text-lg shadow-sm">
+                                           class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-1 transition-all text-gray-900 font-medium text-lg shadow-sm">
                                     @error('expense_person_name')
                                         <p class="text-sm text-red-700 flex items-center mt-2 font-semibold">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -422,19 +403,19 @@
 
                                 <!-- Enhanced Quick Suggestions -->
                                 <div class="bg-purple-50 border-2 border-purple-200 rounded-xl p-6 shadow-sm">
-                                    <h4 class="font-bold text-purple-900 mb-4 text-lg">👥 Quick Suggestions</h4>
+                                    <h4 class="font-bold text-purple-900 mb-4 text-lg">Quick Suggestions</h4>
                                     <div class="space-y-3">
                                         <button type="button" onclick="document.getElementById('expense_person_name').value = 'Myself'" 
                                                 class="w-full text-left px-4 py-3 text-sm text-purple-800 bg-purple-100 rounded-xl hover:bg-purple-200 transition-all font-semibold border-2 border-transparent hover:border-purple-300 shadow-sm">
-                                            👤 Myself
+                                            Myself
                                         </button>
                                         <button type="button" onclick="document.getElementById('expense_person_name').value = 'Spouse/Partner'" 
                                                 class="w-full text-left px-4 py-3 text-sm text-purple-800 bg-purple-100 rounded-xl hover:bg-purple-200 transition-all font-semibold border-2 border-transparent hover:border-purple-300 shadow-sm">
-                                            💑 Spouse/Partner
+                                            Spouse/Partner
                                         </button>
                                         <button type="button" onclick="document.getElementById('expense_person_name').value = 'Family Member'" 
                                                 class="w-full text-left px-4 py-3 text-sm text-purple-800 bg-purple-100 rounded-xl hover:bg-purple-200 transition-all font-semibold border-2 border-transparent hover:border-purple-300 shadow-sm">
-                                            👨‍👩‍👧‍👦 Family Member
+                                            Family Member
                                         </button>
                                     </div>
                                 </div>
@@ -445,7 +426,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                         </svg>
                                         <div>
-                                            <h4 class="font-bold text-indigo-900 mb-2 text-lg">🤔 Why Add People?</h4>
+                                            <h4 class="font-bold text-indigo-900 mb-2 text-lg">Why Add People?</h4>
                                             <p class="text-indigo-800 font-medium">Track who expenses are for, making it easier to manage shared costs and personal budgets.</p>
                                         </div>
                                     </div>
@@ -469,13 +450,10 @@
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-3xl mx-auto">
                                 <div class="space-y-3">
                                     <label for="default_currency_id" class="flex items-center text-sm font-bold text-gray-900">
-                                        <svg class="w-5 h-5 mr-3 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        Default Currency *
+                                        Default Currency<span class="text-red-500">*</span>
                                     </label>
                                     <select name="default_currency_id" id="default_currency_id" required
-                                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-orange-200 focus:border-orange-600 transition-all bg-white text-gray-900 font-medium text-lg shadow-sm">
+                                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-1 transition-all bg-white text-gray-900 font-medium text-lg shadow-sm">
                                         <option value="">Select default currency</option>
                                         @foreach ($currencies as $currency)
                                             <option value="{{ $currency->id }}" {{ old('default_currency_id') == $currency->id ? 'selected' : '' }}>
@@ -495,13 +473,10 @@
 
                                 <div class="space-y-3">
                                     <label for="default_timezone" class="flex items-center text-sm font-bold text-gray-900">
-                                        <svg class="w-5 h-5 mr-3 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        Timezone *
+                                        Timezone<span class="text-red-500">*</span>
                                     </label>
                                     <select name="default_timezone" id="default_timezone" required
-                                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-orange-200 focus:border-orange-600 transition-all bg-white text-gray-900 font-medium text-lg shadow-sm">
+                                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-1 transition-all bg-white text-gray-900 font-medium text-lg shadow-sm">
                                         <option value="">Select your timezone</option>
                                         @foreach ($timezones as $timezone)
                                             <option value="{{ $timezone }}" {{ old('default_timezone') == $timezone ? 'selected' : '' }}>
@@ -525,7 +500,7 @@
                                     <svg class="w-16 h-16 text-green-600 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    <h4 class="font-bold text-gray-900 mb-3 text-2xl">🎉 Almost Done!</h4>
+                                    <h4 class="font-bold text-gray-900 mb-3 text-2xl">Almost Done!</h4>
                                     <p class="text-gray-800 font-medium text-lg">Click finish to complete your setup and start managing your finances.</p>
                                 </div>
                             </div>
@@ -543,19 +518,11 @@
                             Back
                         </button>
 
-                        <div class="text-center">
-                            <p class="text-lg font-bold text-gray-800" x-text="`Step ${step} of 4`"></p>
-                            <div class="flex space-x-2 mt-2">
-                                <template x-for="i in 4" :key="i">
-                                    <div class="w-3 h-3 rounded-full transition-all duration-300" 
-                                         :class="step >= i ? 'bg-blue-600' : 'bg-gray-300'"></div>
-                                </template>
-                            </div>
-                        </div>
+                       
 
                         <template x-if="step < 4">
                             <button type="button" @click="next" 
-                                    class="inline-flex items-center px-10 py-4 bg-gradient-to-r from-blue-600 to-purple-700 text-white rounded-xl hover:from-blue-700 hover:to-purple-800 transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105">
+                                    class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-700 text-white rounded-xl hover:from-blue-700 hover:to-purple-800 transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105">
                                 Next
                                 <svg class="w-5 h-5 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -565,7 +532,7 @@
 
                         <template x-if="step === 4">
                             <button type="button" @click="complete" x-ref="finishButton"
-                                    class="inline-flex items-center px-10 py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-xl hover:from-green-700 hover:to-emerald-800 transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105">
+                                    class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-xl hover:from-green-700 hover:to-emerald-800 transition-all duration-200 font-bold text-md shadow-lg hover:shadow-xl transform hover:scale-105">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
