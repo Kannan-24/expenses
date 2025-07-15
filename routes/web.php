@@ -9,6 +9,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReportTemplateController;
 use App\Http\Controllers\ExpensePersonController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\SupportTicketController;
@@ -81,6 +82,12 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
     Route::get('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
     Route::post('/reports/regenerate', [ReportController::class, 'regenerate'])->name('reports.regenerate');
     Route::delete('/reports/history/{id}', [ReportController::class, 'deleteReport'])->name('reports.history.delete');
+    
+    // Report Templates Routes
+    Route::resource('report-templates', ReportTemplateController::class);
+    Route::post('/report-templates/{reportTemplate}/clone', [ReportTemplateController::class, 'clone'])->name('report-templates.clone');
+    Route::get('/report-templates/{reportTemplate}/preview', [ReportTemplateController::class, 'preview'])->name('report-templates.preview');
+    Route::get('/api/template-fields/{reportType}', [ReportTemplateController::class, 'getPredefinedFields'])->name('api.template-fields');
 
     // Admin Routes
     Route::resources([
