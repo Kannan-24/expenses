@@ -511,7 +511,7 @@
                     <!-- Enhanced Navigation Buttons -->
                     <div class="flex justify-between items-center mt-12 lg:mt-16 pt-8 border-t-2 border-gray-200">
                         <button type="button" @click="prev" :disabled="step === 1"
-                                class="inline-flex items-center px-8 py-3 border-2 border-gray-400 rounded-xl text-gray-800 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl disabled:shadow-none">
+                                class="inline-flex items-center px-8 py-4 border-2 border-gray-400 rounded-xl text-gray-800 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl disabled:shadow-none">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>
