@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class ActivityTracker
         string $status = 'success'
     ): UserActivity {
         $request = request();
-        $user = $userId ? \App\Models\User::find($userId) : Auth::user();
+        $user = $userId ? User::find($userId) : Auth::user();
 
         if (!$user) {
             throw new \Exception('User not found for activity logging');

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Services\ActivityTracker;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -24,6 +26,9 @@ class User extends Authenticatable
         'password',
         'phone',
         'address',
+        'has_set_password',
+        'password_updated_at',
+        'google_id',
     ];
 
 
@@ -47,7 +52,46 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'has_set_password' => 'boolean',
+            'password_updated_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Check if the user has registered via google.
+     */
+    public function isSocialLogin(): bool
+    {
+        return !is_null($this->google_id);
+    }
+
+    /**
+     * Check if user should see password reminder banner
+     */
+    public function shouldShowPasswordReminder(): bool
+    {
+        // Don't show if user has set password
+        if ($this->has_set_password) {
+            return false;
+        }
+
+        // Don't show if not OAuth user
+        if (!$this->isSocialLogin()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Mark password as set
+     */
+    public function markPasswordAsSet(): void
+    {
+        $this->update([
+            'has_set_password' => true,
+            'password_reminder_dismissed_at' => null
+        ]);
     }
 
     /**
@@ -159,9 +203,18 @@ class User extends Authenticatable
     protected static function boot()
     {
         parent::boot();
-        
+
         static::created(function ($user) {
-            \App\Services\ActivityTracker::logAccountCreated($user->id);
+            ActivityTracker::logAccountCreated($user->id);
+        });
+
+        static::updated(function ($user) {
+            if ($user->wasChanged('password')) {
+                ActivityTracker::logPasswordChange($user->id);
+
+                $user->password_updated_at = now();
+                $user->save();
+            }
         });
     }
 

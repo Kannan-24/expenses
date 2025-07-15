@@ -28,12 +28,8 @@
     <x-google-analytics-head />
 </head>
 
-<body class="font-sans antialiased bg-blue-200 dark:bg-slate-900 min-h-screen"
-    x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
-    x-init="$watch('darkMode', value => localStorage.setItem('darkMode', value))"
-    x-bind:class="{ 'dark': darkMode }"
-    x-cloak
->
+<body class="font-sans antialiased bg-blue-200 dark:bg-slate-900 min-h-screen" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
+    x-init="$watch('darkMode', value => localStorage.setItem('darkMode', value))" x-bind:class="{ 'dark': darkMode }" x-cloak>
     <x-google-analytics-body />
 
     <div class="pt-16 md:pt-0 bg-blue-200 dark:bg-slate-950">
@@ -82,11 +78,11 @@
             </header>
         @endisset
 
-        <div x-data="{ 
+        <div x-data="{
             sidebarOpen: false,
             notificationOpen: false,
             profileOpen: false,
-            
+        
             init() {
                 // Close sidebar on route change (for mobile)
                 this.$nextTick(() => {
@@ -97,18 +93,20 @@
                     });
                 });
             },
-            
+        
             toggleSidebar() {
                 this.sidebarOpen = !this.sidebarOpen;
             }
         }">
-        
+
             @include('layouts.navigation')
-        
+
             <!-- Main Content Area -->
             <div class="lg:ml-80 min-h-screen">
                 <!-- Your page content goes here -->
                 <div class="p-4 lg:p-6">
+                    <x-password-setup-banner />
+
                     {{ $slot }}
                 </div>
             </div>

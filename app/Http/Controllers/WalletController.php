@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Currency;
+use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Models\WalletType;
 use Illuminate\Http\Request;
@@ -50,7 +51,7 @@ class WalletController extends Controller
             $query->where('currency_id', $currency);
         }
 
-        $wallets = $query->paginate(12)->appends($request->all());
+        $wallets = $query->paginate(10)->appends($request->except('page'));
 
         // For filter dropdowns
         $walletTypes = WalletType::where('is_active', true)->get();
@@ -85,10 +86,9 @@ class WalletController extends Controller
         // Check if a wallet with the same name already exists for the user and wallet type
         $existingWallet = Wallet::where('user_id', Auth::id())
             ->where('wallet_type_id', $request->input('wallet_type_id'))
-            ->where('name', $request->input('name'))
-            ->first();
+            ->where('name', $request->input('name'));
 
-        if ($existingWallet) {
+        if ($existingWallet->exists()) {
             return redirect()->back()->withErrors(['name' => 'A wallet with this name already exists for this wallet type.'])
                 ->withInput();
         }
@@ -173,6 +173,12 @@ class WalletController extends Controller
     public function destroy(Wallet $wallet)
     {
         $this->authorizeWallet($wallet);
+
+        $transactions = Transaction::where('wallet_id', $wallet->id)->count();
+
+        if ($transactions > 0) {
+            return redirect()->back()->withErrors(['wallet' => 'Cannot delete wallet with existing transactions.']);
+        }
 
         $wallet->delete();
         return redirect()->route('wallets.index')->with('success', 'Wallet deleted successfully.');

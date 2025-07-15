@@ -22,7 +22,7 @@ class CurrencyController extends Controller
             });
         }
 
-        $currencies = $query->orderBy('name')->paginate(12)->withQueryString();
+        $currencies = $query->orderBy('name')->paginate(12)->appends($request->except('page'));
 
         return view('currencies.index', compact('currencies'));
     }

@@ -405,9 +405,9 @@ class CategoryAnalysisSheet implements FromArray, WithHeadings, WithStyles, With
 
 
         // Set up the chart
-        $plotArea = new PlotArea(null, [$series]);
         $title = new Title('Expense Distribution by Category');
         $legend = new Legend(Legend::POSITION_RIGHT, null, false);
+        $plotArea = new PlotArea(null, [$series]);
 
         $chart = new Chart(
             'categoryChart',

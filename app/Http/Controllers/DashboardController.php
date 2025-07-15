@@ -200,6 +200,7 @@ class DashboardController extends Controller
         $topCategories = Transaction::select('category_id', DB::raw('SUM(amount) as total_amount'))
             ->with('category:id,name')
             ->where('user_id', $userId)
+            ->where('type', 'expense')
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->groupBy('category_id')
             ->orderByDesc('total_amount')

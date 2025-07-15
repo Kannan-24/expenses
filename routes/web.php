@@ -79,6 +79,8 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
 
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
+    Route::post('/reports/regenerate', [ReportController::class, 'regenerate'])->name('reports.regenerate');
+    Route::delete('/reports/history/{id}', [ReportController::class, 'deleteReport'])->name('reports.history.delete');
 
     // Admin Routes
     Route::resources([

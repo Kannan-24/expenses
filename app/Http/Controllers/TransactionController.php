@@ -34,7 +34,7 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::all();
+        $categories = Category::where('user_id', Auth::id())->get();
         $people = ExpensePerson::where('user_id', Auth::id())->get();
 
         $query = Transaction::with(['category', 'person'])->where('user_id', Auth::id());
@@ -79,7 +79,10 @@ class TransactionController extends Controller
             $query->where('type', $request->type);
         }
 
-        $transactions = $query->orderBy('date', 'desc')->paginate(12);
+        $transactions = $query->orderBy('date', 'desc')->paginate(10);
+
+        // Attach filter values to the pagination links
+        $transactions->appends($request->except('page'));
 
         return view('transactions.index', compact('transactions', 'categories', 'people'));
     }

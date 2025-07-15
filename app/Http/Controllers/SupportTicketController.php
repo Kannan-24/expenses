@@ -70,7 +70,7 @@ class SupportTicketController extends Controller
             $query->where('status', $status);
         }
 
-        $supportTickets = $query->paginate(6);
+        $supportTickets = $query->paginate(6)->appends($request->except('page'));
 
         // For admin, pass users for filter dropdown
         $users = [];
