@@ -78,7 +78,7 @@
 
         <!-- Report Types Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            @if (auth()->user()->hasRole('user'))
+            @if (auth()->userma()->hasRole('user'))
                 <!-- Transaction Report Card -->
                 <div
                     class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-xl transition-all duration-300 group">
