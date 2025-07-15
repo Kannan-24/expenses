@@ -532,7 +532,7 @@
 
                         <template x-if="step === 4">
                             <button type="button" @click="complete" x-ref="finishButton"
-                                    class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-xl hover:from-green-700 hover:to-emerald-800 transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105">
+                                    class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-xl hover:from-green-700 hover:to-emerald-800 transition-all duration-200 font-bold text-md shadow-lg hover:shadow-xl transform hover:scale-105">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
