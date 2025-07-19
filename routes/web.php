@@ -64,11 +64,11 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
     Route::resource('transactions', TransactionController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('expense-people', ExpensePersonController::class);
-    Route::resource('wallets', WalletController::class);
     Route::resource('budgets', BudgetController::class);
 
     Route::get('/wallets/transfer', [WalletController::class, 'showTransferForm'])->name('wallets.transfer.form');
     Route::post('/wallets/transfer', [WalletController::class, 'transfer'])->name('wallets.transfer');
+    Route::resource('wallets', WalletController::class);
 
     Route::get('/support-tickets', [SupportTicketController::class, 'index'])->name('support_tickets.index');
     Route::get('/support-tickets/create', [SupportTicketController::class, 'create'])->name('support_tickets.create');

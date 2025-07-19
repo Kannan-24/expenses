@@ -234,12 +234,14 @@ class WalletController extends Controller
             // Optionally, log transactions for both wallets
             Transaction::create([
                 'wallet_id' => $fromWallet->id,
+                'user_id' => Auth::id(),
                 'amount' => -$request->amount,
                 'type' => 'transfer_out',
                 'description' => 'Transfer to wallet: ' . $toWallet->name,
             ]);
             Transaction::create([
                 'wallet_id' => $toWallet->id,
+                'user_id' => Auth::id(),
                 'amount' => $request->amount,
                 'type' => 'transfer_in',
                 'description' => 'Transfer from wallet: ' . $fromWallet->name,
