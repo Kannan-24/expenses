@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('Transfer Funds') }} - {{ config('app.name', 'expenses') }}
+        {{ __('Self Transfer') }} - {{ config('app.name', 'expenses') }}
     </x-slot>
 
     <div class="min-h-screen">
@@ -10,7 +10,7 @@
                 <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border-b border-blue-500 dark:border-blue-600 p-4 sm:p-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
-                            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">Transfer Funds Between Wallets</h1>
+                            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">Self Transfer Between Wallets</h1>
                             <nav class="flex text-sm" aria-label="Breadcrumb">
                                 <ol class="inline-flex items-center space-x-1 md:space-x-2 flex-wrap">
                                     <li class="inline-flex items-center">
@@ -33,7 +33,7 @@
                                         <svg class="w-4 h-4 mx-2 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M7.05 4.05a1 1 0 011.41 0l5.5 5.5a1 1 0 010 1.41l-5.5 5.5a1 1 0 01-1.41-1.41L12.09 10 7.05 4.95a1 1 0 010-1.41z" />
                                         </svg>
-                                        <span class="text-blue-100 font-medium">Transfer Funds</span>
+                                        <span class="text-blue-100 font-medium">Self Transfer</span>
                                     </li>
                                 </ol>
                             </nav>
@@ -67,8 +67,8 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Transfer Details</h2>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Fill in the transfer information below</p>
+                                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Self Transfer Details</h2>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Fill in the self transfer information below</p>
                                 </div>
                             </div>
                         </div>
@@ -144,7 +144,7 @@
                                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                                 </svg>
-                                                Transfer Funds
+                                                Self Transfer
                                             </button>
                                         </div>
                                     </div>
@@ -161,12 +161,12 @@
                             <svg class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                             </svg>
-                            Transfer Tips
+                            Self Transfer Tips
                         </h3>
                         <div class="space-y-3 text-sm">
                             <div class="flex items-start space-x-2">
                                 <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
-                                <p class="text-blue-800 dark:text-blue-200">Select correct wallets for transfer</p>
+                                <p class="text-blue-800 dark:text-blue-200">Select correct wallets for self transfer</p>
                             </div>
                             <div class="flex items-start space-x-2">
                                 <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
@@ -174,7 +174,7 @@
                             </div>
                             <div class="flex items-start space-x-2">
                                 <span class="text-blue-600 dark:text-blue-400 mt-0.5">•</span>
-                                <p class="text-blue-800 dark:text-blue-200">Transfers update both wallet balances</p>
+                                <p class="text-blue-800 dark:text-blue-200">Self transfers update both wallet balances</p>
                             </div>
                         </div>
                     </div>
