@@ -33,10 +33,6 @@
     <x-google-analytics-body />
 
     <div class="pt-16 md:pt-0 bg-blue-200 dark:bg-slate-950">
-        {{-- @if (Route::currentRouteName() !== 'welcome')
-            @include('layouts.navigation')
-        @endif --}}
-
         <div id="message-alert"
             class="fixed inset-x-2 bottom-5 right-2 left-2 sm:inset-x-0 sm:right-5 sm:left-auto z-50 transition-all ease-in-out duration-300 message-alert">
             <!-- Message Alert -->
@@ -103,19 +99,12 @@
 
             <!-- Main Content Area -->
             <div class="lg:ml-80 min-h-screen">
-                <!-- Your page content goes here -->
                 <div class="p-4 lg:p-6">
                     <x-password-setup-banner />
-
                     {{ $slot }}
                 </div>
             </div>
         </div>
-
-        {{-- <!-- Page Content -->
-        <main class="px-4 sm:px-6 lg:px-4">
-            {{ $slot }}
-        </main> --}}
     </div>
 </body>
 

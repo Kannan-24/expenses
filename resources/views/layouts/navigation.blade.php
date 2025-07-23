@@ -11,7 +11,6 @@
     x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-300"
     x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full">
 
-
     <!-- Sidebar Header -->
     <div
         class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 p-6 border-b border-blue-500 dark:border-blue-600">
