@@ -288,7 +288,7 @@
                                 </div>
                             </div>
                             <div class="mt-6 flex justify-end">
-                                <button type="button" @click="openReturnModal = false" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-xl mr-2">Cancel</button>
+                                <button type="button" @click="openReturnModal = false" class="px-4 py-2 text-gray-900 dark:text-white bg-gray-200 dark:bg-gray-700 rounded-xl mr-2">Cancel</button>
                                 <button type="submit" class="px-8 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl">Record Return</button>
                             </div>
                         </form>

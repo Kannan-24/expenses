@@ -1,4 +1,4 @@
-{{-- @if (Auth::check() && Auth::user()->shouldShowPasswordReminder()) --}}
+@if (Auth::check() && Auth::user()->shouldShowPasswordReminder())
     <div id="password-banner"
         class="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 border border-blue-500/30 dark:border-blue-600/30 rounded-xl shadow-lg dark:shadow-xl mb-6 overflow-hidden">
         
@@ -233,4 +233,4 @@
             transition: transform 0.2s ease-in-out;
         }
     </style>
-{{-- @endif --}}
+@endif
