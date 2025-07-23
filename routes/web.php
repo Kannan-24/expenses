@@ -16,6 +16,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WalletTypeController;
+use App\Http\Controllers\BorrowController;
 use App\Http\Middleware\EnsureUserIsOnboarded;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -65,6 +66,12 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
     Route::resource('categories', CategoryController::class);
     Route::resource('expense-people', ExpensePersonController::class);
     Route::resource('budgets', BudgetController::class);
+
+    // Edit and update a return history (repayment) for a borrow
+    Route::get('borrows/{borrow}/return/{history}/edit', [\App\Http\Controllers\BorrowController::class, 'editReturn'])->name('borrows.return.edit');
+    Route::put('borrows/{borrow}/return/{history}', [\App\Http\Controllers\BorrowController::class, 'updateReturn'])->name('borrows.return.update');
+    Route::post('/borrows/{borrow}/repay', [BorrowController::class, 'repay'])->name('borrows.repay');
+    Route::resource('borrows', BorrowController::class);
 
     Route::get('/wallets/transfer', [WalletController::class, 'showTransferForm'])->name('wallets.transfer.form');
     Route::post('/wallets/transfer', [WalletController::class, 'transfer'])->name('wallets.transfer');
