@@ -190,4 +190,64 @@ class WalletController extends Controller
             abort(403, 'Unauthorized action.');
         }
     }
+
+
+    /**
+     * Show the form for transferring funds between wallets.
+     */
+    public function showTransferForm()
+    {
+        $wallets = Wallet::where('user_id', Auth::id())->get();
+        return view('wallets.transfer', compact('wallets'));
+    }
+
+
+    /**
+     * Transfer funds between user's own wallets.
+     */
+    public function transfer(Request $request)
+    {
+        $request->validate([
+            'from_wallet_id' => 'required|exists:wallets,id',
+            'to_wallet_id' => 'required|exists:wallets,id|different:from_wallet_id',
+            'amount' => 'required|numeric|min:0.01',
+        ]);
+
+        $fromWallet = Wallet::where('id', $request->from_wallet_id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $toWallet = Wallet::where('id', $request->to_wallet_id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        if ($fromWallet->balance < $request->amount) {
+            return redirect()->back()->withErrors(['amount' => 'Insufficient balance in source wallet.']);
+        }
+
+        // Optionally, handle currency conversion here if needed
+
+        \DB::transaction(function () use ($fromWallet, $toWallet, $request) {
+            $fromWallet->decrement('balance', $request->amount);
+            $toWallet->increment('balance', $request->amount);
+
+            // Optionally, log transactions for both wallets
+            Transaction::create([
+                'wallet_id' => $fromWallet->id,
+                'user_id' => Auth::id(),
+                'amount' => -$request->amount,
+                'type' => 'transfer_out',
+                'description' => 'Transfer to wallet: ' . $toWallet->name,
+            ]);
+            Transaction::create([
+                'wallet_id' => $toWallet->id,
+                'user_id' => Auth::id(),
+                'amount' => $request->amount,
+                'type' => 'transfer_in',
+                'description' => 'Transfer from wallet: ' . $fromWallet->name,
+            ]);
+        });
+
+        return redirect()->route('wallets.index')->with('success', 'Transfer completed successfully.');
+    }
 }
