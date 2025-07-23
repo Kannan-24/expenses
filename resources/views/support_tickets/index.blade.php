@@ -3,7 +3,7 @@
         {{ __('Support Center') }} - {{ config('app.name', 'expenses') }}
     </x-slot>
 
-    <div class=" space-y-6">
+    <div class="space-y-6">
 
          <!-- Enhanced Breadcrumb -->
         <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4">

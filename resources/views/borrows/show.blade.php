@@ -364,7 +364,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                                         {{ $history->wallet->name ?? '-' }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900 dark:text-gray-100">
                                         {{ $borrow->wallet->currency->symbol ?? '₹' }}{{ number_format($history->amount, 2) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">

@@ -190,22 +190,22 @@
                         <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse ($borrows as $borrow)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                    <td class="px-6 py-4">{{ $loop->iteration + ($borrows->currentPage() - 1) * $borrows->perPage() }}</td>
-                                    <td class="px-6 py-4">{{ \Carbon\Carbon::parse($borrow->date)->format('M d, Y') }}</td>
-                                    <td class="px-6 py-4">{{ $borrow->person->name ?? '-' }}</td>
+                                    <td class="px-6 py-4 text-gray-600 dark:text-gray-300">{{ $loop->iteration + ($borrows->currentPage() - 1) * $borrows->perPage() }}</td>
+                                    <td class="px-6 py-4 text-gray-600 dark:text-gray-300">{{ \Carbon\Carbon::parse($borrow->date)->format('M d, Y') }}</td>
+                                    <td class="px-6 py-4 text-gray-600 dark:text-gray-300">{{ $borrow->person->name ?? '-' }}</td>
                                     <td class="px-6 py-4">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $borrow->borrow_type === 'lent' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200' }}">
                                             {{ ucfirst($borrow->borrow_type) }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4">{{ $borrow->wallet->name ?? '-' }}</td>
-                                    <td class="px-6 py-4 font-semibold">
+                                    <td class="px-6 py-4 text-gray-600 dark:text-gray-300">{{ $borrow->wallet->name ?? '-' }}</td>
+                                    <td class="px-6 py-4 font-semibold text-gray-600 dark:text-gray-300">
                                         {{ $borrow->wallet->currency->symbol ?? '₹' }}{{ number_format($borrow->amount, 2) }}
                                     </td>
-                                    <td class="px-6 py-4">
+                                    <td class="px-6 py-4 text-gray-600 dark:text-gray-300">
                                         {{ $borrow->wallet->currency->symbol ?? '₹' }}{{ number_format($borrow->returned_amount, 2) }}
                                     </td>
-                                    <td class="px-6 py-4">
+                                    <td class="px-6 py-4 text-gray-600 dark:text-gray-300">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                                             @if($borrow->status === 'returned') bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200
                                             @elseif($borrow->status === 'partial') bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200
