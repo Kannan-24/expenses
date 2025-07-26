@@ -8,6 +8,7 @@ use App\Models\Wallet;
 use App\Models\WalletType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class WalletController extends Controller
 {
@@ -229,7 +230,7 @@ class WalletController extends Controller
 
         // Optionally, handle currency conversion here if needed
 
-        \DB::transaction(function () use ($fromWallet, $toWallet, $request) {
+        DB::transaction(function () use ($fromWallet, $toWallet, $request) {
             $fromWallet->decrement('balance', $request->amount);
             $toWallet->increment('balance', $request->amount);
 
