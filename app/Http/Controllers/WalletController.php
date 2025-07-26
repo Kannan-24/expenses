@@ -124,7 +124,9 @@ class WalletController extends Controller
         // Optionally, paginate transactions
         $transactions = $wallet->transactions()->latest()->paginate(10);
 
-        return view('wallets.show', compact('wallet', 'transactions'));
+        $borrows = $wallet->borrows()->latest()->paginate(10);
+
+        return view('wallets.show', compact('wallet', 'transactions', 'borrows'));
     }
 
 

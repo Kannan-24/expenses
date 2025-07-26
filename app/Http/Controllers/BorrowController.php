@@ -135,51 +135,83 @@ class BorrowController extends Controller
         $this->authorizeBorrow($borrow);
 
         $request->validate([
-            'person_id'  => 'required|exists:expense_people,id',
-            'amount'     => 'required|numeric|min:0.01',
-            'date'       => 'required|date',
+            'person_id'   => 'required|exists:expense_people,id',
+            'amount'      => 'required|numeric|min:0.01',
+            'date'        => 'required|date',
             'borrow_type' => 'required|in:borrowed,lent',
-            'wallet_id'  => 'required|exists:wallets,id',
-            'note'       => 'nullable|string',
+            'wallet_id'   => 'required|exists:wallets,id',
+            'note'        => 'nullable|string',
         ]);
 
-        if ($borrow->wallet_id != $request->wallet_id || $borrow->amount != $request->amount || $borrow->borrow_type != $request->borrow_type) {
-            $oldWallet = Wallet::where('user_id', Auth::id())->findOrFail($borrow->wallet_id);
-            $newWallet = Wallet::where('user_id', Auth::id())->findOrFail($request->wallet_id);
+        // Validate that the new wallet belongs to the authenticated user
+        $newWallet = Wallet::where('user_id', Auth::id())->findOrFail($request->wallet_id);
 
-            // Reverse previous
-            if ($borrow->borrow_type === 'lent') $oldWallet->balance += $borrow->amount;
-            else $oldWallet->balance -= $borrow->amount;
-            $oldWallet->save();
-
-            // Apply new
-            if ($request->borrow_type === 'lent') {
-                if ($newWallet->balance < $request->amount) {
-                    return back()->withErrors(['wallet' => 'Insufficient balance in wallet.'])->withInput();
-                }
-                $newWallet->balance -= $request->amount;
-            } else {
-                $newWallet->balance += $request->amount;
-            }
-            $newWallet->save();
-        }
-
+        // Check if returned amount exceeds new borrow amount
         if ($borrow->returned_amount > $request->amount) {
             return back()->withErrors(['amount' => 'Returned amount exceeds new borrow amount.'])->withInput();
         }
 
-        $status = 'pending';
-        if ($borrow->returned_amount >= $request->amount) $status = 'returned';
-        elseif ($borrow->returned_amount > 0) $status = 'partial';
+        // Only update wallet balances if wallet, amount, or borrow_type changed
+        if (
+            $borrow->wallet_id != $request->wallet_id ||
+            $borrow->amount != $request->amount ||
+            $borrow->borrow_type != $request->borrow_type
+        ) {
 
+            // Get old wallet (ensure it belongs to the user)
+            $oldWallet = Wallet::where('user_id', Auth::id())->findOrFail($borrow->wallet_id);
+
+            // Calculate the net effect of the old transaction
+            $oldNetEffect = ($borrow->borrow_type === 'lent') ? -$borrow->amount : $borrow->amount;
+
+            // Calculate the net effect of the new transaction
+            $newNetEffect = ($request->borrow_type === 'lent') ? -$request->amount : $request->amount;
+
+            // If wallet changed, reverse the old transaction and apply new one
+            if ($borrow->wallet_id != $request->wallet_id) {
+                // Reverse old transaction
+                $oldWallet->balance -= $oldNetEffect;
+                $oldWallet->save();
+
+                // Check if new wallet has sufficient balance for lending
+                if ($request->borrow_type === 'lent' && $newWallet->balance < $request->amount) {
+                    return back()->withErrors(['wallet' => 'Insufficient balance in wallet.'])->withInput();
+                }
+
+                // Apply new transaction
+                $newWallet->balance += $newNetEffect;
+                $newWallet->save();
+            } else {
+                // Same wallet, just adjust the difference
+                $balanceDifference = $newNetEffect - $oldNetEffect;
+
+                // Check if wallet has sufficient balance for the change
+                if ($balanceDifference < 0 && $newWallet->balance < abs($balanceDifference)) {
+                    return back()->withErrors(['wallet' => 'Insufficient balance in wallet for this change.'])->withInput();
+                }
+
+                $newWallet->balance += $balanceDifference;
+                $newWallet->save();
+            }
+        }
+
+        // Calculate status based on returned amount vs new amount
+        $status = 'pending';
+        if ($borrow->returned_amount >= $request->amount) {
+            $status = 'returned';
+        } elseif ($borrow->returned_amount > 0) {
+            $status = 'partial';
+        }
+
+        // Update the borrow record
         $borrow->update([
-            'person_id'       => $request->person_id,
-            'amount'          => $request->amount,
-            'borrow_type'     => $request->borrow_type,
-            'wallet_id'       => $request->wallet_id,
-            'date'            => $request->date,
-            'note'            => $request->note,
-            'status'          => $status,
+            'person_id'   => $request->person_id,
+            'amount'      => $request->amount,
+            'borrow_type' => $request->borrow_type,
+            'wallet_id'   => $request->wallet_id,
+            'date'        => $request->date,
+            'note'        => $request->note,
+            'status'      => $status,
         ]);
 
         return redirect()->route('borrows.index')->with('success', 'Borrow/Lend updated successfully.');
