@@ -92,9 +92,17 @@
                         </div>
                         <button type="button" @click="showAdvanced = !showAdvanced"
                                 class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition-colors">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path>
-                            </svg>
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M5 12L5 4" stroke="currentColor" stroke-linecap="round"></path> 
+                                    <path d="M19 20L19 17" stroke="currentColor" stroke-linecap="round"></path> 
+                                    <path d="M5 20L5 16" stroke="currentColor" stroke-linecap="round"></path> 
+                                    <path d="M19 13L19 4" stroke="currentColor" stroke-linecap="round"></path> 
+                                    <path d="M12 7L12 4" stroke="currentColor" stroke-linecap="round"></path> 
+                                    <path d="M12 20L12 11" stroke="currentColor" stroke-linecap="round"></path> 
+                                    <circle cx="5" cy="14" r="2" stroke="currentColor" stroke-linecap="round"></circle> 
+                                    <circle cx="12" cy="9" r="2" stroke="currentColor" stroke-linecap="round"></circle> 
+                                    <circle cx="19" cy="15" r="2" stroke="currentColor" stroke-linecap="round"></circle> 
+                                </svg>
                             Advanced Filters
                             <svg x-show="!showAdvanced" class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>

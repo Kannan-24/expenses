@@ -268,8 +268,16 @@
                             <!-- Advanced Filters Header -->
                             <div class="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-800">
                                 <h4 class="text-sm font-semibold text-gray-900 dark:text-white flex items-center">
-                                    <svg class="w-4 h-4 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path>
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M5 12L5 4" stroke="currentColor" stroke-linecap="round"></path> 
+                                        <path d="M19 20L19 17" stroke="currentColor" stroke-linecap="round"></path> 
+                                        <path d="M5 20L5 16" stroke="currentColor" stroke-linecap="round"></path> 
+                                        <path d="M19 13L19 4" stroke="currentColor" stroke-linecap="round"></path> 
+                                        <path d="M12 7L12 4" stroke="currentColor" stroke-linecap="round"></path> 
+                                        <path d="M12 20L12 11" stroke="currentColor" stroke-linecap="round"></path> 
+                                        <circle cx="5" cy="14" r="2" stroke="currentColor" stroke-linecap="round"></circle> 
+                                        <circle cx="12" cy="9" r="2" stroke="currentColor" stroke-linecap="round"></circle> 
+                                        <circle cx="19" cy="15" r="2" stroke="currentColor" stroke-linecap="round"></circle> 
                                     </svg>
                                     Advanced Search Options
                                 </h4>
