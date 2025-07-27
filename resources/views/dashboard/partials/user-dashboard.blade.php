@@ -368,6 +368,22 @@
                 </div>
             </div>
             <div class="p-6 space-y-4">
+                @php
+                    function formatAmount($amount) {
+                        if ($amount >= 1000000000000) {
+                            return '₹' . round($amount / 1000000000000, 1) . 'T';
+                        } elseif ($amount >= 1000000000) {
+                            return '₹' . round($amount / 1000000000, 1) . 'B';
+                        } elseif ($amount >= 1000000) {
+                            return '₹' . round($amount / 1000000, 1) . 'M';
+                        } elseif ($amount >= 1000) {
+                            return '₹' . round($amount / 1000, 1) . 'K';
+                        } else {
+                            return '₹' . number_format($amount, 2);
+                        }
+                    }
+                @endphp
+        
                 @foreach ($wallets as $wallet)
                     <div
                         class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
@@ -389,11 +405,11 @@
                         </div>
                         <div class="text-right">
                             <p class="font-bold text-lg text-gray-900 dark:text-white">
-                                ₹{{ number_format($wallet->balance, 2) }}</p>
+                                {{ formatAmount($wallet->balance) }}</p>
                         </div>
                     </div>
                 @endforeach
-
+        
                 <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-800">
                     <div
                         class="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900 dark:to-blue-900 rounded-xl">
@@ -414,7 +430,7 @@
                         </div>
                         <div>
                             <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                ₹{{ number_format($wallets->sum('balance'), 2) }}</p>
+                                {{ formatAmount($wallets->sum('balance')) }}</p>
                         </div>
                     </div>
                 </div>
