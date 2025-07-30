@@ -369,7 +369,8 @@
             </div>
             <div class="p-6 space-y-4">
                 @php
-                    function formatAmount($amount) {
+                    function formatAmount($amount)
+                    {
                         if ($amount >= 1000000000000) {
                             return '₹' . round($amount / 1000000000000, 1) . 'T';
                         } elseif ($amount >= 1000000000) {
@@ -383,10 +384,11 @@
                         }
                     }
                 @endphp
-        
+
                 @foreach ($wallets as $wallet)
                     <div
-                        class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        class="group relative flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer">
+
                         <div class="flex items-center space-x-3">
                             <div
                                 class="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 dark:from-purple-700 dark:to-purple-900 rounded-lg flex items-center justify-center">
@@ -403,16 +405,28 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <p class="font-bold text-lg text-gray-900 dark:text-white">
-                                {{ formatAmount($wallet->balance) }}</p>
+                        <div class="text-right flex items-center space-x-2">
+                            <p class="font-bold text-lg text-gray-900 dark:text-white relative">
+                                {{ formatAmount($wallet->balance) }}
+                                <span class="relative group">
+                                    <svg class="w-4 h-4 text-gray-400 inline-block ml-1 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16v-4m0-4h.01"></path>
+                                    </svg>
+                                    <span class="absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap px-3 py-2 rounded-lg shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs text-gray-800 dark:text-gray-100 font-semibold">
+                                        Exact: ₹{{ number_format($wallet->balance, 2) }}
+                                    </span>
+                                </span>
+                            </p>
                         </div>
                     </div>
                 @endforeach
-        
+
+                <!-- Total Balance Section with tooltip near value -->
                 <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-800">
                     <div
-                        class="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900 dark:to-blue-900 rounded-xl">
+                        class="group relative flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900 dark:to-blue-900 rounded-xl cursor-pointer">
+
                         <div class="flex items-center space-x-3">
                             <div
                                 class="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-600 dark:from-purple-700 dark:to-blue-800 rounded-lg flex items-center justify-center">
@@ -428,13 +442,24 @@
                                 <p class="text-sm text-gray-600 dark:text-gray-300">All wallets combined</p>
                             </div>
                         </div>
-                        <div>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ formatAmount($wallets->sum('balance')) }}</p>
+                        <div class="text-right flex items-center space-x-2">
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white relative">
+                                {{ formatAmount($wallets->sum('balance')) }}
+                                <span class="relative group">
+                                    <svg class="w-5 h-5 text-gray-400 inline-block ml-1 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16v-4m0-4h.01"></path>
+                                    </svg>
+                                    <span class="absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 whitespace-nowrap px-4 py-2 rounded-lg shadow-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-gray-100 font-bold">
+                                        Exact: ₹{{ number_format($wallets->sum('balance'), 2) }}
+                                    </span>
+                                </span>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -820,7 +845,7 @@
                 y: {
                     beginAtZero: true,
                     grid: {
-                       display: false,
+                        display: false,
                     },
                     border: {
                         display: true
