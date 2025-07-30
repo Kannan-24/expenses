@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class CurrencyController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:manage currencies');
+    }
+    
     /**
      * Display a listing of the resource.
      */
