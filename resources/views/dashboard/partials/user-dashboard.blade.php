@@ -221,9 +221,9 @@
     </div>
 
     <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Recent Transactions - Takes 2 columns -->
-        <div class="lg:col-span-2 bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-all ">
+        <div class="lg:col-span-1 bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-all ">
             <div class="p-6 border-b border-gray-100 dark:border-gray-800">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
@@ -341,8 +341,8 @@
             </div>
         </div>
 
-        <!-- Enhanced Wallets Widget -->
-        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-all ">
+        <!-- Enhanced Wallets Widget with Multi-Currency Support & Improved UX -->
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-all">
             <div class="p-6 border-b border-gray-100 dark:border-gray-800">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
@@ -355,7 +355,7 @@
                         My Wallets
                     </h3>
                     <a href="{{ route('wallets.index') }}"
-                        class="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-medium flex items-center transition-colors">
+                        class="inline-flex items-center text-sm px-3 py-1.5 rounded-lg font-medium text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-gray-800 hover:bg-purple-100 dark:hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 transition">
                         Manage
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -369,69 +369,124 @@
             </div>
             <div class="p-6 space-y-4">
                 @php
-                    function formatAmount($amount) {
-                        if ($amount >= 1000000000000) {
-                            return '₹' . round($amount / 1000000000000, 1) . 'T';
-                        } elseif ($amount >= 1000000000) {
-                            return '₹' . round($amount / 1000000000, 1) . 'B';
-                        } elseif ($amount >= 1000000) {
-                            return '₹' . round($amount / 1000000, 1) . 'M';
-                        } elseif ($amount >= 1000) {
-                            return '₹' . round($amount / 1000, 1) . 'K';
-                        } else {
-                            return '₹' . number_format($amount, 2);
+                    function formatAmount($amount, $currency = '₹')
+                    {
+                        if ($amount >= 1_000_000_000_000) {
+                            return $currency . round($amount / 1_000_000_000_000, 1) . 'T';
                         }
+                        if ($amount >= 1_000_000_000) {
+                            return $currency . round($amount / 1_000_000_000, 1) . 'B';
+                        }
+                        if ($amount >= 1_000_000) {
+                            return $currency . round($amount / 1_000_000, 1) . 'M';
+                        }
+                        if ($amount >= 1_000) {
+                            return $currency . round($amount / 1_000, 1) . 'K';
+                        }
+                        return $currency . number_format($amount, 2);
+                    }
+                    function formatFullAmount($amount, $currency = '₹')
+                    {
+                        return $currency . number_format($amount, 2);
+                    }
+                    // Group balances by currency for total row
+                    $totals = [];
+                    foreach ($wallets as $wallet) {
+                        $cur = $wallet->currency->symbol ?? '₹';
+                        if (!isset($totals[$cur])) {
+                            $totals[$cur] = 0;
+                        }
+                        $totals[$cur] += $wallet->balance;
                     }
                 @endphp
-        
-                @foreach ($wallets as $wallet)
-                    <div
-                        class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <div class="flex items-center space-x-3">
-                            <div
-                                class="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 dark:from-purple-700 dark:to-purple-900 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
-                                    </path>
-                                </svg>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    @foreach ($wallets as $wallet)
+                        <div x-data="{ showTooltip: false }"
+                            class="relative flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group focus-within:ring-2 focus-within:ring-purple-500"
+                            @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
+                            @focusin="showTooltip = true" @focusout="showTooltip = false"
+                            @touchstart.stop="showTooltip = !showTooltip" @click.away="showTooltip = false"
+                            tabindex="0"
+                            aria-label="Wallet {{ $wallet->name }}, balance {{ formatFullAmount($wallet->balance, $wallet->currency->symbol ?? '₹') }}">
+                            <div class="flex items-center space-x-3 overflow-x-auto">
+                                <div
+                                    class="min-w-10 min-h-10 w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 dark:from-purple-700 dark:to-purple-900 rounded-lg flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-900 dark:text-white">{{ $wallet->name }}</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                        {{ $wallet->type ?? 'Savings' }}
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="font-semibold text-gray-900 dark:text-white">{{ $wallet->name }}</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ $wallet->type ?? 'Savings' }}
-                                </p>
+                            <div class="text-right relative ml-2">
+                                <button type="button" tabindex="0"
+                                    class="font-bold text-lg text-gray-900 dark:text-white cursor-pointer bg-transparent border-0 focus:outline-none"
+                                    aria-describedby="wallet-tooltip-{{ $loop->index }}">
+                                    {{ formatAmount($wallet->balance, $wallet->currency->symbol ?? '₹') }}
+                                </button>
+                                <!-- Tooltip -->
+                                <div x-cloak x-show="showTooltip" x-transition
+                                    id="wallet-tooltip-{{ $loop->index }}"
+                                    class="absolute right-0 z-20 mt-2 w-max px-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg text-sm text-gray-900 dark:text-gray-100 font-semibold"
+                                    style="min-width:120px">
+                                    Accurate:
+                                    {{ formatFullAmount($wallet->balance, $wallet->currency->symbol ?? '₹') }}
+                                    <span
+                                        class="absolute top-0 right-2 w-2 h-2 rotate-45 -mt-1 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700"></span>
+                                </div>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <p class="font-bold text-lg text-gray-900 dark:text-white">
-                                {{ formatAmount($wallet->balance) }}</p>
-                        </div>
-                    </div>
-                @endforeach
-        
-                <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-800">
-                    <div
-                        class="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900 dark:to-blue-900 rounded-xl">
-                        <div class="flex items-center space-x-3">
-                            <div
-                                class="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-600 dark:from-purple-700 dark:to-blue-800 rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                    </path>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="font-bold text-gray-900 dark:text-white">Total Balance</p>
-                                <p class="text-sm text-gray-600 dark:text-gray-300">All wallets combined</p>
-                            </div>
+                    @endforeach
+                </div>
+
+                <hr class="my-4 border-gray-200 dark:border-gray-700">
+
+                <!-- Total Row with Multi-Currency -->
+                <div
+                    class="flex flex-col sm:flex-row items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900 dark:to-blue-900 rounded-xl transition-colors group">
+                    <div class="flex items-center space-x-3 mb-2 sm:mb-0">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-600 dark:from-purple-700 dark:to-blue-800 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
+                            </svg>
                         </div>
                         <div>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ formatAmount($wallets->sum('balance')) }}</p>
+                            <p class="font-bold text-gray-900 dark:text-white">Total Balance</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">All wallets combined</p>
                         </div>
+                    </div>
+                    <div class="flex flex-wrap gap-3 items-center text-right relative">
+                        @foreach ($totals as $cur => $total)
+                            <div x-data="{ showTooltip: false }" class="relative">
+                                <button type="button" tabindex="0"
+                                    class="font-bold text-lg text-gray-900 dark:text-white cursor-pointer bg-transparent border-0 focus:outline-none"
+                                    @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
+                                    @focusin="showTooltip = true" @focusout="showTooltip = false"
+                                    @touchstart.stop="showTooltip = !showTooltip" @click.away="showTooltip = false"
+                                    aria-describedby="total-tooltip-{{ $cur }}">
+                                    {{ formatAmount($total, $cur) }}
+                                </button>
+                                <div x-cloak x-show="showTooltip" x-transition id="total-tooltip-{{ $cur }}"
+                                    class="absolute right-0 z-20 mt-2 w-max px-3 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg text-sm text-gray-900 dark:text-gray-100 font-semibold"
+                                    style="min-width:120px">
+                                    Accurate: {{ formatFullAmount($total, $cur) }}
+                                    <span
+                                        class="absolute top-0 right-2 w-2 h-2 rotate-45 -mt-1 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700"></span>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -820,7 +875,7 @@
                 y: {
                     beginAtZero: true,
                     grid: {
-                       display: false,
+                        display: false,
                     },
                     border: {
                         display: true
