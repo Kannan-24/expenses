@@ -490,6 +490,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -875,6 +876,7 @@
                 y: {
                     beginAtZero: true,
                     grid: {
+                        display: false,
                         display: false,
                     },
                     border: {
