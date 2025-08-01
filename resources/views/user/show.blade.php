@@ -281,7 +281,7 @@
                                 </div>
                                 <h4 class="text-sm font-semibold text-gray-900">Account Age</h4>
                                 <p class="text-2xl font-bold text-gray-700 mt-1">
-                                    {{ $user->created_at->diffInDays() }} days
+                                    {{ number_format($user->created_at->diffInDays(), 2) }} days
                                 </p>
                             </div>
 
