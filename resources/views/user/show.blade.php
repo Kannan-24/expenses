@@ -66,6 +66,39 @@
                 </div>
             </div>
 
+            <hr class="my-4 border-t border-gray-400">
+
+            <h2 class="text-lg font-semibold text-gray-800">Usage:</h2>
+            <div class="grid grid-cols-1 gap-4">
+                {{-- Transactions Count --}}
+                <div class="flex items-center gap-4">
+                    <span class="w-16 text-sm font-bold text-gray-900">Transactions</span>
+                    <span class="mx-1">:</span>
+                    <span class="text-base text-gray-600">{{ $user->transactions->count() }}</span>
+                </div>
+
+                {{-- Categories Count --}}
+                <div class="flex items-center gap-4">
+                    <span class="w-16 text-sm font-bold text-gray-900">Categories</span>
+                    <span class="mx-1">:</span>
+                    <span class="text-base text-gray-600">{{ $user->categories->count() }}</span>
+                </div>
+
+                {{-- Budgets Count --}}
+                <div class="flex items-center gap-4">
+                    <span class="w-16 text-sm font-bold text-gray-900">Budgets</span>
+                    <span class="mx-1">:</span>
+                    <span class="text-base text-gray-600">{{ $user->budgets->count() }}</span>
+                </div>
+
+                {{-- Wallets Count --}}
+                <div class="flex items-center gap-4">
+                    <span class="w-16 text-sm font-bold text-gray-900">Wallets</span>
+                    <span class="mx-1">:</span>
+                    <span class="text-base text-gray-600">{{ $user->wallets->count() }}</span>
+                </div>
+            </div>
+
             <hr class="my-2 border-t border-gray-400">
 
             <div class="flex justify-end space-x-2">
