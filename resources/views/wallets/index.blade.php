@@ -55,7 +55,7 @@
                             </a>
                             <!-- Transfer Funds Button (opens modal) -->
                             <a href="{{ route('wallets.transfer.form') }}"
-                                class="inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-blue-700 dark:bg-blue-800 text-white font-semibold rounded-xl hover:bg-blue-800 dark:hover:bg-blue-900 transition-all duration-200 shadow-lg hover:shadow-xl">
+                                class="inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-purple-600 dark:bg-purple-800 text-white font-semibold rounded-xl hover:bg-purple-700 dark:hover:bg-purple-900 transition-all duration-200 shadow-lg hover:shadow-xl">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round"

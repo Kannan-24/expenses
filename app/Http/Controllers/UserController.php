@@ -8,6 +8,11 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:manage users');
+    }
+
     /**
      * Display a listing of the users.
      */

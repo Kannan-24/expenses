@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Auth;
 
 class BudgetController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can:manage budgets');
+    }
+
     /**
      * Display a listing of the resource.
      */

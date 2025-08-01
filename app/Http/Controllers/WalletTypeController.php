@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class WalletTypeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:manage wallet types');
+    }
+
+
     /**
      * Display a listing of the resource.
      */

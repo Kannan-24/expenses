@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ExpensePersonController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:manage expense people');
+    }
+
     public function index(Request $request)
     {
         $query = ExpensePerson::where('user_id', Auth::id());

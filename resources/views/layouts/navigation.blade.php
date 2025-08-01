@@ -185,202 +185,203 @@
                 @endif
             </a>
 
-            <!-- Core Features Section -->
-            <div class="pt-4">
-                <h4
-                    class="section-header px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center">
-                    <span class="flex-1">Core Features</span>
-                    <div class="h-px bg-gradient-to-r from-gray-300 to-transparent dark:from-gray-600 flex-1 ml-3">
-                    </div>
-                </h4>
-
-                @can('manage transactions')
-                    <a href="{{ route('transactions.index') }}"
-                        class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('transactions.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
-                        <div
-                            class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('transactions.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
-                            <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
-                                viewBox="0 0 24 24">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                        d="M11.9375 1.25H12.0625C14.1308 1.24998 15.7678 1.24997 17.0485 1.44129C18.3725 1.63907 19.4223 2.05481 20.2395 2.96274C21.0464 3.85936 21.4066 4.99222 21.5798 6.42355C21.75 7.83014 21.75 9.63498 21.75 11.9478V12.0522C21.75 14.365 21.75 16.1699 21.5798 17.5765C21.4066 19.0078 21.0464 20.1406 20.2395 21.0373C19.4223 21.9452 18.3725 22.3609 17.0485 22.5587C15.7678 22.75 14.1308 22.75 12.0625 22.75H11.9375C9.8692 22.75 8.23221 22.75 6.95147 22.5587C5.62747 22.3609 4.57769 21.9452 3.76055 21.0373C2.95359 20.1406 2.59338 19.0078 2.42018 17.5765C2.24998 16.1699 2.24999 14.365 2.25 12.0522V11.9478C2.24999 9.63499 2.24998 7.83014 2.42018 6.42355C2.59338 4.99222 2.95359 3.85936 3.76055 2.96274C4.57769 2.05481 5.62747 1.63907 6.95147 1.44129C8.23221 1.24997 9.86922 1.24998 11.9375 1.25ZM7.17309 2.92483C6.04626 3.09316 5.37637 3.40965 4.87549 3.96619C4.36443 4.53404 4.06563 5.31193 3.90932 6.60374C3.7513 7.90972 3.75 9.62385 3.75 12C3.75 14.3762 3.7513 16.0903 3.90932 17.3963C4.06563 18.6881 4.36443 19.466 4.87549 20.0338C5.37637 20.5903 6.04626 20.9068 7.17309 21.0752C8.33029 21.248 9.8552 21.25 12 21.25C14.1448 21.25 15.6697 21.248 16.8269 21.0752C17.9537 20.9068 18.6236 20.5903 19.1245 20.0338C19.6356 19.466 19.9344 18.6881 20.0907 17.3963C20.2487 16.0903 20.25 14.3762 20.25 12C20.25 9.62385 20.2487 7.90972 20.0907 6.60374C19.9344 5.31193 19.6356 4.53404 19.1245 3.96619C18.6236 3.40965 17.9537 3.09316 16.8269 2.92483C15.6697 2.75196 14.1448 2.75 12 2.75C9.8552 2.75 8.33029 2.75196 7.17309 2.92483ZM8.91612 5.24994C8.9438 5.24997 8.97176 5.25 9 5.25H15C15.0282 5.25 15.0562 5.24997 15.0839 5.24994C15.4647 5.24954 15.7932 5.24919 16.0823 5.32667C16.8588 5.53472 17.4653 6.1412 17.6733 6.91766C17.7508 7.2068 17.7505 7.53533 17.7501 7.91612C17.75 7.9438 17.75 7.97176 17.75 8C17.75 8.02824 17.75 8.0562 17.7501 8.08389C17.7505 8.46468 17.7508 8.7932 17.6733 9.08234C17.4653 9.8588 16.8588 10.4653 16.0823 10.6733C15.7932 10.7508 15.4647 10.7505 15.0839 10.7501C15.0562 10.75 15.0282 10.75 15 10.75H9C8.97176 10.75 8.9438 10.75 8.91612 10.7501C8.53533 10.7505 8.2068 10.7508 7.91766 10.6733C7.1412 10.4653 6.53472 9.8588 6.32667 9.08234C6.24919 8.7932 6.24954 8.46468 6.24994 8.08389C6.24997 8.0562 6.25 8.02824 6.25 8C6.25 7.97176 6.24997 7.9438 6.24994 7.91612C6.24954 7.53533 6.24919 7.2068 6.32667 6.91766C6.53472 6.1412 7.1412 5.53472 7.91766 5.32667C8.2068 5.24919 8.53533 5.24954 8.91612 5.24994ZM9 6.75C8.48673 6.75 8.37722 6.75644 8.30589 6.77556C8.04707 6.84491 7.84491 7.04707 7.77556 7.30589C7.75644 7.37722 7.75 7.48673 7.75 8C7.75 8.51327 7.75644 8.62278 7.77556 8.69412C7.84491 8.95293 8.04707 9.1551 8.30589 9.22445C8.37722 9.24356 8.48673 9.25 9 9.25H15C15.5133 9.25 15.6228 9.24356 15.6941 9.22445C15.9529 9.1551 16.1551 8.95293 16.2244 8.69412C16.2436 8.62278 16.25 8.51327 16.25 8C16.25 7.48673 16.2436 7.37722 16.2244 7.30589C16.1551 7.04707 15.9529 6.84491 15.6941 6.77556C15.6228 6.75644 15.5133 6.75 15 6.75H9Z"
-                                        fill="currentColor"></path>
-                                    <path
-                                        d="M9 13C9 13.5523 8.55229 14 8 14C7.44772 14 7 13.5523 7 13C7 12.4477 7.44772 12 8 12C8.55229 12 9 12.4477 9 13Z"
-                                        fill="currentColor"></path>
-                                    <path
-                                        d="M9 17C9 17.5523 8.55229 18 8 18C7.44772 18 7 17.5523 7 17C7 16.4477 7.44772 16 8 16C8.55229 16 9 16.4477 9 17Z"
-                                        fill="currentColor"></path>
-                                    <path
-                                        d="M13 13C13 13.5523 12.5523 14 12 14C11.4477 14 11 13.5523 11 13C11 12.4477 11.4477 12 12 12C12.5523 12 13 12.4477 13 13Z"
-                                        fill="currentColor"></path>
-                                    <path
-                                        d="M13 17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17C11 16.4477 11.4477 16 12 16C12.5523 16 13 16.4477 13 17Z"
-                                        fill="currentColor"></path>
-                                    <path
-                                        d="M17 13C17 13.5523 16.5523 14 16 14C15.4477 14 15 13.5523 15 13C15 12.4477 15.4477 12 16 12C16.5523 12 17 12.4477 17 13Z"
-                                        fill="currentColor"></path>
-                                    <path
-                                        d="M17 17C17 17.5523 16.5523 18 16 18C15.4477 18 15 17.5523 15 17C15 16.4477 15.4477 16 16 16C16.5523 16 17 16.4477 17 17Z"
-                                        fill="currentColor"></path>
-                                </g>
-                            </svg>
+            @canany(['manage transactions', 'manage categories', 'manage wallets', 'manage budgets'])
+                <!-- Core Features Section -->
+                <div class="pt-4">
+                    <h4
+                        class="section-header px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center">
+                        <span class="flex-1">Core Features</span>
+                        <div class="h-px bg-gradient-to-r from-gray-300 to-transparent dark:from-gray-600 flex-1 ml-3">
                         </div>
-                        <span class="ml-3 font-medium transition-all duration-200">Transactions</span>
-                        @if (request()->routeIs('transactions.*'))
+                    </h4>
+
+                    @can('manage transactions')
+                        <a href="{{ route('transactions.index') }}"
+                            class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('transactions.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
                             <div
-                                class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                                class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('transactions.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
+                                <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M11.9375 1.25H12.0625C14.1308 1.24998 15.7678 1.24997 17.0485 1.44129C18.3725 1.63907 19.4223 2.05481 20.2395 2.96274C21.0464 3.85936 21.4066 4.99222 21.5798 6.42355C21.75 7.83014 21.75 9.63498 21.75 11.9478V12.0522C21.75 14.365 21.75 16.1699 21.5798 17.5765C21.4066 19.0078 21.0464 20.1406 20.2395 21.0373C19.4223 21.9452 18.3725 22.3609 17.0485 22.5587C15.7678 22.75 14.1308 22.75 12.0625 22.75H11.9375C9.8692 22.75 8.23221 22.75 6.95147 22.5587C5.62747 22.3609 4.57769 21.9452 3.76055 21.0373C2.95359 20.1406 2.59338 19.0078 2.42018 17.5765C2.24998 16.1699 2.24999 14.365 2.25 12.0522V11.9478C2.24999 9.63499 2.24998 7.83014 2.42018 6.42355C2.59338 4.99222 2.95359 3.85936 3.76055 2.96274C4.57769 2.05481 5.62747 1.63907 6.95147 1.44129C8.23221 1.24997 9.86922 1.24998 11.9375 1.25ZM7.17309 2.92483C6.04626 3.09316 5.37637 3.40965 4.87549 3.96619C4.36443 4.53404 4.06563 5.31193 3.90932 6.60374C3.7513 7.90972 3.75 9.62385 3.75 12C3.75 14.3762 3.7513 16.0903 3.90932 17.3963C4.06563 18.6881 4.36443 19.466 4.87549 20.0338C5.37637 20.5903 6.04626 20.9068 7.17309 21.0752C8.33029 21.248 9.8552 21.25 12 21.25C14.1448 21.25 15.6697 21.248 16.8269 21.0752C17.9537 20.9068 18.6236 20.5903 19.1245 20.0338C19.6356 19.466 19.9344 18.6881 20.0907 17.3963C20.2487 16.0903 20.25 14.3762 20.25 12C20.25 9.62385 20.2487 7.90972 20.0907 6.60374C19.9344 5.31193 19.6356 4.53404 19.1245 3.96619C18.6236 3.40965 17.9537 3.09316 16.8269 2.92483C15.6697 2.75196 14.1448 2.75 12 2.75C9.8552 2.75 8.33029 2.75196 7.17309 2.92483ZM8.91612 5.24994C8.9438 5.24997 8.97176 5.25 9 5.25H15C15.0282 5.25 15.0562 5.24997 15.0839 5.24994C15.4647 5.24954 15.7932 5.24919 16.0823 5.32667C16.8588 5.53472 17.4653 6.1412 17.6733 6.91766C17.7508 7.2068 17.7505 7.53533 17.7501 7.91612C17.75 7.9438 17.75 7.97176 17.75 8C17.75 8.02824 17.75 8.0562 17.7501 8.08389C17.7505 8.46468 17.7508 8.7932 17.6733 9.08234C17.4653 9.8588 16.8588 10.4653 16.0823 10.6733C15.7932 10.7508 15.4647 10.7505 15.0839 10.7501C15.0562 10.75 15.0282 10.75 15 10.75H9C8.97176 10.75 8.9438 10.75 8.91612 10.7501C8.53533 10.7505 8.2068 10.7508 7.91766 10.6733C7.1412 10.4653 6.53472 9.8588 6.32667 9.08234C6.24919 8.7932 6.24954 8.46468 6.24994 8.08389C6.24997 8.0562 6.25 8.02824 6.25 8C6.25 7.97176 6.24997 7.9438 6.24994 7.91612C6.24954 7.53533 6.24919 7.2068 6.32667 6.91766C6.53472 6.1412 7.1412 5.53472 7.91766 5.32667C8.2068 5.24919 8.53533 5.24954 8.91612 5.24994ZM9 6.75C8.48673 6.75 8.37722 6.75644 8.30589 6.77556C8.04707 6.84491 7.84491 7.04707 7.77556 7.30589C7.75644 7.37722 7.75 7.48673 7.75 8C7.75 8.51327 7.75644 8.62278 7.77556 8.69412C7.84491 8.95293 8.04707 9.1551 8.30589 9.22445C8.37722 9.24356 8.48673 9.25 9 9.25H15C15.5133 9.25 15.6228 9.24356 15.6941 9.22445C15.9529 9.1551 16.1551 8.95293 16.2244 8.69412C16.2436 8.62278 16.25 8.51327 16.25 8C16.25 7.48673 16.2436 7.37722 16.2244 7.30589C16.1551 7.04707 15.9529 6.84491 15.6941 6.77556C15.6228 6.75644 15.5133 6.75 15 6.75H9Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M9 13C9 13.5523 8.55229 14 8 14C7.44772 14 7 13.5523 7 13C7 12.4477 7.44772 12 8 12C8.55229 12 9 12.4477 9 13Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M9 17C9 17.5523 8.55229 18 8 18C7.44772 18 7 17.5523 7 17C7 16.4477 7.44772 16 8 16C8.55229 16 9 16.4477 9 17Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M13 13C13 13.5523 12.5523 14 12 14C11.4477 14 11 13.5523 11 13C11 12.4477 11.4477 12 12 12C12.5523 12 13 12.4477 13 13Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M13 17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17C11 16.4477 11.4477 16 12 16C12.5523 16 13 16.4477 13 17Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M17 13C17 13.5523 16.5523 14 16 14C15.4477 14 15 13.5523 15 13C15 12.4477 15.4477 12 16 12C16.5523 12 17 12.4477 17 13Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M17 17C17 17.5523 16.5523 18 16 18C15.4477 18 15 17.5523 15 17C15 16.4477 15.4477 16 16 16C16.5523 16 17 16.4477 17 17Z"
+                                            fill="currentColor"></path>
+                                    </g>
+                                </svg>
                             </div>
-                        @endif
-                    </a>
-                @endcan
+                            <span class="ml-3 font-medium transition-all duration-200">Transactions</span>
+                            @if (request()->routeIs('transactions.*'))
+                                <div
+                                    class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                                </div>
+                            @endif
+                        </a>
+                    @endcan
 
-                @can('manage categories')
-                    <a href="{{ route('categories.index') }}"
-                        class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('categories.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
-                        <div
-                            class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('categories.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
-                            <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                                </path>
-                            </svg>
-                        </div>
-                        <span class="ml-3 font-medium transition-all duration-200">Categories</span>
-                        @if (request()->routeIs('categories.*'))
+                    @can('manage categories')
+                        <a href="{{ route('categories.index') }}"
+                            class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('categories.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
                             <div
-                                class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
-                            </div>
-                        @endif
-                    </a>
-                @endcan
-
-                @can('manage wallets')
-                    <a href="{{ route('wallets.index') }}"
-                        class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('wallets.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
-                        <div
-                            class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('wallets.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
-                            <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
-                                </path>
-                            </svg>
-                        </div>
-                        <span class="ml-3 font-medium transition-all duration-200">Wallets</span>
-                        @if (request()->routeIs('wallets.*'))
-                            <div
-                                class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
-                            </div>
-                        @endif
-                    </a>
-                @endcan
-
-                @can('manage budgets')
-                    <a href="{{ route('budgets.index') }}"
-                        class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('budgets.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
-                        <div
-                            class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('budgets.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
-                            <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                                </path>
-                            </svg>
-                        </div>
-                        <span class="ml-3 font-medium transition-all duration-200">Budgets</span>
-                        @if (request()->routeIs('budgets.*'))
-                            <div
-                                class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
-                            </div>
-                        @endif
-                    </a>
-                @endcan
-
-                <a href="{{ route('borrows.index') }}"
-                    class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('borrows.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
-                    <div
-                        class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('borrows.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
-                        <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8v4m0 0v4m0-4h4m-4 0H8m6.5 6.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zM12 3a9 9 0 100 18A9 9 0 0012 3z">
-                            </path>
-                        </svg>
-                    </div>
-                    <span class="ml-3 font-medium transition-all duration-200">Borrows</span>
-                    @if (request()->routeIs('borrows.*'))
-                        <div
-                            class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
-                        </div>
-                    @endif
-                </a>
-            </div>
-
-            <!-- Management Section -->
-            <div class="pt-4">
-                <h4
-                    class="section-header px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center">
-                    <span class="flex-1">Management</span>
-                    <div class="h-px bg-gradient-to-r from-gray-300 to-transparent dark:from-gray-600 flex-1 ml-3">
-                    </div>
-                </h4>
-
-                @can('manage expense people')
-                    <a href="{{ route('expense-people.index') }}"
-                        class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('expense-people.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
-                        <div
-                            class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('expense-people.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
-                            <svg viewBox="0 0 16 16" class="w-5 h-5 transition-transform group-hover:scale-110"
-                                xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path
-                                        d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z">
+                                class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('categories.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
+                                <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
                                     </path>
-                                </g>
-                            </svg>
-                        </div>
-                        <span class="ml-3 font-medium transition-all duration-200">Expense People</span>
-                        @if (request()->routeIs('expense-people.*'))
-                            <div
-                                class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                                </svg>
                             </div>
-                        @endif
-                    </a>
-                @endcan
+                            <span class="ml-3 font-medium transition-all duration-200">Categories</span>
+                            @if (request()->routeIs('categories.*'))
+                                <div
+                                    class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                                </div>
+                            @endif
+                        </a>
+                    @endcan
 
-                @can('generate reports')
-                    <a href="{{ route('reports.index') }}"
-                        class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('reports.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
+                    @can('manage wallets')
+                        <a href="{{ route('wallets.index') }}"
+                            class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('wallets.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
+                            <div
+                                class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('wallets.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
+                                <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <span class="ml-3 font-medium transition-all duration-200">Wallets</span>
+                            @if (request()->routeIs('wallets.*'))
+                                <div
+                                    class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                                </div>
+                            @endif
+                        </a>
+                    @endcan
+
+                    @can('manage budgets')
+                        <a href="{{ route('budgets.index') }}"
+                            class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('budgets.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
+                            <div
+                                class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('budgets.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
+                                <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <span class="ml-3 font-medium transition-all duration-200">Budgets</span>
+                            @if (request()->routeIs('budgets.*'))
+                                <div
+                                    class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                                </div>
+                            @endif
+                        </a>
+                    @endcan
+
+                    <a href="{{ route('borrows.index') }}"
+                        class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('borrows.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
                         <div
-                            class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('reports.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
+                            class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('borrows.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
                             <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    d="M12 8v4m0 0v4m0-4h4m-4 0H8m6.5 6.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zM12 3a9 9 0 100 18A9 9 0 0012 3z">
                                 </path>
                             </svg>
                         </div>
-                        <span class="ml-3 font-medium transition-all duration-200">Reports</span>
-                        @if (request()->routeIs('reports.*'))
+                        <span class="ml-3 font-medium transition-all duration-200">Borrows</span>
+                        @if (request()->routeIs('borrows.*'))
                             <div
                                 class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
                             </div>
                         @endif
                     </a>
-                @endcan
-            </div>
+                </div>
+            @endcanany
+
+            @canany(['manage expense people', 'generate reports'])
+                <!-- Management Section -->
+                <div class="pt-4">
+                    <h4
+                        class="section-header px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center">
+                        <span class="flex-1">Management</span>
+                        <div class="h-px bg-gradient-to-r from-gray-300 to-transparent dark:from-gray-600 flex-1 ml-3">
+                        </div>
+                    </h4>
+
+                    @can('manage expense people')
+                        <a href="{{ route('expense-people.index') }}"
+                            class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('expense-people.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
+                            <div
+                                class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('expense-people.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
+                                <svg viewBox="0 0 16 16" class="w-5 h-5 transition-transform group-hover:scale-110"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path
+                                            d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z">
+                                        </path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <span class="ml-3 font-medium transition-all duration-200">Expense People</span>
+                            @if (request()->routeIs('expense-people.*'))
+                                <div
+                                    class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                                </div>
+                            @endif
+                        </a>
+                    @endcan
+
+                    @can('generate reports')
+                        <a href="{{ route('reports.index') }}"
+                            class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('reports.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
+                            <div
+                                class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('reports.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
+                                <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <span class="ml-3 font-medium transition-all duration-200">Reports</span>
+                            @if (request()->routeIs('reports.*'))
+                                <div
+                                    class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                                </div>
+                            @endif
+                        </a>
+                    @endcan
+                </div>
+            @endcanany
 
             <!-- System Configuration -->
-            @if (Auth::user()->can('manage wallet types') ||
-                    Auth::user()->can('manage currencies') ||
-                    Auth::user()->can('manage users') ||
-                    Auth::user()->can('manage roles'))
+            @canany(['manage currencies', 'manage wallet types', 'manage users', 'manage roles'])
                 <div class="pt-4">
                     <h4
                         class="section-header px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center">
@@ -473,7 +474,7 @@
                         </a>
                     @endcan
                 </div>
-            @endif
+            @endcanany
 
             <!-- Support -->
             <div class="pt-4">
@@ -613,22 +614,6 @@
         .section-header {
             position: relative;
             padding-bottom: 8px;
-        }
-
-        .section-header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 20px;
-            height: 2px;
-            background: linear-gradient(90deg, rgba(59, 130, 246, 0.8), rgba(147, 51, 234, 0.8));
-            border-radius: 2px;
-            transition: width 0.3s ease;
-        }
-
-        .section-header:hover::after {
-            width: 60px;
         }
 
         /* Active State Animation */

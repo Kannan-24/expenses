@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\DB;
 
 class WalletController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:manage wallets');
+    }
+
     /**
      * Display a listing of the resource.
      */
