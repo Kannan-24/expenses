@@ -28,8 +28,11 @@
     <x-google-analytics-head />
 </head>
 
-<body class="font-sans antialiased bg-blue-200 dark:bg-slate-900 min-h-screen" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
-    x-init="$watch('darkMode', value => localStorage.setItem('darkMode', value))" x-bind:class="{ 'dark': darkMode }" x-cloak>
+<body class="font-sans antialiased bg-blue-200 dark:bg-slate-900 min-h-screen" 
+        x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
+        x-init="$watch('darkMode', value => localStorage.setItem('darkMode', value))" 
+        x-bind:class="{ 'dark': darkMode }" 
+        x-cloak>
     <x-google-analytics-body />
 
     <div class="pt-16 md:pt-0 bg-blue-200 dark:bg-slate-950">
