@@ -27,17 +27,25 @@ class SendDailyReminder extends Command
      * Execute the console command.
      */
     public function handle()
-    {
-        $users = User::whereHas('roles', function ($query) {
-            $query->where('name', 'user');
-        })->where('wants_reminder', true)->get();
+{
+    $batchSize = 50; // safe per batch
+    $delayBetweenBatches = 10; // seconds
 
-        if ($users->isEmpty()) {
-            $this->info('No users opted in for daily reminders.');
-            return;
+    User::whereHas('roles', function ($query) {
+        $query->where('name', 'user');
+    })
+    ->where('wants_reminder', true)
+    ->select('id', 'name', 'email') // only what’s needed
+    ->chunk($batchSize, function ($users, $page) use ($delayBetweenBatches) {
+
+        foreach ($users as $index => $user) {
+            $delaySeconds = ($page * $delayBetweenBatches);
+
+            // Queue each notification with a slight delay
+            $user->notify((new DailyReminderNotification())->delay(now()->addSeconds($delaySeconds)));
         }
+    });
 
-        Notification::send($users, new DailyReminderNotification());
-        $this->info('Daily reminders sent successfully to ' . $users->count() . ' users.');
-    }
+    $this->info('Queued reminder emails successfully.');
+}
 }
