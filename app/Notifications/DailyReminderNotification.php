@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 
-class DailyReminderNotification extends Notification
+class DailyReminderNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

@@ -27,25 +27,25 @@ class SendDailyReminder extends Command
      * Execute the console command.
      */
     public function handle()
-{
-    $batchSize = 50; // safe per batch
-    $delayBetweenBatches = 10; // seconds
+    {
+        $batchSize = 50; // safe per batch
+        $delayBetweenBatches = 10; // seconds
 
-    User::whereHas('roles', function ($query) {
-        $query->where('name', 'user');
-    })
-    ->where('wants_reminder', true)
-    ->select('id', 'name', 'email') // only what’s needed
-    ->chunk($batchSize, function ($users, $page) use ($delayBetweenBatches) {
+        User::whereHas('roles', function ($query) {
+            $query->where('name', 'user');
+        })
+            ->where('wants_reminder', true)
+            ->select('id', 'name', 'email') // only what’s needed
+            ->chunk($batchSize, function ($users, $page) use ($delayBetweenBatches) {
 
-        foreach ($users as $index => $user) {
-            $delaySeconds = ($page * $delayBetweenBatches);
+                foreach ($users as $index => $user) {
+                    $delaySeconds = ($page * $delayBetweenBatches);
 
-            // Queue each notification with a slight delay
-            $user->notify((new DailyReminderNotification())->delay(now()->addSeconds($delaySeconds)));
-        }
-    });
+                    // Queue each notification with a slight delay
+                    $user->notify((new DailyReminderNotification())->delay(now()->addSeconds($delaySeconds)));
+                }
+            });
 
-    $this->info('Queued reminder emails successfully.');
-}
+        $this->info('Queued reminder emails successfully.');
+    }
 }
