@@ -36,10 +36,6 @@ class DailyReminderNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        Log::info('Sending daily reminder notification to user: ');
-        // Change object to array for better logging
-        Log::info(json_encode($notifiable, JSON_PRETTY_PRINT));
-
         return (new MailMessage)
             ->subject('Reminder: Add Today\'s Transactions')
             ->view('emails.daily-reminder', [

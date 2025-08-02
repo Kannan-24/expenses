@@ -222,10 +222,6 @@ class TransactionReportService
     {
         $reportData = $this->prepareReportData($data, $transactions, $summary, $categorySummary);
 
-        Log::info('Generating transaction report', [
-            'category_summary' => $reportData['categorySummary'],
-        ]);
-
         switch ($data['report_format']) {
             case 'pdf':
                 return $this->generatePdfReport($reportData);

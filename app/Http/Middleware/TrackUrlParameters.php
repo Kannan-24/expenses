@@ -24,16 +24,6 @@ class TrackUrlParameters
                         'route' => $request->route()?->getName(),
                     ]
                 );
-
-                // Log for debugging
-                Log::info('UTM Parameters Tracked', [
-                    'user_id' => Auth::id(),
-                    'utm_source' => $request->get('utm_source'),
-                    'utm_medium' => $request->get('utm_medium'),
-                    'utm_campaign' => $request->get('utm_campaign'),
-                    'url' => $request->fullUrl(),
-                ]);
-
             } catch (\Exception $e) {
                 Log::error('Failed to track UTM parameters: ' . $e->getMessage());
             }

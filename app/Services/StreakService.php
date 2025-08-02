@@ -55,12 +55,6 @@ class StreakService
             'longest_streak' => max($user->longest_streak, 1),
         ]);
 
-        Log::info('New streak started', [
-            'user_id' => $user->id,
-            'date' => $date->toDateString(),
-            'days_missed' => $daysMissed
-        ]);
-
         return [
             'streak_days' => 1,
             'message' => $daysMissed > 0 ? "Streak reset after missing {$daysMissed} days. New streak started!" : 'New streak started!',
@@ -77,12 +71,6 @@ class StreakService
             'streak_days' => $newStreak,
             'last_transaction_date' => $date->toDateString(),
             'longest_streak' => max($user->longest_streak, $newStreak),
-        ]);
-
-        Log::info('Streak continued', [
-            'user_id' => $user->id,
-            'streak_days' => $newStreak,
-            'date' => $date->toDateString()
         ]);
 
         return [
