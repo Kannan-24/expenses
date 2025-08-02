@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withSchedule(function (Schedule $schedule) {
         $schedule->command(SendDailyReminder::class)
-            ->dailyAt('15:30') // 9 PM IST = 15:30 UTC
+            ->dailyAt('11:05') // 9 PM IST = 15:30 UTC
             ->timezone('Asia/Kolkata')
             ->withoutOverlapping()
             ->onOneServer();
