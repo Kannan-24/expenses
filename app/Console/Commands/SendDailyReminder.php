@@ -28,19 +28,16 @@ class SendDailyReminder extends Command
      */
     public function handle()
     {
-        // $users = User::whereHas('roles', function ($query) {
-        //     $query->where('name', 'user');
-        // })->where('wants_reminder', true)->get();
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('name', 'user');
+        })->where('wants_reminder', true)->get();
 
-        // if ($users->isEmpty()) {
-        //     $this->info('No users opted in for daily reminders.');
-        //     return;
-        // }
+        if ($users->isEmpty()) {
+            $this->info('No users opted in for daily reminders.');
+            return;
+        }
 
-        // Notification::send($users, new DailyReminderNotification());
-        // $this->info('Daily reminders sent successfully to ' . $users->count() . ' users.');
-        User::where('email', 'jp008882@gmail.com')
-            ->first()
-            ->notify(new DailyReminderNotification());
+        Notification::send($users, new DailyReminderNotification());
+        $this->info('Daily reminders sent successfully to ' . $users->count() . ' users.');
     }
 }
