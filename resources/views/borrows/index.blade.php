@@ -188,9 +188,9 @@
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Date</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Person</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Type</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Wallet</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Amount</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Returned</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Remaining</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Status</th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Actions</th>
                             </tr>
@@ -206,13 +206,13 @@
                                             {{ ucfirst($borrow->borrow_type) }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 text-gray-600 dark:text-gray-300">{{ $borrow->wallet->name ?? '-' }}</td>
                                     <td class="px-6 py-4 font-semibold text-gray-600 dark:text-gray-300">
                                         {{ $borrow->wallet->currency->symbol ?? '₹' }}{{ number_format($borrow->amount, 2) }}
                                     </td>
                                     <td class="px-6 py-4 text-gray-600 dark:text-gray-300">
                                         {{ $borrow->wallet->currency->symbol ?? '₹' }}{{ number_format($borrow->returned_amount, 2) }}
                                     </td>
+                                    <td class="px-6 py-4 text-gray-600 dark:text-gray-300">{{ number_format(($borrow->amount, 2)-($borrow->returned_amount, 2)) }}</td>
                                     <td class="px-6 py-4 text-gray-600 dark:text-gray-300">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                                             @if($borrow->status === 'returned') bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200

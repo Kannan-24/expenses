@@ -139,6 +139,16 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
+                                        Remaining
+                                    </label>
+                                    <div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
+                                        <span class="text-gray-900 dark:text-white font-medium">
+                                            {{ $borrow->wallet->currency->symbol ?? '₹' }}{{ number_format($borrow->amount - $borrow->returned_amount, 2) }}
+                                        </span>
+                                    </div>
+                                </div>
                                 <div class="space-y-2 md:col-span-2">
                                     <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
                                         Notes
@@ -223,6 +233,12 @@
                                     </span>
                                 </div>
                             @endif
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Remaining Amount</span>
+                                <span class="text-sm text-gray-900 dark:text-white font-bold">
+                                    {{ $borrow->wallet->currency->symbol ?? '₹' }}{{ number_format($borrow->amount - $borrow->returned_amount, 2) }}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
