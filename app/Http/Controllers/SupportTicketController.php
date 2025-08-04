@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Notification;
 
 class SupportTicketController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -87,6 +88,10 @@ class SupportTicketController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->can('request support')) {
+            abort(403, 'You do not have permission to create a support ticket.');
+        }
+
         return view('support_tickets.create');
     }
 
@@ -95,6 +100,10 @@ class SupportTicketController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::user()->can('request support')) {
+            abort(403, 'You do not have permission to create a support ticket.');
+        }
+
         $request->validate([
             'subject' => 'required|string|max:255',
             'message' => 'required|string',

@@ -8,6 +8,11 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:manage users');
+    }
+
     /**
      * Display a listing of the users.
      */
@@ -21,6 +26,8 @@ class UserController extends Controller
                   ->orWhere('email', 'like', "%{$search}%");
             });
         }
+
+        $query = $query->orderBy('created_at', 'desc');
 
         $users = $query->paginate(10)->appends(['search' => $search]);
 

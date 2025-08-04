@@ -32,6 +32,7 @@ class DashboardController extends Controller
                 $query->where('name', '=', 'user');
             })
             ->count();
+            
         $recentlyRegisteredUsers = User::with('roles')
             ->whereHas('roles', function ($query) {
                 $query->where('name', '=', 'user');

@@ -7,7 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
-{
+{   
+    public function __construct()
+    {
+        $this->middleware('can:manage categories');
+    }
+
     public function index()
     {
         $query = Category::where('user_id', Auth::user()->id);

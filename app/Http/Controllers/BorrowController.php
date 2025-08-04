@@ -14,6 +14,7 @@ class BorrowController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:manage borrows');
     }
 
     // List all borrows/lends

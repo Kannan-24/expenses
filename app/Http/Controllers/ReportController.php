@@ -24,6 +24,8 @@ class ReportController extends Controller
         $this->transactionReportService = new TransactionReportService();
         $this->budgetReportService = new BudgetReportService();
         $this->ticketReportService = new TicketReportService();
+
+        $this->middleware('can:generate reports');
     }
 
     // Show report index page

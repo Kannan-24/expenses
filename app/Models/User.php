@@ -29,6 +29,15 @@ class User extends Authenticatable
         'has_set_password',
         'password_updated_at',
         'google_id',
+        'wants_reminder',
+        'last_login_at',
+
+        'streak_days',
+        'last_transaction_date',
+        'strea_start_date',
+        'longest_streak',
+        'monthly_savings_goal',
+        'current_month_savings'
     ];
 
 
@@ -54,6 +63,8 @@ class User extends Authenticatable
             'password' => 'hashed',
             'has_set_password' => 'boolean',
             'password_updated_at' => 'datetime',
+            'wants_reminder' => 'boolean',
+            'last_login_at' => 'datetime',
         ];
     }
 
