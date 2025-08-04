@@ -480,22 +480,21 @@
                                         {{ $borrow->wallet->currency->symbol ?? '₹' }}{{ number_format($history->amount, 2) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                        <div class="flex justify-center space-x-2">
-                                            <button @click="openEditModal = {{ $history->id }}"
-                                                class="inline-flex items-center px-3 py-1.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-xs font-medium rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">
-                                                Edit
+                                        <button @click="openEditModal = {{ $history->id }}"
+                                            class="inline-flex items-center px-3 py-1.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-xs font-medium rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">
+                                            Edit
+                                        </button>
+                                        <form
+                                            action="{{ route('borrows.return.destroy', [$borrow->id, $history->id]) }}"
+                                            method="POST" class="inline-block"
+                                            onsubmit="return confirm('Are you sure you want to delete this return entry? This action cannot be undone.')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="inline-flex items-center px-3 py-1.5 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 text-xs font-medium rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition-colors">
+                                                Delete
                                             </button>
-                                            <form action="{{ route('borrows.return.destroy', [$borrow->id, $history->id]) }}" method="POST"
-                                                class="inline-block"
-                                                onsubmit="return confirm('Are you sure you want to delete this return entry? This action cannot be undone.')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="inline-flex items-center px-3 py-1.5 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 text-xs font-medium rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition-colors">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        </div>
+                                        </form>
                                     </td>
                                 </tr>
                             @empty
