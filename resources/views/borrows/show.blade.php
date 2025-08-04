@@ -184,7 +184,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="">
+                                <div class="space-y-2 md:col-span-2">
                                     <label
                                         class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
                                         Notes
