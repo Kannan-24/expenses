@@ -482,6 +482,13 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         <button @click="openEditModal = {{ $history->id }}"
                                             class="text-blue-600 hover:underline text-xs font-semibold">Edit</button>
+                                        <form action="{{ route('borrows.return.destroy', [$borrow->id, $history->id]) }}" method="POST"
+                                            onsubmit="return confirm('Are you sure you want to delete this return entry? This action cannot be undone.')"
+                                            class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:underline text-xs font-semibold ml-2">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @empty

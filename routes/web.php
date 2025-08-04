@@ -71,6 +71,7 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
     Route::get('borrows/{borrow}/return/{history}/edit', [\App\Http\Controllers\BorrowController::class, 'editReturn'])->name('borrows.return.edit');
     Route::put('borrows/{borrow}/return/{history}', [\App\Http\Controllers\BorrowController::class, 'updateReturn'])->name('borrows.return.update');
     Route::post('/borrows/{borrow}/repay', [BorrowController::class, 'repay'])->name('borrows.repay');
+    Route::delete('borrows/{borrow}/return/{history}', [BorrowController::class, 'destroyReturn'])->name('borrows.return.destroy');
     Route::resource('borrows', BorrowController::class);
 
     Route::get('/wallets/transfer', [WalletController::class, 'showTransferForm'])->name('wallets.transfer.form');
