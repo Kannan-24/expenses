@@ -38,6 +38,7 @@ class TransactionController extends Controller
     {
         $categories = Category::where('user_id', Auth::id())->get();
         $people = ExpensePerson::where('user_id', Auth::id())->get();
+        $wallets = Wallet::where('user_id', Auth::id())->get();
 
         $query = Transaction::with(['category', 'person'])->where('user_id', Auth::id());
 
@@ -81,12 +82,17 @@ class TransactionController extends Controller
             $query->where('type', $request->type);
         }
 
+        // Wallet filter
+        if ($request->filled('wallet')) {
+            $query->where('wallet_id', $request->wallet);
+        }
+
         $transactions = $query->orderBy('date', 'desc')->paginate(10);
 
         // Attach filter values to the pagination links
         $transactions->appends($request->except('page'));
 
-        return view('transactions.index', compact('transactions', 'categories', 'people'));
+        return view('transactions.index', compact('transactions', 'categories', 'people', 'wallets'));
     }
 
     /**
