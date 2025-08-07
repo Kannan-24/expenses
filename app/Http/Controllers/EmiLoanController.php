@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\DB;
 
 class EmiLoanController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth', 'verified', 'can:manage emi loans']);
+    }
+
     /**
      * Display a listing of the resource.
      */
