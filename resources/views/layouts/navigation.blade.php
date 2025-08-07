@@ -12,9 +12,8 @@
     x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full">
 
     <!-- Sidebar Header -->
-    <div
-        class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 p-6 border-b border-blue-500 dark:border-blue-600">
-        <div class="flex items-center justify-between mb-4">
+    <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 p-4 border-b border-blue-500 dark:border-blue-600">
+        <div class="flex items-center justify-between">
             <!-- Logo and Brand -->
             <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 group">
                 <div
@@ -22,9 +21,7 @@
                     <x-application-logo class="w-8 h-8 text-white" />
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-white group-hover:text-blue-100 dark:group-hover:text-blue-200 ">
-                        Duo Dev Expenses
-                    </h1>
+                    <h1 class="text-xl font-bold text-white group-hover:text-blue-100 dark:group-hover:text-blue-200">Duo Dev Expenses</h1>
                     <p class="text-blue-200 dark:text-blue-300 text-sm">Financial Management</p>
                 </div>
             </a>
@@ -38,78 +35,15 @@
                 </svg>
             </button>
         </div>
-
-        <!-- User Profile Section -->
-        <div class="bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-xl p-4">
-            <div class="flex items-center space-x-3 mb-3">
-                @if (Auth::user()->profile_photo)
-                    <img class="w-12 h-12 rounded-full object-cover ring-2 ring-white/30 dark:ring-white/20"
-                        src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile" />
-                @else
-                    <div
-                        class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-600 dark:from-blue-500 dark:to-purple-700 rounded-full flex items-center justify-center ring-2 ring-white/30 dark:ring-white/20">
-                        <span
-                            class="text-white font-bold text-lg">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
-                    </div>
-                @endif
-                <div class="flex-1 min-w-0">
-                    <p class="text-white font-semibold truncate">{{ Auth::user()->name }}</p>
-                    <p class="text-blue-200 dark:text-blue-300 text-sm truncate">{{ Auth::user()->email }}</p>
-                </div>
-
-                <!-- Profile Dropdown Toggle -->
-                <button @click="profileOpen = !profileOpen"
-                    class="p-1 text-white/80 hover:text-white hover:bg-white/20 dark:hover:bg-white/10 rounded-lg ">
-                    <svg class="w-5 h-5 transition-transform" :class="profileOpen ? 'rotate-180' : ''" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Quick Profile Actions -->
-            <div x-show="profileOpen" x-collapse class="space-y-2">
-                <a href="{{ route('profile.show') }}"
-                    class="flex items-center space-x-2 w-full px-3 py-2 text-sm text-white/90 hover:text-white hover:bg-white/20 dark:hover:bg-white/10 rounded-lg ">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                    <span>View Profile</span>
-                </a>
-                <a href="{{ route('account.settings') }}"
-                    class="flex items-center space-x-2 w-full px-3 py-2 text-sm text-white/90 hover:text-white hover:bg-white/20 dark:hover:bg-white/10 rounded-lg ">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                        </path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                    <span>Account Settings</span>
-                </a>
-            </div>
-
-            <!-- Status and Time -->
-            <div class="mt-3 pt-3 border-t border-white/20 dark:border-white/10">
-                <div class="flex items-center justify-between text-xs text-blue-200 dark:text-blue-300">
-                    <div class="flex items-center space-x-1">
-                        <div class="w-2 h-2 bg-green-400 dark:bg-green-500 rounded-full animate-pulse"></div>
-                        <span>Online</span>
-                    </div>
-                    <span>{{ now()->format('D d M Y, h:i A ') }}</span>
-                </div>
-            </div>
-        </div>
     </div>
+
     <!-- Navigation Section -->
     <div class="flex-1 overflow-y-auto custom-scrollbar">
         <!-- Navigation Header -->
         <div
             class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 sticky top-0 z-10 backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
             <div class="flex items-center justify-between">
-                <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Navigation
-                </h3>
+                <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Main Menu</h3>
 
                 <div class="flex items-center space-x-1">
                     <!-- Theme Toggle Button -->
@@ -141,7 +75,7 @@
                     <!-- Notifications Button -->
                     <button @click="notificationOpen = !notificationOpen"
                         class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 group">
-                        <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
+                        <svg class="w-5 h-5 transition-transform group-hover:scale-110 group-hover:animate-ring" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a2 2 0 00-4 0v.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m7 0v1a3 3 0 01-6 0v-1m6 0H9">
@@ -167,8 +101,8 @@
                 class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('dashboard') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
                 <div
                     class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
-                    <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                         <g id="SVGRepo_iconCarrier">
@@ -185,7 +119,8 @@
                 @endif
             </a>
 
-            @canany(['manage transactions', 'manage categories', 'manage wallets', 'manage budgets', 'manage borrows', 'manage emi loans'])
+            @canany(['manage transactions', 'manage categories', 'manage wallets', 'manage budgets', 'manage borrows',
+                'manage emi loans'])
                 <!-- Core Features Section -->
                 <div class="pt-4">
                     <h4
@@ -708,6 +643,47 @@
             animation: pulse 1.5s infinite;
         }
 
+        /* User Profile Dropdown Styles */
+        .profile-dropdown {
+            position: relative;
+            z-index: 50;
+        }
+
+        .profile-dropdown-content {
+            position: absolute;
+            right: 0;
+            bottom: 100%;
+            margin-bottom: 8px;
+            min-width: 280px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transform-origin: bottom right;
+        }
+
+        .dark .profile-dropdown-content {
+            background: rgb(17, 24, 39);
+            border: 1px solid rgba(55, 65, 81, 0.3);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Mobile Dropdown Styles */
+        @media (max-width: 1023px) {
+            .profile-dropdown-content {
+                position: fixed;
+                bottom: auto;
+                top: 50%;
+                left: 50%;
+                right: auto;
+                transform: translate(-50%, -50%);
+                margin: 0;
+                width: 90vw;
+                max-width: 320px;
+                transform-origin: center;
+            }
+        }
+
         /* Responsive Enhancements */
         @media (max-width: 768px) {
             .custom-scrollbar::-webkit-scrollbar {
@@ -755,36 +731,112 @@
         }
     </style>
 
-    <!-- Bottom Actions -->
-    <div class="border-t border-gray-300 p-4 space-y-2 dark:border-t dark:border-gray-700">
-        <!-- Logout Button -->
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit"
-                class="w-full flex items-center px-4 py-3 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/50 hover:bg-red-100 dark:hover:bg-red-900 rounded-xl group">
-                <div
-                    class="p-2 bg-red-100 dark:bg-red-800 group-hover:bg-red-200 dark:group-hover:bg-red-700 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M9 20.7499H6C5.65324 20.7647 5.30697 20.7109 4.98101 20.5917C4.65505 20.4725 4.3558 20.2902 4.10038 20.0552C3.84495 19.8202 3.63837 19.5371 3.49246 19.2222C3.34654 18.9073 3.26415 18.5667 3.25 18.2199V5.77994C3.26415 5.43316 3.34654 5.09256 3.49246 4.77765C3.63837 4.46274 3.84495 4.17969 4.10038 3.9447C4.3558 3.70971 4.65505 3.52739 4.98101 3.40818C5.30697 3.28896 5.65324 3.23519 6 3.24994H9C9.19891 3.24994 9.38968 3.32896 9.53033 3.46961C9.67098 3.61027 9.75 3.80103 9.75 3.99994C9.75 4.19886 9.67098 4.38962 9.53033 4.53027C9.38968 4.67093 9.19891 4.74994 9 4.74994H6C5.70307 4.72412 5.4076 4.81359 5.17487 4.99977C4.94213 5.18596 4.78999 5.45459 4.75 5.74994V18.2199C4.78999 18.5153 4.94213 18.7839 5.17487 18.9701C5.4076 19.1563 5.70307 19.2458 6 19.2199H9C9.19891 19.2199 9.38968 19.299 9.53033 19.4396C9.67098 19.5803 9.75 19.771 9.75 19.9699C9.75 20.1689 9.67098 20.3596 9.53033 20.5003C9.38968 20.6409 9.19891 20.7199 9 20.7199V20.7499Z"
-                                fill="currentColor"></path>
-                            <path
-                                d="M16 16.7499C15.9015 16.7504 15.8038 16.7312 15.7128 16.6934C15.6218 16.6556 15.5392 16.6 15.47 16.5299C15.3296 16.3893 15.2507 16.1987 15.2507 15.9999C15.2507 15.8012 15.3296 15.6105 15.47 15.4699L18.94 11.9999L15.47 8.52991C15.3963 8.46125 15.3372 8.37845 15.2962 8.28645C15.2552 8.19445 15.2332 8.09513 15.2314 7.99443C15.2296 7.89373 15.2482 7.7937 15.2859 7.70031C15.3236 7.60692 15.3797 7.52209 15.451 7.45087C15.5222 7.37965 15.607 7.32351 15.7004 7.28579C15.7938 7.24807 15.8938 7.22954 15.9945 7.23132C16.0952 7.23309 16.1945 7.25514 16.2865 7.29613C16.3785 7.33712 16.4613 7.39622 16.53 7.46991L20.53 11.4699C20.6705 11.6105 20.7493 11.8012 20.7493 11.9999C20.7493 12.1987 20.6705 12.3893 20.53 12.5299L16.53 16.5299C16.4608 16.6 16.3782 16.6556 16.2872 16.6934C16.1962 16.7312 16.0985 16.7504 16 16.7499Z"
-                                fill="currentColor"></path>
-                            <path
-                                d="M20 12.75H9C8.80109 12.75 8.61032 12.671 8.46967 12.5303C8.32902 12.3897 8.25 12.1989 8.25 12C8.25 11.8011 8.32902 11.6103 8.46967 11.4697C8.61032 11.329 8.80109 11.25 9 11.25H20C20.1989 11.25 20.3897 11.329 20.5303 11.4697C20.671 11.6103 20.75 11.8011 20.75 12C20.75 12.1989 20.671 12.3897 20.5303 12.5303C20.3897 12.671 20.1989 12.75 20 12.75Z"
-                                fill="currentColor"></path>
-                        </g>
-                    </svg>
+    <!-- Bottom Actions - User Profile Section -->
+    <div class="border-t border-gray-200 dark:border-gray-700 space-y-2">
+        <!-- User Profile Section with Dropdown -->
+        <div class="profile-dropdown relative" x-data="{ profileOpen: false }">
+            <!-- Profile Button -->
+            <button @click="profileOpen = !profileOpen"
+                class="w-full flex items-center justify-between px-4 py-3 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 group transition-all duration-200">
+                <div class="flex items-center space-x-3">
+                    @if (Auth::user()->profile_photo)
+                        <img class="w-10 h-10 rounded-full object-cover ring-2 ring-gray-300 dark:ring-gray-600"
+                            src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile" />
+                    @else
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center ring-2 ring-gray-300 dark:ring-gray-600">
+                            <span
+                                class="text-white font-bold text-sm">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                        </div>
+                    @endif
+                    <div class="flex-1 min-w-0 text-left">
+                        <p class="font-medium truncate">{{ Auth::user()->name }}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ Auth::user()->email }}</p>
+                    </div>
                 </div>
-                <span class="ml-3 font-medium">Sign Out</span>
+                <!-- Chevron Icon -->
+                <svg class="w-5 h-5 transition-transform group-hover:text-blue-600 dark:group-hover:text-blue-400"
+                    :class="profileOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
             </button>
-        </form>
-    </div>
 
+            <!-- Profile Dropdown Content -->
+            <div x-show="profileOpen" @click.away="profileOpen = false"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95 transform translate-y-2"
+                x-transition:enter-end="opacity-100 scale-100 transform translate-y-0"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100 transform translate-y-0"
+                x-transition:leave-end="opacity-0 scale-95 transform translate-y-2" 
+                class="w-full bg-white dark:bg-gray-900">
+
+                <!-- Dropdown Content -->
+                <div class="relative">
+                    <!-- Menu Items -->
+                    <div class="py-2">
+                        <!-- View Profile -->
+                        <a href="{{ route('profile.show') }}"
+                            class="flex items-center space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                            @click="profileOpen = false">
+                            <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-medium">View Profile</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Manage your profile information</p>
+                            </div>
+                        </a>
+
+                        <!-- Account Settings -->
+                        <a href="{{ route('account.settings') }}"
+                            class="flex items-center space-x-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                            @click="profileOpen = false">
+                            <div class="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+                                <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                                    </path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-medium">Account Settings</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Configure your account preferences
+                                </p>
+                            </div>
+                        </a>
+
+                        <!-- Divider -->
+                        <hr class="my-2 border-gray-200 dark:border-gray-700">
+
+                        <!-- Sign Out -->
+                        <form action="{{ route('logout') }}" method="POST" class="block">
+                            @csrf
+                            <button type="submit"
+                                class="w-full flex items-center space-x-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
+                                @click="profileOpen = false">
+                                <div class="p-2 bg-red-100 dark:bg-red-900 rounded-lg">
+                                    <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11.75 9.874C11.75 10.2882 12.0858 10.624 12.5 10.624C12.9142 10.624 13.25 10.2882 13.25 9.874H11.75ZM13.25 4C13.25 3.58579 12.9142 3.25 12.5 3.25C12.0858 3.25 11.75 3.58579 11.75 4H13.25ZM9.81082 6.66156C10.1878 6.48991 10.3542 6.04515 10.1826 5.66818C10.0109 5.29121 9.56615 5.12478 9.18918 5.29644L9.81082 6.66156ZM5.5 12.16L4.7499 12.1561L4.75005 12.1687L5.5 12.16ZM12.5 19L12.5086 18.25C12.5029 18.25 12.4971 18.25 12.4914 18.25L12.5 19ZM19.5 12.16L20.2501 12.1687L20.25 12.1561L19.5 12.16ZM15.8108 5.29644C15.4338 5.12478 14.9891 5.29121 14.8174 5.66818C14.6458 6.04515 14.8122 6.48991 15.1892 6.66156L15.8108 5.29644ZM13.25 9.874V4H11.75V9.874H13.25ZM9.18918 5.29644C6.49843 6.52171 4.7655 9.19951 4.75001 12.1561L6.24999 12.1639C6.26242 9.79237 7.65246 7.6444 9.81082 6.66156L9.18918 5.29644ZM4.75005 12.1687C4.79935 16.4046 8.27278 19.7986 12.5086 19.75L12.4914 18.25C9.08384 18.2892 6.28961 15.5588 6.24995 12.1513L4.75005 12.1687ZM12.4914 19.75C16.7272 19.7986 20.2007 16.4046 20.2499 12.1687L18.7501 12.1513C18.7104 15.5588 15.9162 18.2892 12.5086 18.25L12.4914 19.75ZM20.25 12.1561C20.2345 9.19951 18.5016 6.52171 15.8108 5.29644L15.1892 6.66156C17.3475 7.6444 18.7376 9.79237 18.75 12.1639L20.25 12.1561Z" fill="currentColor"></path> </g></svg>
+                                </div>
+                                <div class="text-left">
+                                    <p class="font-medium">Sign Out</p>
+                                    <p class="text-xs text-red-500 dark:text-red-400">End your current session</p>
+                                </div>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </aside>
 
 <!-- Notifications Panel -->
@@ -877,7 +929,7 @@
             <form action="{{ route('notifications.markAllAsRead') }}" method="POST">
                 @csrf
                 <button type="submit"
-                    class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg">
+                    class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
                     Mark All as Read
                 </button>
             </form>
@@ -887,7 +939,7 @@
 
 <!-- Mobile Menu Button -->
 <button @click="toggleSidebar()"
-    class="lg:hidden fixed top-4 left-4 z-[65] p-3 bg-white shadow-lg rounded-xl border border-gray-200 text-gray-600 hover:text-blue-600 hover:bg-blue-50 ">
+    class="lg:hidden fixed top-4 left-4 z-[65] p-3 bg-white dark:bg-gray-800 shadow-lg rounded-xl border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 transition-all duration-200">
     <svg x-show="!sidebarOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
     </svg>
@@ -896,10 +948,11 @@
     </svg>
 </button>
 
+<!-- Mobile Top Bar Controls -->
 <div class="fixed top-4 right-4 z-[65] flex items-center space-x-2 lg:hidden">
     <!-- Theme Toggle Button -->
     <button @click='darkMode = !darkMode' type="button"
-        class="p-3 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-xl shadow-lg transition-colors duration-200"
+        class="p-3 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-200"
         role="button" aria-label="Toggle theme">
         <!-- Sun icon - shown in dark mode -->
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-sun w-6 h-6 hidden dark:block"
@@ -922,7 +975,7 @@
 
     <!-- Notifications Button -->
     <button @click="notificationOpen = !notificationOpen"
-        class="relative p-3 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-lg transition-colors duration-200">
+        class="relative p-3 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-200">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a2 2 0 00-4 0v.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m7 0v1a3 3 0 01-6 0v-1m6 0H9">
@@ -930,7 +983,7 @@
         </svg>
         @if (Auth::user()->unreadNotifications->count() > 0)
             <div
-                class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 dark:bg-red-600 rounded-full flex items-center justify-center">
+                class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 dark:bg-red-600 rounded-full flex items-center justify-center animate-pulse">
                 <span class="text-xs font-bold text-white">
                     {{ Auth::user()->unreadNotifications->count() > 9 ? '9+' : Auth::user()->unreadNotifications->count() }}
                 </span>

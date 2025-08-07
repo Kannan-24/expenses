@@ -26,6 +26,7 @@ export default {
                 'float-card': 'floatCard 8s ease-in-out infinite',
                 'float-icon': 'floatIcon 6s ease-in-out infinite',
                 'grow-bar': 'growBar 2s ease-out',
+                'ring': 'ring 1s ease-in-out',
             },
             keyframes: {
                 float: {
@@ -47,7 +48,20 @@ export default {
                 growBar: {
                     '0%': { height: '0' },
                     '100%': { height: 'var(--height)' }
-                }
+                },
+                ring: {
+                    '0%': { transform: 'rotate(0deg)' },
+                    '10%': { transform: 'rotate(15deg)' },
+                    '20%': { transform: 'rotate(-10deg)' },
+                    '30%': { transform: 'rotate(15deg)' },
+                    '40%': { transform: 'rotate(-8deg)' },
+                    '50%': { transform: 'rotate(10deg)' },
+                    '60%': { transform: 'rotate(-6deg)' },
+                    '70%': { transform: 'rotate(6deg)' },
+                    '80%': { transform: 'rotate(-4deg)' },
+                    '90%': { transform: 'rotate(4deg)' },
+                    '100%': { transform: 'rotate(0deg)' },
+                },
             }
         },
     },
