@@ -4,7 +4,7 @@
     </x-slot>
 
     <div class="min-h-screen">
-        <div class="max-w-4xl mx-auto">
+        <div class="mx-auto">
             <!-- Enhanced Header Section -->
             <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 mb-6 overflow-hidden">
                 <div class="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 dark:from-purple-800 dark:via-purple-900 dark:to-indigo-900 border-b border-purple-500 dark:border-purple-600 p-6">
