@@ -31,7 +31,7 @@ class EmiLoanController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::where('user_id', Auth::id())->get();
         $wallets = Wallet::where('user_id', Auth::id())->where('is_active', true)->get();
         return view('emi_loans.create', compact('categories', 'wallets'));
     }
@@ -131,7 +131,7 @@ class EmiLoanController extends Controller
      */
     public function edit(EmiLoan $emiLoan)
     {
-        $categories = Category::all();
+        $categories = Category::where('user_id', Auth::id())->get();
         $wallets = Wallet::where('user_id', Auth::id())->where('is_active', true)->get();
         return view('emi_loans.edit', compact('emiLoan', 'categories', 'wallets'));
     }
