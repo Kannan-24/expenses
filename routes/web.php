@@ -17,13 +17,12 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WalletTypeController;
 use App\Http\Controllers\BorrowController;
+use App\Http\Controllers\LandingController;
 use App\Http\Middleware\EnsureUserIsOnboarded;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [LandingController::class, 'index'])->name('home');
 
 Route::get('/terms-of-service', function () {
     return view('terms');
