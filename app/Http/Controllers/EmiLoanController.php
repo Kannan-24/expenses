@@ -213,7 +213,7 @@ class EmiLoanController extends Controller
 
             DB::commit();
 
-            return redirect()->route('emi_loans.index')->with('success', 'EMI Loan updated successfully.');
+            return redirect()->route('emi-loans.index')->with('success', 'EMI Loan updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Failed to update EMI loan: ' . $e->getMessage()]);
@@ -237,7 +237,7 @@ class EmiLoanController extends Controller
 
             DB::commit();
 
-            return redirect()->route('emi_loans.index')->with('success', 'EMI Loan deleted successfully.');
+            return redirect()->route('emi-loans.index')->with('success', 'EMI Loan deleted successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Failed to delete EMI loan: ' . $e->getMessage()]);
