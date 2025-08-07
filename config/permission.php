@@ -207,6 +207,7 @@ return [
         'request support',
         'manage budgets',
         'manage borrows',
+        'manage emi loans',
 
         'manage users',
         'manage roles',
@@ -244,6 +245,7 @@ return [
                 'request support',
                 'manage budgets',
                 'manage borrows',
+                'manage emi loans',
             ]
         ]
     ],

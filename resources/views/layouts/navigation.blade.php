@@ -185,7 +185,7 @@
                 @endif
             </a>
 
-            @canany(['manage transactions', 'manage categories', 'manage wallets', 'manage budgets'])
+            @canany(['manage transactions', 'manage categories', 'manage wallets', 'manage budgets', 'manage borrows', 'manage emi loans'])
                 <!-- Core Features Section -->
                 <div class="pt-4">
                     <h4
@@ -301,43 +301,47 @@
                         </a>
                     @endcan
 
-                    <a href="{{ route('borrows.index') }}"
-                        class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('borrows.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
-                        <div
-                            class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('borrows.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
-                            <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 8v4m0 0v4m0-4h4m-4 0H8m6.5 6.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zM12 3a9 9 0 100 18A9 9 0 0012 3z">
-                                </path>
-                            </svg>
-                        </div>
-                        <span class="ml-3 font-medium transition-all duration-200">Borrows</span>
-                        @if (request()->routeIs('borrows.*'))
+                    @can('manage borrows')
+                        <a href="{{ route('borrows.index') }}"
+                            class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('borrows.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
                             <div
-                                class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                                class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('borrows.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
+                                <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4m0 0v4m0-4h4m-4 0H8m6.5 6.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zM12 3a9 9 0 100 18A9 9 0 0012 3z">
+                                    </path>
+                                </svg>
                             </div>
-                        @endif
-                    </a>
+                            <span class="ml-3 font-medium transition-all duration-200">Borrows</span>
+                            @if (request()->routeIs('borrows.*'))
+                                <div
+                                    class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                                </div>
+                            @endif
+                        </a>
+                    @endcan
 
-                    <a href="{{ route('emi-loans.index') }}"
-                        class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('emi-loans.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
-                        <div
-                            class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('emi-loans.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
-                            <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
-                                </path>
-                            </svg>
-                        </div>
-                        <span class="ml-3 font-medium transition-all duration-200">EMI Loans</span>
-                        @if (request()->routeIs('emi-loans.*'))
+                    @can('manage emi loans')
+                        <a href="{{ route('emi-loans.index') }}"
+                            class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('emi-loans.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
                             <div
-                                class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                                class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('emi-loans.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
+                                <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                                    </path>
+                                </svg>
                             </div>
-                        @endif
-                    </a>
+                            <span class="ml-3 font-medium transition-all duration-200">EMI Loans</span>
+                            @if (request()->routeIs('emi-loans.*'))
+                                <div
+                                    class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                                </div>
+                            @endif
+                        </a>
+                    @endcan
                 </div>
             @endcanany
 
