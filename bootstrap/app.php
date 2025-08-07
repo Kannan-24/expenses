@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ->withoutOverlapping()
             ->onOneServer();
         $schedule->command('streaks:update')->daily();
+        $schedule->command('emi:check-due --days=3')->dailyAt('10:00')->timezone('Asia/Kolkata');
     })
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append([

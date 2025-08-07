@@ -319,6 +319,25 @@
                             </div>
                         @endif
                     </a>
+
+                    <a href="{{ route('emi-loans.index') }}"
+                        class="nav-item flex items-center px-4 py-3 rounded-xl group transition-all duration-200 {{ request()->routeIs('emi-loans.*') ? 'nav-active bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-md' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400' }}">
+                        <div
+                            class="nav-icon p-2 rounded-lg transition-all duration-200 {{ request()->routeIs('emi-loans.*') ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50' }}">
+                            <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                                </path>
+                            </svg>
+                        </div>
+                        <span class="ml-3 font-medium transition-all duration-200">EMI Loans</span>
+                        @if (request()->routeIs('emi-loans.*'))
+                            <div
+                                class="ml-auto w-1 h-8 bg-blue-600 dark:bg-blue-400 rounded-full opacity-0 animate-slide-in">
+                            </div>
+                        @endif
+                    </a>
                 </div>
             @endcanany
 
