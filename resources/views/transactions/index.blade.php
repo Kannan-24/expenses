@@ -175,6 +175,20 @@
                             </select>
                         </div>
 
+                        <!-- Wallets -->
+                        <div >
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Wallet</label>
+                            <select name="wallet"
+                                    class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">All Wallets</option>
+                                @foreach ($wallets as $wallet)
+                                    <option value="{{ $wallet->id }}" {{ request('wallet') == $wallet->id ? 'selected' : '' }}>
+                                        {{ $wallet->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <!-- Type Filter Hidden Select -->
                         <select name="type" class="hidden">
                             <option value="">All Types</option>
