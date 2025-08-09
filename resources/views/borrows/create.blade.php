@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('Add Borrow / Lend') }} - {{ config('app.name', 'expenses') }}
+        {{ __('Add Borrow / Lend') }} - {{ config('app.name', 'Cazhoo') }}
     </x-slot>
 
     <div class="min-h-screen">

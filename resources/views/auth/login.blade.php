@@ -1,6 +1,6 @@
 <x-auth-layout>
     <x-slot name="title">
-        {{ __('Sign In') }} - {{ config('app.name', 'Duo Dev Expenses') }}
+        {{ __('Sign In') }} - {{ config('app.name', 'Cazhoo') }}
     </x-slot>
     
     <!-- Enhanced Left Panel (Illustration) -->
@@ -191,9 +191,8 @@
             <!-- Enhanced Header -->
             <div class="text-center lg:text-left mb-8">
                 <!-- Brand Logo/Icon -->
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 shadow-lg">
-                    <x-application-logo class="w-10 h-10 text-white" />
-                </div>
+                <x-application-logo class="w-10 h-10 text-white mb-6" />
+
                 
                 <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Welcome Back!</h1>
                 <p class="text-gray-600 text-lg leading-relaxed">
@@ -358,7 +357,7 @@
     <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 z-20" x-data="{ dismissed: false }" x-show="!dismissed">
         <div class="flex items-center justify-between">
             <div>
-                <div class="font-semibold text-sm">New to Duo Dev Expenses?</div>
+                <div class="font-semibold text-sm">New to Cazhoo?</div>
                 <div class="text-xs opacity-90">Join thousands managing their finances</div>
             </div>
             <div class="flex items-center space-x-2">

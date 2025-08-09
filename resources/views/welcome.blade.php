@@ -1,6 +1,6 @@
 <x-guest-layout>
     <x-slot name="title">
-        Duo Dev Expenses - Professional Personal Finance Management | Track, Manage & Save Money
+        Cazhoo - Professional Personal Finance Management | Track, Manage & Save Money
     </x-slot>
 
     <!-- Enhanced Hero Section -->
@@ -206,8 +206,7 @@
                 </div>
                 <h2 class="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
                     Why Choose <span
-                        class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Duo Dev
-                        Expenses</span>
+                        class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Cazhoo</span>
                 </h2>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
                     Comprehensive financial management tools designed to help you take control of your money and build
@@ -493,7 +492,7 @@
                         class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Questions?</span>
                 </h2>
                 <p class="text-xl text-gray-600">
-                    Everything you need to know about Duo Dev Expenses and getting started with better financial
+                    Everything you need to know about Cazhoo and getting started with better financial
                     management.
                 </p>
             </div>
@@ -502,14 +501,14 @@
             @php
                 $faqs = [
                     [
-                        'question' => 'What is Duo Dev Expenses?',
+                        'question' => 'What is Cazhoo?',
                         'answer' =>
-                            'Duo Dev Expenses is a simple and powerful tool to help you manage your personal finances. You can track daily spending, set budgets, manage wallets, and get insights — all in one place.',
+                            'Cazhoo is a simple and powerful tool to help you manage your personal finances. You can track daily spending, set budgets, manage wallets, and get insights — all in one place.',
                     ],
                     [
-                        'question' => 'Is Duo Dev Expenses free to use?',
+                        'question' => 'Is Cazhoo free to use?',
                         'answer' =>
-                            'Yes! Duo Dev Expenses is completely free to use. We’re focused on helping individuals build better financial habits without cost.',
+                            'Yes! Cazhoo is completely free to use. We’re focused on helping individuals build better financial habits without cost.',
                     ],
                     [
                         'question' => 'Do I need to create an account?',
@@ -547,9 +546,9 @@
                             'Not yet. We’re working on it! For now, you can use the web version on any device. Stay tuned for app updates.',
                     ],
                     [
-                        'question' => 'Who built Duo Dev Expenses?',
+                        'question' => 'Who built Cazhoo?',
                         'answer' =>
-                            'Duo Dev Expenses is proudly built by Duo Dev Technologies, with the goal of making personal finance simple and accessible for everyone.',
+                            'Cazhoo is proudly built by Duo Dev Technologies, with the goal of making personal finance simple and accessible for everyone.',
                     ],
                 ];
             @endphp
@@ -586,7 +585,7 @@
                     class="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-3xl shadow-2xl p-8 lg:p-12 text-white">
                     <h3 class="text-3xl lg:text-4xl font-bold mb-4">Ready to Take Control of Your Finances?</h3>
                     <p class="text-xl mb-8 text-purple-100">Join thousands of users who've transformed their financial
-                        habits with Duo Dev Expenses.</p>
+                        habits with Cazhoo.</p>
 
                     <div
                         class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">

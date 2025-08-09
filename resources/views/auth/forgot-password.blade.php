@@ -1,6 +1,6 @@
 <x-auth-layout>
     <x-slot name="title">
-        {{ __('Forgot Password') }} - {{ config('app.name', 'Duo Dev expenses') }}
+        {{ __('Forgot Password') }} - {{ config('app.name', 'Cazhoo') }}
     </x-slot>
 
     <div class="w-full min-h-screen bg-gray-50">
@@ -13,7 +13,7 @@
                         <div class="inline-flex items-center justify-center w-10 h-10 rounded-2xl shadow-lg">
                             <x-application-logo class="w-10 h-10 text-white" />
                         </div>
-                        <span class="ml-3 text-lg sm:text-xl font-bold text-gray-900">{{ config('app.name', 'Duo Dev Expenses') }}</span>
+                        <span class="ml-3 text-lg sm:text-xl font-bold text-gray-900">{{ config('app.name', 'Cazhoo') }}</span>
                     </div>
                     <a href="{{ route('login') }}" class="text-sm sm:text-base text-blue-600 hover:text-blue-500 font-medium transition-colors">
                         Back to Login

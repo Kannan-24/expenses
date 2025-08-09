@@ -6,27 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description"
-        content="Duo Dev Expenses - Professional personal finance management tool. Track expenses, manage budgets, and build better financial habits with our intuitive platform.">
+        content="Cazhoo - Professional personal finance management tool. Track expenses, manage budgets, and build better financial habits with our intuitive platform.">
     <meta name="keywords"
         content="expense tracker, budget management, personal finance, money management, financial planning">
     <meta name="author" content="Duo Dev Technologies">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Duo Dev Expenses - Take Control of Your Money">
+    <meta property="og:title" content="Cazhoo - Take Control of Your Money">
     <meta property="og:description"
         content="The most intuitive way to track expenses, manage budgets, and build better financial habits.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:site_name" content="Duo Dev Expenses">
+    <meta property="og:site_name" content="Cazhoo">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Duo Dev Expenses - Take Control of Your Money">
+    <meta name="twitter:title" content="Cazhoo - Take Control of Your Money">
     <meta name="twitter:description"
         content="The most intuitive way to track expenses, manage budgets, and build better financial habits.">
 
     <title>
-        {{ $title ?? 'Duo Dev Expenses - Professional Personal Finance Management | Track, Manage & Save Money' }}
+        {{ $title ?? 'Cazhoo - Professional Personal Finance Management | Track, Manage & Save Money' }}
     </title>
 
     <!-- Fonts -->
@@ -188,20 +188,21 @@
 
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
-                    <div
+                    {{-- <div
                         class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                         <img src="{{ asset('assets\logo.png') }}" alt="logo">
                     </div>
                     <div class="hidden sm:block">
                         <h1
                             class="text-xl lg:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                            Duo Dev Expenses
+                            Cazhoo
                         </h1>
                         <p class="text-xs text-gray-500 -mt-1">Financial Freedom</p>
                     </div>
                     <div class="sm:hidden">
                         <h1 class="text-lg font-bold text-gray-900">Duo Dev</h1>
-                    </div>
+                    </div> --}}
+                    <img src="{{ asset('assets\Cazhoo Logo.png') }}" alt="1" class="w-auto h-12">
                 </div>
 
                 <!-- Mobile menu button -->
@@ -359,13 +360,13 @@
                 <!-- Company Info -->
                 <div class="lg:col-span-2">
                     <div class="flex items-center space-x-3 mb-6">
-                        <div
-                            class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        {{-- <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                             <img src="{{ asset('assets\logo.png') }}" alt="logo">
-                        </div>
+                        </div> --}}
+                        <img src="{{ asset('assets\Cazhoo Logo.png') }}" alt="1" class="w-auto h-14">
                         <div>
-                            <h3 class="text-2xl font-bold">Duo Dev Expenses</h3>
-                            <p class="text-gray-400 text-sm">Financial Freedom Made Simple</p>
+                            {{-- <h3 class="text-2xl font-bold">Cazhoo</h3>
+                            <p class="text-gray-400 text-sm">Financial Freedom Made Simple</p> --}}
                         </div>
                     </div>
                     <p class="text-gray-300 text-lg leading-relaxed mb-6 max-w-md">
@@ -483,7 +484,7 @@
                         </p>
                     </div>
                     <div class="flex items-center space-x-4 text-sm text-gray-400">
-                        <p><span class="text-white font-medium">Duo Dev Expenses</span> — A personal finance management
+                        <p><span class="text-white font-medium">Cazhoo</span> — A personal finance management
                             product by <a href="https://duodev.in/" target="_blank"><span
                                     class="text-white font-medium">Duo Dev Technologies</span></a>.</p>
                     </div>

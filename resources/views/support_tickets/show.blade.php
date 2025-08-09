@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('Support Ticket') }} #{{ $supportTicket->id }} - {{ config('app.name', 'expenses') }}
+        {{ __('Support Ticket') }} #{{ $supportTicket->id }} - {{ config('app.name', 'Cazhoo') }}
     </x-slot>
 
     <x-slot name="head">

@@ -12,34 +12,76 @@
     x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full">
 
     <!-- Sidebar Header -->
-    <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 p-4 border-b border-blue-500 dark:border-blue-600">
+    <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 sticky top-0 z-10 backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
         <div class="flex items-center justify-between">
             <!-- Logo and Brand -->
             <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 group">
-                <div
-                    class="p-2 bg-white/20 dark:bg-white/10 rounded-xl group-hover:bg-white/30 dark:group-hover:bg-white/20 ">
-                    <x-application-logo class="w-8 h-8 text-white" />
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold text-white group-hover:text-blue-100 dark:group-hover:text-blue-200">Duo Dev Expenses</h1>
-                    <p class="text-blue-200 dark:text-blue-300 text-sm">Financial Management</p>
-                </div>
+                <x-application-logo  />
             </a>
 
-            <!-- Mobile Close Button -->
-            <button @click="sidebarOpen = false"
-                class="lg:hidden p-2 text-white/80 hover:text-white hover:bg-white/20 dark:hover:bg-white/10 rounded-lg ">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                    </path>
-                </svg>
-            </button>
+            <div>
+                <!-- Theme Toggle Button -->
+                <button @click='darkMode = !darkMode' type="button"
+                    class="hidden lg:inline-flex items-center justify-center w-8 h-8 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 group"
+                    role="button" aria-label="Toggle theme">
+                    <!-- Sun icon - shown in dark mode -->
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="icon icon-tabler icon-tabler-sun w-5 h-5 hidden dark:block transition-transform group-hover:rotate-12"
+                        width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path>
+                        <path
+                            d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7">
+                        </path>
+                    </svg>
+                    <!-- Moon icon - shown in light mode -->
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="icon icon-tabler icon-tabler-moon w-5 h-5 block dark:hidden transition-transform group-hover:-rotate-12"
+                        width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z">
+                        </path>
+                    </svg>
+                </button>
+
+                <!-- Notifications Button -->
+                <button @click="notificationOpen = !notificationOpen"
+                    class="hidden lg:inline-flex relative p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 group">
+                    <svg class="w-5 h-5 transition-transform group-hover:scale-110 group-hover:animate-ring" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a2 2 0 00-4 0v.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m7 0v1a3 3 0 01-6 0v-1m6 0H9">
+                        </path>
+                    </svg>
+                    @if (Auth::user()->unreadNotifications->count() > 0)
+                        <div
+                            class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 dark:bg-red-600 rounded-full flex items-center justify-center animate-pulse">
+                            <span class="text-xs font-bold text-white">
+                                {{ Auth::user()->unreadNotifications->count() > 9 ? '9+' : Auth::user()->unreadNotifications->count() }}
+                            </span>
+                        </div>
+                    @endif
+                </button>
+
+                <!-- Mobile Close Button -->
+                <button @click="sidebarOpen = false"
+                    class="lg:hidden p-2 text-white/80 hover:text-white hover:bg-white/20 dark:hover:bg-white/10 rounded-lg ">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+
+            </div>
+
         </div>
     </div>
 
     <!-- Navigation Section -->
     <div class="flex-1 overflow-y-auto custom-scrollbar">
-        <!-- Navigation Header -->
+        {{-- <!-- Navigation Header -->
         <div
             class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 sticky top-0 z-10 backdrop-blur-sm bg-opacity-95 dark:bg-opacity-95">
             <div class="flex items-center justify-between">
@@ -92,7 +134,7 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Main Navigation Menu -->
         <nav class="p-4 space-y-2 pb-6">

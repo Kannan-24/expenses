@@ -1,6 +1,6 @@
 <x-auth-layout>
     <x-slot name="title">
-        {{ __('Create Account') }} - {{ config('app.name', 'Duo Dev Expenses') }}
+        {{ __('Create Account') }} - {{ config('app.name', 'Cazhoo') }}
     </x-slot>
 
     <!-- Enhanced Left Panel (Form) -->
@@ -40,11 +40,10 @@
             <!-- Enhanced Header -->
             <div class="text-center lg:text-left mb-8">
                 <!-- Brand Logo/Icon -->
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 shadow-lg">
-                    <x-application-logo class="w-10 h-10 text-white" />
-                </div>
+                <x-application-logo class="w-10 h-10 text-white mb-6" />
+
                 
-                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Join Duo Dev Expenses</h1>
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Join Cazhoo</h1>
                 <p class="text-gray-600 text-lg leading-relaxed">
                     Create your account and start your journey to financial freedom today.
                 </p>

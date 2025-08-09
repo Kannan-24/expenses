@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('User Profile') }} - {{ config('app.name', 'expenses') }}
+        {{ __('User Profile') }} - {{ config('app.name', 'Cazhoo') }}
     </x-slot>
 
     <div class="w-full mx-auto max-w-7xl space-y-6">

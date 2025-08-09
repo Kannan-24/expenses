@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('Secure Access Verification') }} - {{ config('app.name', 'expenses') }}
+        {{ __('Secure Access Verification') }} - {{ config('app.name', 'Cazhoo') }}
     </x-slot>
 
     <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 ">
