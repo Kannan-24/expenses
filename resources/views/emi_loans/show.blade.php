@@ -345,6 +345,12 @@
                                 </table>
                             </div>
                         </div>
+
+                        @if ($emiSchedules->hasPages())
+                            <div class="p-6">
+                                {{ $emiSchedules->links('components.pagination') }}
+                            </div>
+                        @endif
                     @endif
                 </div>
 
