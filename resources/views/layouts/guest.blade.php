@@ -188,7 +188,7 @@
 
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
-                    <div
+                    {{-- <div
                         class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                         <img src="{{ asset('assets\logo.png') }}" alt="logo">
                     </div>
@@ -201,7 +201,8 @@
                     </div>
                     <div class="sm:hidden">
                         <h1 class="text-lg font-bold text-gray-900">Duo Dev</h1>
-                    </div>
+                    </div> --}}
+                    <img src="{{ asset('assets\Cazhoo Logo.png') }}" alt="1" class="w-auto h-12">
                 </div>
 
                 <!-- Mobile menu button -->
@@ -349,13 +350,13 @@
                 <!-- Company Info -->
                 <div class="lg:col-span-2">
                     <div class="flex items-center space-x-3 mb-6">
-                        <div
-                            class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        {{-- <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                             <img src="{{ asset('assets\logo.png') }}" alt="logo">
-                        </div>
+                        </div> --}}
+                        <img src="{{ asset('assets\Cazhoo Logo.png') }}" alt="1" class="w-auto h-14">
                         <div>
-                            <h3 class="text-2xl font-bold">Duo Dev Expenses</h3>
-                            <p class="text-gray-400 text-sm">Financial Freedom Made Simple</p>
+                            {{-- <h3 class="text-2xl font-bold">Duo Dev Expenses</h3>
+                            <p class="text-gray-400 text-sm">Financial Freedom Made Simple</p> --}}
                         </div>
                     </div>
                     <p class="text-gray-300 text-lg leading-relaxed mb-6 max-w-md">
