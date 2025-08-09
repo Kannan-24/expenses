@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <x-slot name="title">Privacy Policy | Duo Dev Expenses - Protecting Your Financial Data Privacy</x-slot>
+    <x-slot name="title">Privacy Policy | Cazhoo - Protecting Your Financial Data Privacy</x-slot>
 
     <!-- Enhanced Hero Section -->
     <section class="relative bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 pt-12 pb-16">

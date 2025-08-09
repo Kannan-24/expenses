@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('Roles') }} - {{ config('app.name', 'expenses') }}
+        {{ __('Roles') }} - {{ config('app.name', 'Cazhoo') }}
     </x-slot>
 
     <div class="bg-white p-4 rounded-2xl shadow flex flex-col justify-between"

@@ -1,6 +1,6 @@
 <x-auth-layout>
     <x-slot name="title">
-        {{ __('Sign In') }} - {{ config('app.name', 'Duo Dev Expenses') }}
+        {{ __('Sign In') }} - {{ config('app.name', 'Cazhoo') }}
     </x-slot>
     
     <!-- Enhanced Left Panel (Illustration) -->
@@ -358,7 +358,7 @@
     <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 z-20" x-data="{ dismissed: false }" x-show="!dismissed">
         <div class="flex items-center justify-between">
             <div>
-                <div class="font-semibold text-sm">New to Duo Dev Expenses?</div>
+                <div class="font-semibold text-sm">New to Cazhoo?</div>
                 <div class="text-xs opacity-90">Join thousands managing their finances</div>
             </div>
             <div class="flex items-center space-x-2">

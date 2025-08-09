@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <x-slot name="title">Terms of Service | Duo Dev Expenses - Professional Personal Finance Management</x-slot>
+    <x-slot name="title">Terms of Service | Cazhoo - Professional Personal Finance Management</x-slot>
 
     <!-- Enhanced Hero Section -->
     <section class="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-14 pb-16">
@@ -45,7 +45,7 @@
                         Terms of <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Service</span>
                     </h1>
                     <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                        Please read these terms carefully before using Duo Dev Expenses. By accessing our services, you agree to be bound by these terms.
+                        Please read these terms carefully before using Cazhoo. By accessing our services, you agree to be bound by these terms.
                     </p>
                 </div>
 
@@ -316,7 +316,7 @@
                                         </svg>
                                         <div>
                                             <h4 class="font-semibold text-green-800">Currently Free</h4>
-                                            <p class="text-green-700 text-sm">Duo Dev Expenses is currently completely free to use with no subscription fees.</p>
+                                            <p class="text-green-700 text-sm">Cazhoo is currently completely free to use with no subscription fees.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -538,7 +538,7 @@
                 <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
                     <h3 class="text-2xl font-bold mb-4">Ready to Get Started?</h3>
                     <p class="text-blue-100 mb-6 max-w-2xl mx-auto">
-                        Now that you've reviewed our terms, join thousands of users managing their finances with Duo Dev Expenses.
+                        Now that you've reviewed our terms, join thousands of users managing their finances with Cazhoo.
                     </p>
                     <a href="{{ route('register') }}" 
                        class="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">

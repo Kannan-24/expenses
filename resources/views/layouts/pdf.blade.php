@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ $title ?? 'Duo Dev Expenses Report' }}</title>
+    <title>{{ $title ?? 'Cazhoo Report' }}</title>
     <style>
 
         @page {
@@ -75,10 +75,10 @@
         <table>
             <tr>
                 <td>
-                    <img src="https://expenses.duodev.in/assets/logo.png" alt="Duo Dev Expenses Logo">
+                    <img src="https://cazhoo.duodev.in/assets/logo.png" alt="Cazhoo Logo">
                 </td>
                 <td>
-                    Duo Dev Expenses <br>
+                    Cazhoo <br>
                     Powered by Duo Dev Technologies
                 </td>
                 <td>
