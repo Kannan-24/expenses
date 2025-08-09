@@ -150,7 +150,7 @@
                         <h2 class="text-xl font-bold text-gray-900 mb-3">Agreement Overview</h2>
                         <p class="text-gray-700 leading-relaxed mb-4">
                             These Terms of Service ("Terms") govern your access to and use of all services, products, and websites
-                            (collectively, the "Services") provided by <strong>Duo Dev Technologies</strong> ("we", "our", or "us") through
+                            (collectively, the "Services") provided by <strong>Duo Dev Technologies &trade;</strong> ("we", "our", or "us") through
                             <a href="https://duodev.in" class="text-blue-600 hover:text-blue-800 underline font-medium">https://duodev.in</a>.
                         </p>
                         <div class="bg-white rounded-lg p-4 border border-blue-200">
@@ -339,7 +339,7 @@
                         <div class="p-8">
                             <p class="text-gray-700 leading-relaxed mb-4">
                                 All content, trademarks, logos, and intellectual property on the Services are owned by Duo Dev
-                                Technologies or our licensors. You may not reproduce, modify, or distribute any content without our
+                                Technologies &trade; or our licensors. You may not reproduce, modify, or distribute any content without our
                                 prior written consent.
                             </p>
                         </div>
@@ -400,7 +400,7 @@
                         </div>
                         <div class="p-8">
                             <p class="text-gray-700 leading-relaxed mb-4">
-                                To the maximum extent permitted by law, Duo Dev Technologies shall not be liable for any indirect,
+                                To the maximum extent permitted by law, Duo Dev Technologies &trade; shall not be liable for any indirect,
                                 incidental, consequential, or punitive damages, or any loss of data, revenue, or profits arising out of
                                 or in connection with your use of the Services.
                             </p>

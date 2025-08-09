@@ -548,7 +548,7 @@
                     [
                         'question' => 'Who built Cazhoo?',
                         'answer' =>
-                            'Cazhoo is proudly built by Duo Dev Technologies, with the goal of making personal finance simple and accessible for everyone.',
+                            'Cazhoo is proudly built by Duo Dev Technologies &trade;, with the goal of making personal finance simple and accessible for everyone.',
                     ],
                 ];
             @endphp

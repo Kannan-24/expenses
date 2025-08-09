@@ -188,20 +188,6 @@
 
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
-                    {{-- <div
-                        class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <img src="{{ asset('assets\logo.png') }}" alt="logo">
-                    </div>
-                    <div class="hidden sm:block">
-                        <h1
-                            class="text-xl lg:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                            Cazhoo
-                        </h1>
-                        <p class="text-xs text-gray-500 -mt-1">Financial Freedom</p>
-                    </div>
-                    <div class="sm:hidden">
-                        <h1 class="text-lg font-bold text-gray-900">Duo Dev</h1>
-                    </div> --}}
                     <img src="{{ asset('assets\Cazhoo Logo.png') }}" alt="1" class="w-auto h-12">
                 </div>
 
@@ -479,14 +465,14 @@
                         <p>&copy; {{ date('Y') }}
                             <a href="https://duodev.in" target="_blank" rel="noopener"
                                 class="text-white font-semibold hover:text-blue-400 transition-colors">
-                                Duo Dev Technologies
+                                Duo Dev Technologies  &trade;
                             </a>. All rights reserved.
                         </p>
                     </div>
                     <div class="flex items-center space-x-4 text-sm text-gray-400">
                         <p><span class="text-white font-medium">Cazhoo</span> — A personal finance management
                             product by <a href="https://duodev.in/" target="_blank"><span
-                                    class="text-white font-medium">Duo Dev Technologies</span></a>.</p>
+                                    class="text-white font-medium">Duo Dev Technologies  &trade;</span></a>.</p>
                     </div>
                 </div>
             </div>

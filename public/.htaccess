@@ -1,4 +1,10 @@
 <IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect only if the request came to expenses.duodev.in
+    RewriteCond %{HTTP_HOST} ^expenses\.duodev\.in$ [NC]
+    RewriteRule ^(.*)$ https://cazhoo.duodev.in/$1 [L,R=301]
+
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>

@@ -116,7 +116,7 @@
                     <div>
                         <h2 class="text-xl font-bold text-gray-900 mb-3">Privacy Policy Summary</h2>
                         <p class="text-gray-700 leading-relaxed mb-4">
-                            This Privacy Policy explains how <strong>Duo Dev Technologies</strong> ("we", "our", or "us") collects, uses, and
+                            This Privacy Policy explains how <strong>Duo Dev Technologies &trade;</strong> ("we", "our", or "us") collects, uses, and
                             protects your personal information when you use our financial management services through 
                             <a href="https://duodev.in" class="text-green-600 hover:text-green-800 underline font-medium">https://duodev.in</a>.
                         </p>
