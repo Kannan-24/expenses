@@ -1,5 +1,10 @@
 <?php
 
+if ($_SERVER['HTTP_HOST'] === 'expenses.duodev.in') {
+    header("Location: https://cazhoo.duodev.in" . $_SERVER['REQUEST_URI'], true, 301);
+    exit();
+}
+
 use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
