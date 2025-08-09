@@ -627,7 +627,7 @@
                     <div class="text-sm text-gray-600">Active Users</div>
                 </div>
                 <div class="space-y-2">
-                    <div class="text-3xl font-bold text-green-600">₹2.7M+</div>
+                    <div class="text-3xl font-bold text-green-600">{{ $totalTracked }}+</div>
                     <div class="text-sm text-gray-600">Money Tracked</div>
                 </div>
                 <div class="space-y-2">

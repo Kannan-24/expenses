@@ -17,13 +17,12 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WalletTypeController;
 use App\Http\Controllers\BorrowController;
+use App\Http\Controllers\LandingController;
 use App\Http\Middleware\EnsureUserIsOnboarded;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [LandingController::class, 'index'])->name('home');
 
 Route::get('/terms-of-service', function () {
     return view('terms');
@@ -71,7 +70,11 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
     Route::get('borrows/{borrow}/return/{history}/edit', [\App\Http\Controllers\BorrowController::class, 'editReturn'])->name('borrows.return.edit');
     Route::put('borrows/{borrow}/return/{history}', [\App\Http\Controllers\BorrowController::class, 'updateReturn'])->name('borrows.return.update');
     Route::post('/borrows/{borrow}/repay', [BorrowController::class, 'repay'])->name('borrows.repay');
+    Route::delete('borrows/{borrow}/return/{history}', [BorrowController::class, 'destroyReturn'])->name('borrows.return.destroy');
     Route::resource('borrows', BorrowController::class);
+
+    Route::resource('emi-loans', \App\Http\Controllers\EmiLoanController::class);
+    Route::post('emi-loans/{emiLoan}/schedules/{emiSchedule}/mark-paid', [\App\Http\Controllers\EmiLoanController::class, 'markSchedulePaid'])->name('emi-loans.schedules.mark-paid');
 
     Route::get('/wallets/transfer', [WalletController::class, 'showTransferForm'])->name('wallets.transfer.form');
     Route::post('/wallets/transfer', [WalletController::class, 'transfer'])->name('wallets.transfer');
@@ -105,5 +108,42 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
         ],
     ]);
 });
+
+// Email template preview routes (for development)
+if (app()->environment(['local', 'testing'])) {
+    Route::get('/emi-notification-preview', function () {
+        // Create mock data for preview
+        $user = new \App\Models\User([
+            'id' => 1,
+            'name' => 'John Doe',
+            'email' => 'john@example.com'
+        ]);
+
+        $loan = new \App\Models\EmiLoan([
+            'id' => 1,
+            'name' => 'Home Loan - Main Residence',
+            'principal_amount' => 500000,
+            'interest_rate' => 8.5,
+            'tenure_months' => 240
+        ]);
+
+        $schedule = new \App\Models\EmiSchedule([
+            'id' => 1,
+            'emi_loan_id' => 1,
+            'due_date' => \Carbon\Carbon::now()->addDays(request('days', 2)),
+            'principal_amount' => 1500,
+            'interest_amount' => 500,
+            'total_amount' => 2000,
+            'status' => 'pending'
+        ]);
+
+        $schedule->setRelation('emiLoan', $loan);
+
+        return view('emails.emi-due-notification', [
+            'user' => $user,
+            'schedule' => $schedule
+        ]);
+    })->name('emi.notification.preview');
+}
 
 require __DIR__ . '/auth.php';

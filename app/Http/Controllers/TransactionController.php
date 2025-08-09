@@ -9,8 +9,10 @@ use App\Models\Category;
 use App\Models\Currency;
 use App\Models\ExpensePerson;
 use App\Models\User;
+use App\Models\UserAnalytics;
 use App\Models\Wallet;
 use App\Models\WalletType;
+use App\Services\StreakService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +38,7 @@ class TransactionController extends Controller
     {
         $categories = Category::where('user_id', Auth::id())->get();
         $people = ExpensePerson::where('user_id', Auth::id())->get();
+        $wallets = Wallet::where('user_id', Auth::id())->get();
 
         $query = Transaction::with(['category', 'person'])->where('user_id', Auth::id());
 
@@ -79,12 +82,17 @@ class TransactionController extends Controller
             $query->where('type', $request->type);
         }
 
+        // Wallet filter
+        if ($request->filled('wallet')) {
+            $query->where('wallet_id', $request->wallet);
+        }
+
         $transactions = $query->orderBy('date', 'desc')->paginate(10);
 
         // Attach filter values to the pagination links
         $transactions->appends($request->except('page'));
 
-        return view('transactions.index', compact('transactions', 'categories', 'people'));
+        return view('transactions.index', compact('transactions', 'categories', 'people', 'wallets'));
     }
 
     /**
@@ -137,8 +145,10 @@ class TransactionController extends Controller
             $this->updateBudgetHistory($request->category_id, $request->amount, $request->date);
         }
 
+        $user = Auth::user();
+
         $transaction = Transaction::create([
-            'user_id'           => Auth::id(),
+            'user_id'           => $user->id,
             'category_id'       => $request->category_id,
             'expense_person_id' => $request->expense_person_id,
             'amount'            => $request->amount,
@@ -147,6 +157,23 @@ class TransactionController extends Controller
             'type'              => $request->type,
             'wallet_id'         => $request->wallet_id,
         ]);
+
+        $streakInfo = StreakService::updateUserStreak($user);
+
+        // Track if came from email
+        if ($request->hasAny(['utm_source', 'utm_medium', 'utm_campaign'])) {
+            UserAnalytics::trackFromRequest(
+            $request, 
+                $user->id, 
+                'transaction_created',
+                [
+                    'transaction_id' => $transaction->id,
+                    'transaction_type' => $request->type,
+                    'amount' => $request->amount,
+                    'streak_info' => $streakInfo
+                ]
+            );
+        }
 
         return redirect()->route('transactions.index')->with(
             'success',

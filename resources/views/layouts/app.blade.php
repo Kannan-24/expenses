@@ -28,11 +28,8 @@
     <x-google-analytics-head />
 </head>
 
-<body class="font-sans antialiased bg-blue-200 dark:bg-slate-900 min-h-screen" 
-        x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
-        x-init="$watch('darkMode', value => localStorage.setItem('darkMode', value))" 
-        x-bind:class="{ 'dark': darkMode }" 
-        x-cloak>
+<body class="font-sans antialiased bg-blue-200 dark:bg-slate-900 min-h-screen" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
+    x-init="$watch('darkMode', value => localStorage.setItem('darkMode', value))" x-bind:class="{ 'dark': darkMode }" x-cloak>
     <x-google-analytics-body />
 
     <div class="pt-16 md:pt-0 bg-blue-200 dark:bg-slate-950">
@@ -109,6 +106,25 @@
             </div>
         </div>
     </div>
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        @if (request()->hasAny(['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']))
+            // Push UTM parameters to Data Layer
+            window.dataLayer.push({
+                'event': 'utm_tracking',
+                'utm_source': '{{ request()->get('utm_source') }}',
+                'utm_medium': '{{ request()->get('utm_medium') }}',
+                'utm_campaign': '{{ request()->get('utm_campaign') }}',
+                'utm_term': '{{ request()->get('utm_term') }}',
+                'utm_content': '{{ request()->get('utm_content') }}',
+                'referrer': '{{ request()->header('referer') }}',
+                'landing_page': '{{ request()->fullUrl() }}',
+                'tracking_timestamp': '{{ now()->format('Y-m-d H:i:s') }}'
+            });
+        @endif
+    </script>
 </body>
 
 </html>

@@ -27,6 +27,8 @@ class UserController extends Controller
             });
         }
 
+        $query = $query->orderBy('created_at', 'desc');
+
         $users = $query->paginate(10)->appends(['search' => $search]);
 
         return view('user.index', compact('users'));

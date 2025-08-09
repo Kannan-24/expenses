@@ -217,4 +217,25 @@ return [
             'symbol' => '₺',
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | EMI Notification Settings
+    |--------------------------------------------------------------------------
+    |
+    | This configuration controls when to send notifications for upcoming
+    | EMI payments. The value represents the number of days before the due
+    | date to start sending notifications.
+    |
+    */
+
+    'emi_notification_days' => env('EMI_NOTIFICATION_DAYS', 3),
+    
+    /*|--------------------------------------------------------------------------
+    | Support Email
+    |--------------------------------------------------------------------------
+    | This email address is used for support-related communications.
+    | It can be used in email templates and notifications.
+    */
+    'support_email' => env('APP_SUPPORT_EMAIL', 'contact@duodev.in'),
 ];
