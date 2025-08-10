@@ -22,7 +22,7 @@ class EmiLoanController extends Controller
      */
     public function index()
     {
-        $emiLoans = EmiLoan::with(['user', 'category', 'emiSchedules'])->get();
+        $emiLoans = EmiLoan::with(['user', 'category', 'emiSchedules'])->where('user_id', Auth::id())->paginate(10);
         return view('emi_loans.index', compact('emiLoans'));
     }
 
@@ -121,7 +121,7 @@ class EmiLoanController extends Controller
      */
     public function show(EmiLoan $emiLoan)
     {
-        $emiSchedules = $emiLoan->emiSchedules()->with('wallet')->get();
+        $emiSchedules = $emiLoan->emiSchedules()->with('wallet')->paginate(10);
         $wallets = Wallet::where('user_id', Auth::id())->where('is_active', true)->get();
         return view('emi_loans.show', compact('emiLoan', 'emiSchedules', 'wallets'));
     }
