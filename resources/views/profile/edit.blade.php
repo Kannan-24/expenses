@@ -349,45 +349,6 @@
                     </div>
                 </div>
 
-                <!-- Account Information -->
-                <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-                        <svg class="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Account Info
-                    </h3>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex justify-between">
-                            <span class="text-gray-600 dark:text-gray-400">User ID:</span>
-                            <span class="font-medium text-gray-900 dark:text-white">#{{ $user->id }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600 dark:text-gray-400">Member Since:</span>
-                            <span class="font-medium text-gray-900 dark:text-white">{{ $user->created_at->format('M Y') }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600 dark:text-gray-400">Last Updated:</span>
-                            <span class="font-medium text-gray-900 dark:text-white">{{ $user->updated_at->diffForHumans() }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600 dark:text-gray-400">Account Type:</span>
-                            <span class="font-medium text-gray-900 dark:text-white capitalize">{{ $user->user_type ?? 'Standard' }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600 dark:text-gray-400">Current User:</span>
-                            <span class="font-medium text-gray-900 dark:text-white">harithelord47</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600 dark:text-gray-400">Session:</span>
-                            <span class="font-medium text-gray-900 dark:text-white">Jul 07, 2025</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600 dark:text-gray-400">Time:</span>
-                            <span class="font-medium text-gray-900 dark:text-white">16:10 UTC</span>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
