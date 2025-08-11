@@ -18,6 +18,7 @@ use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WalletTypeController;
 use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Middleware\EnsureUserIsOnboarded;
 use Illuminate\Support\Facades\Auth;
@@ -53,14 +54,8 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
 
     Route::get('/account/activity', [ActivityController::class, 'index'])->name('account.activity');
 
-    Route::post('/notifications/{id}/read', function ($id) {
-        Auth::user()->notifications()->where('id', $id)->first()?->markAsRead();
-        return back();
-    })->name('notifications.read');
-    Route::post('/notifications/read-all', function () {
-        Auth::user()->unreadNotifications->markAsRead();
-        return back();
-    })->name('notifications.markAllAsRead');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 
     Route::resource('transactions', TransactionController::class);
     Route::resource('categories', CategoryController::class);
