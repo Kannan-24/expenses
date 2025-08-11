@@ -41,5 +41,21 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    'openrouter' => [
+        'url' => env('OPENROUTER_URL', 'https://openrouter.ai/api/v1/chat/completions'),
+        'key' => env('OPENROUTER_API_KEY'),
+        'model' => env('OPENROUTER_MODEL', 'mistralai/mistral-7b-instruct'),
+        'timeout' => env('OPENROUTER_TIMEOUT', 30),
+        'max_retries' => env('OPENROUTER_MAX_RETRIES', 2),
+        'cache_minutes' => env('OPENROUTER_CACHE_MINUTES', 5),
+        'enable_caching' => env('OPENROUTER_ENABLE_CACHING', false),
+        'debug_logging' => env('OPENROUTER_DEBUG_LOGGING', false),
+    ],
 
+    'whatsapp' => [
+        'webhook_token' => env('WHATSAPP_WEBHOOK_TOKEN'),
+        'api_url' => env('WHATSAPP_API_URL'),
+        'api_token' => env('WHATSAPP_API_TOKEN'),
+        'phone_number_id' => env('WHATSAPP_PHONE_NUMBER_ID'),
+    ]
 ];

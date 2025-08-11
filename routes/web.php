@@ -18,6 +18,7 @@ use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WalletTypeController;
 use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\WhatsAppController;
 use App\Http\Middleware\EnsureUserIsOnboarded;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -144,6 +145,17 @@ if (app()->environment(['local', 'testing'])) {
             'schedule' => $schedule
         ]);
     })->name('emi.notification.preview');
+
+    // WhatsApp Integration Routes
+    Route::prefix('whatsapp')->name('whatsapp.')->group(function () {
+        Route::get('/test', function () {
+            return view('whatsapp.test');
+        })->name('test');
+        Route::post('/parse-expense', [WhatsAppController::class, 'parseExpense'])->name('parse.expense');
+        Route::post('/create-transaction', [WhatsAppController::class, 'createTransaction'])->name('create.transaction');
+        Route::post('/parse-and-create', [WhatsAppController::class, 'parseAndCreate'])->name('parse.and.create');
+        Route::get('/recent-transactions', [WhatsAppController::class, 'getRecentTransactions'])->name('recent.transactions');
+    });
 }
 
 require __DIR__ . '/auth.php';
