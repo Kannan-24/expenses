@@ -240,6 +240,7 @@ class OpenRouterService
         ];
 
         $parsed = $decoded['parsed_data'] ?? [];
+        $aiNewEntries = $decoded['new_entries'] ?? [];
 
         // AMOUNT: ensure numeric (if string containing commas or ₹ remove)
         $parsed['amount'] = $this->normalizeAmount($parsed['amount']);
@@ -253,25 +254,40 @@ class OpenRouterService
         // NOTES: ensure string or null
         $parsed['notes'] = $parsed['notes'] === null ? null : (string)$parsed['notes'];
 
-        // CATEGORY
-        [$catId, $catObjOrNull] = $this->resolveOrCreate('CATEGORY', $parsed['category'], $categories);
+        // CATEGORY: Process AI response and merge with AI's new entries
+        [$catId, $catObjOrNull] = $this->resolveOrCreateFromAI(
+            'CATEGORY', 
+            $parsed['category'], 
+            $categories, 
+            $aiNewEntries['categories'] ?? []
+        );
         $parsed['category'] = $catId;
         if ($catObjOrNull) {
             $newEntries['categories'][] = $catObjOrNull;
         }
 
-        // WALLET
-        [$walId, $walObjOrNull] = $this->resolveOrCreate('WALLET', $parsed['wallet'], $wallets);
+        // WALLET: Process AI response and merge with AI's new entries
+        [$walId, $walObjOrNull] = $this->resolveOrCreateFromAI(
+            'WALLET', 
+            $parsed['wallet'], 
+            $wallets, 
+            $aiNewEntries['wallets'] ?? []
+        );
         $parsed['wallet'] = $walId;
         if ($walObjOrNull) {
             $newEntries['wallets'][] = $walObjOrNull;
         }
 
-        // PERSON
+        // PERSON: Handle self or process normally
         if (is_string($parsed['person']) && $this->isSelfValue($parsed['person'])) {
             $parsed['person'] = 'Self';
         } else {
-            [$perId, $perObjOrNull] = $this->resolveOrCreate('PERSON', $parsed['person'], $persons);
+            [$perId, $perObjOrNull] = $this->resolveOrCreateFromAI(
+                'PERSON', 
+                $parsed['person'], 
+                $persons, 
+                $aiNewEntries['persons'] ?? []
+            );
             $parsed['person'] = $perId;
             if ($perObjOrNull) {
                 $newEntries['persons'][] = $perObjOrNull;
@@ -288,6 +304,54 @@ class OpenRouterService
     }
 
     /**
+     * Enhanced resolve method that takes AI's new entries into account
+     */
+    protected function resolveOrCreateFromAI(string $type, $value, array $existingList, array $aiNewEntries): array
+    {
+        // If null or empty -> treat as null
+        $val = $value === null ? '' : (string)$value;
+        $norm = $this->normalizeNameForMatch($val);
+
+        // First, check if AI already provided this as a new entry
+        foreach ($aiNewEntries as $aiEntry) {
+            if (isset($aiEntry['id']) && $aiEntry['id'] === $val) {
+                // AI created this entry, use its definition
+                return [$aiEntry['id'], $aiEntry];
+            }
+        }
+
+        // Check existing entries for exact match
+        foreach ($existingList as $item) {
+            $itemNameNorm = $this->normalizeNameForMatch($item['name']);
+            if ($itemNameNorm === $norm && $norm !== '') {
+                return [$item['id'], null];
+            }
+        }
+
+        // Check if this looks like a NEW_* ID that we should create
+        if (str_starts_with($val, 'NEW_' . $type . '_')) {
+            // Use the AI's new entry if provided, otherwise create our own
+            foreach ($aiNewEntries as $aiEntry) {
+                if (isset($aiEntry['id']) && $aiEntry['id'] === $val) {
+                    return [$aiEntry['id'], $aiEntry];
+                }
+            }
+            
+            // Create from the ID pattern
+            $short = substr($val, strlen('NEW_' . $type . '_'));
+            $newObj = ['id' => $val, 'name' => ucfirst(str_replace('_', ' ', $short))];
+            return [$val, $newObj];
+        }
+
+        // Not found anywhere, create new entry
+        $short = $this->createShortName($val ?: "{$type}_unknown");
+        $newId = "NEW_{$type}_{$short}";
+        $newObj = ['id' => $newId, 'name' => $val ?: ucfirst(strtolower($type))];
+
+        return [$newId, $newObj];
+    }
+
+    /**
      * Build the prompt text per user specification.
      */
     protected function buildPrompt(string $userMessage, array $categories, array $wallets, array $persons, array $catNames, array $walNames, array $perNames): string
@@ -299,55 +363,44 @@ class OpenRouterService
 
         // Inline schema exactly as requested
         $prompt = <<<PROMPT
-You are a financial transaction parser.
-You will receive:
-1. A user message describing a transaction in natural language.
-2. Lists of existing categories, wallets, and persons, each as an array of objects with "id" and "name".
+You are a financial transaction parser that ONLY returns valid JSON.
 
-Your task:
-- Parse the user message.
-- Extract structured data following the SCHEMA exactly.
-- For category, wallet, and person:
-    • If a matching name (case-insensitive, ignoring extra spaces) exists in the provided array -> use its "id".
-    • If no match exists -> create a NEW entry with:
-        { "id": "NEW_<TYPE>_<shortname>", "name": "<Name from message>" }
-      where <TYPE> is CATEGORY, WALLET, or PERSON and <shortname> is a short lowercase version of the name (no spaces).
-- Amount must be a number (no currency symbol).
-- Currency should be "INR".
-- If date is missing in the message, set it to null.
-- If notes are missing, set to null.
+TASK: Parse this expense message and return ONLY the JSON response specified below.
 
-IMPORTANT:
-- Return ONLY valid JSON matching the schema below.
-- Do not include any explanation, commentary, or extra text.
-- Ensure JSON is syntactically correct and matches the SCHEMA exactly.
+USER MESSAGE: "{$this->escapeForPrompt($userMessage)}"
 
-SCHEMA:
-{
-  "amount": number,
-  "currency": "INR",
-  "category": string,  // id from provided list OR id of newly created object
-  "wallet": string,    // id from provided list OR id of newly created object
-  "person": string,    // id from provided list OR id of newly created object, or "Self"
-  "notes": string or null,
-  "date": "YYYY-MM-DD" or null
-}
-
-INPUT:
-User message: "{$this->escapeForPrompt($userMessage)}"
+AVAILABLE DATA:
 Categories: {$this->buildObjectArrayText($categories)}
 Wallets: {$this->buildObjectArrayText($wallets)}
 Persons: {$this->buildObjectArrayText($persons)}
 
-OUTPUT:
+RULES:
+1. For category, wallet, person - match existing entries by name (case-insensitive)
+2. If no match found, create NEW entry with format: NEW_<TYPE>_<shortname>
+3. Amount must be numeric (remove currency symbols)
+4. Currency is always "INR"
+5. Date format: YYYY-MM-DD or null
+6. Person can be "Self" if referring to user
+
+REQUIRED JSON OUTPUT FORMAT:
 {
-  "parsed_data": <SCHEMA_OBJECT>,
+  "parsed_data": {
+    "amount": <number>,
+    "currency": "INR",
+    "category": "<existing_id_or_NEW_CATEGORY_shortname>",
+    "wallet": "<existing_id_or_NEW_WALLET_shortname>",
+    "person": "<existing_id_or_NEW_PERSON_shortname_or_Self>",
+    "notes": "<string_or_null>",
+    "date": "<YYYY-MM-DD_or_null>"
+  },
   "new_entries": {
-    "categories": <ID or Category name (only if new)>,
-    "wallets": <ID or Wallet name (only if new)>,
-    "persons": <ID or Person name (only if new)>
+    "categories": [{"id": "NEW_CATEGORY_shortname", "name": "Category Name"}],
+    "wallets": [{"id": "NEW_WALLET_shortname", "name": "Wallet Name"}],
+    "persons": [{"id": "NEW_PERSON_shortname", "name": "Person Name"}]
   }
 }
+
+RETURN ONLY VALID JSON - NO EXPLANATIONS OR EXTRA TEXT.
 PROMPT;
 
         return $prompt;
@@ -402,48 +455,61 @@ PROMPT;
     protected function extractJson(string $text): ?string
     {
         // Remove markdown fences if present
-        $text = preg_replace('/^```json\s*/i', '', $text);
-        $text = preg_replace('/```$/', '', $text);
+        $text = preg_replace('/^```(?:json)?\s*/im', '', $text);
+        $text = preg_replace('/```\s*$/m', '', $text);
         $text = trim($text);
 
-        // Try to find first { ... } JSON object
+        // First try: The whole response might be valid JSON
+        json_decode($text);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $text;
+        }
+
+        // Second try: Look for JSON object pattern
+        if (preg_match('/\{(?:[^{}]|(?R))*\}/s', $text, $matches)) {
+            $candidate = $matches[0];
+            json_decode($candidate);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return $candidate;
+            }
+        }
+
+        // Third try: Find first { to last } and validate
         $start = strpos($text, '{');
         $end = strrpos($text, '}');
 
-        if ($start === false || $end === false || $end <= $start) {
-            // try to search for a JSON block using regex (greedy)
-            if (preg_match('/(\{(?:.*)\})/s', $text, $m)) {
-                return $m[1];
+        if ($start !== false && $end !== false && $end > $start) {
+            $candidate = substr($text, $start, $end - $start + 1);
+            json_decode($candidate);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return $candidate;
             }
-            return null;
+
+            // Try progressively shrinking from the end to find valid JSON
+            for ($i = $end; $i > $start; $i--) {
+                if ($text[$i] === '}') {
+                    $candidate = substr($text, $start, $i - $start + 1);
+                    json_decode($candidate);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        return $candidate;
+                    }
+                }
+            }
         }
 
-        $candidate = substr($text, $start, $end - $start + 1);
-
-        // Attempt decode to verify
-        json_decode($candidate);
-        if (json_last_error() === JSON_ERROR_NONE) {
-            return $candidate;
-        }
-
-        // Fallback: try to detect and remove trailing characters
-        // Try progressively shrinking from the end to find valid JSON
-        for ($i = $end; $i > $start; $i--) {
-            $candidate = substr($text, $start, $i - $start + 1);
+        // Fourth try: Look for multi-line JSON with flexible regex
+        if (preg_match('/\{[\s\S]*\}/m', $text, $matches)) {
+            $candidate = $matches[0];
             json_decode($candidate);
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $candidate;
             }
         }
 
-        // Another fallback: regex to find a JSON object-like pattern
-        if (preg_match('/\{(?:[^{}]|(?R))*\}/s', $text, $m)) {
-            $candidate = $m[0];
-            json_decode($candidate);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                return $candidate;
-            }
-        }
+        Log::warning('Failed to extract valid JSON from AI response', [
+            'response_length' => strlen($text),
+            'response_preview' => substr($text, 0, 200)
+        ]);
 
         return null;
     }
@@ -454,41 +520,65 @@ PROMPT;
      */
     protected function validateBasicSchema(array $data): void
     {
+        // Check if we have the main structure
+        if (!isset($data['parsed_data'])) {
+            throw new Exception("Missing 'parsed_data' key in AI output");
+        }
+
+        if (!isset($data['new_entries'])) {
+            throw new Exception("Missing 'new_entries' key in AI output");
+        }
+
+        $parsedData = $data['parsed_data'];
         $requiredKeys = ['amount', 'currency', 'category', 'wallet', 'person', 'notes', 'date'];
+        
         foreach ($requiredKeys as $k) {
-            if (!array_key_exists($k, $data['parsed_data'])) {
-                throw new Exception("Missing required key in AI output: {$k}");
+            if (!array_key_exists($k, $parsedData)) {
+                throw new Exception("Missing required key in parsed_data: {$k}");
             }
         }
 
-        $data = $data['parsed_data'];
-
         // amount must exist (string or number ok for now)
-        if (!is_numeric($data['amount']) && !is_string($data['amount'])) {
+        if (!is_numeric($parsedData['amount']) && !is_string($parsedData['amount'])) {
             throw new Exception('Amount must be numeric or numeric-string.');
         }
 
         // currency must be present (we will override to INR later)
-        if (!is_string($data['currency'])) {
+        if (!is_string($parsedData['currency'])) {
             throw new Exception('Currency must be a string.');
         }
 
         // category/wallet/person should be string or null
         foreach (['category', 'wallet', 'person'] as $k) {
-            if (!is_string($data[$k]) && !is_null($data[$k])) {
+            if (!is_string($parsedData[$k]) && !is_null($parsedData[$k])) {
                 throw new Exception("{$k} must be string or null.");
             }
         }
 
         // notes: string or null
-        if (!is_string($data['notes']) && !is_null($data['notes'])) {
+        if (!is_string($parsedData['notes']) && !is_null($parsedData['notes'])) {
             throw new Exception("notes must be string or null.");
         }
 
         // date: string or null
-        if (!is_string($data['date']) && !is_null($data['date'])) {
+        if (!is_string($parsedData['date']) && !is_null($parsedData['date'])) {
             throw new Exception("date must be string (YYYY-MM-DD) or null.");
         }
+
+        // Validate new_entries structure
+        $newEntries = $data['new_entries'];
+        $expectedEntryTypes = ['categories', 'wallets', 'persons'];
+        
+        foreach ($expectedEntryTypes as $type) {
+            if (!isset($newEntries[$type])) {
+                $newEntries[$type] = []; // Set default empty array if missing
+            } elseif (!is_array($newEntries[$type])) {
+                throw new Exception("new_entries.{$type} must be an array.");
+            }
+        }
+
+        // Update the data array reference
+        $data['new_entries'] = $newEntries;
     }
 
     /**
