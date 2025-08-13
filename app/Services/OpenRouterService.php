@@ -713,12 +713,12 @@ class OpenRouterService
         if (isset($data['needs_wallet_selection']) && $data['needs_wallet_selection'] === true) {
             // wallet can be null when user needs to select
             if (!is_null($data['wallet']) && (!is_string($data['wallet']) || trim($data['wallet']) === '')) {
-            throw new Exception("Final wallet must be null or non-empty string when needs_wallet_selection is true.");
+                throw new Exception("Final wallet must be null or non-empty string when needs_wallet_selection is true.");
             }
         } else {
             // wallet must be non-empty string when not flagged for selection
             if (!is_string($data['wallet']) || trim($data['wallet']) === '') {
-            throw new Exception("Final wallet must be non-empty string.");
+                throw new Exception("Final wallet must be non-empty string.");
             }
         }
 
@@ -792,12 +792,6 @@ class OpenRouterService
      */
     protected function resolveCategory($value, array $existingList, array $aiNewEntries): array
     {
-        Log::debug('Resolving category', [
-            'input' => $value,
-            'existing_categories' => array_column($existingList, 'name'),
-            'ai_new_entries' => array_column($aiNewEntries, 'name')
-        ]);
-
         // If null or empty -> treat as null
         $val = $value === null ? '' : (string)$value;
         $norm = $this->normalizeNameForMatch($val);
@@ -832,39 +826,22 @@ class OpenRouterService
      */
     protected function resolveWallet($value, array $existingList): array
     {
-        Log::debug('Resolving wallet', [
-            'input' => $value,
-            'existing_wallets' => array_column($existingList, 'name')
-        ]);
-
         // If null or empty -> flag for selection
         $val = $value === null ? '' : (string)$value;
         $norm = $this->normalizeNameForMatch($val);
 
         if (empty($val)) {
-            Log::info('Wallet not provided, flagging for user selection');
             return [null, null, true]; // needs wallet selection
         }
 
         // Check existing entries for exact match
         foreach ($existingList as $existing) {
-            $existingNorm = $this->normalizeNameForMatch($existing['name']);
+            $existingNorm = $this->normalizeNameForMatch($existing['id']);
             if ($existingNorm === $norm) {
-                Log::info('Wallet matched', [
-                    'input' => $val,
-                    'matched' => $existing['name'],
-                    'id' => $existing['id']
-                ]);
                 return [(string)$existing['id'], null, false];
             }
         }
 
-        // Wallet not found - do not create, flag for user selection
-        Log::info('Wallet not found, flagging for user selection', [
-            'input' => $val,
-            'available_wallets' => array_column($existingList, 'name')
-        ]);
-        
         return [null, null, true];
     }
 
