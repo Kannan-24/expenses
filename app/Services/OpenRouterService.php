@@ -134,7 +134,6 @@ class OpenRouterService
             }
 
             Log::info('OpenRouter response decoded successfully', [
-                'user_message' => $userMessage,
                 'response' => $decoded
             ]);
 
@@ -254,44 +253,45 @@ class OpenRouterService
         // NOTES: ensure string or null
         $parsed['notes'] = $parsed['notes'] === null ? null : (string)$parsed['notes'];
 
-        // CATEGORY: Process AI response and merge with AI's new entries
-        [$catId, $catObjOrNull] = $this->resolveOrCreateFromAI(
-            'CATEGORY', 
-            $parsed['category'], 
-            $categories, 
+        // CATEGORY: Only create new if not found - check existence first
+        [$catId, $catObjOrNull] = $this->resolveCategory(
+            $parsed['category'],
+            $categories,
             $aiNewEntries['categories'] ?? []
         );
+
         $parsed['category'] = $catId;
         if ($catObjOrNull) {
             $newEntries['categories'][] = $catObjOrNull;
         }
 
-        // WALLET: Process AI response and merge with AI's new entries
-        [$walId, $walObjOrNull] = $this->resolveOrCreateFromAI(
-            'WALLET', 
-            $parsed['wallet'], 
-            $wallets, 
-            $aiNewEntries['wallets'] ?? []
+        // WALLET: Handle wallet not found case - flag for user selection
+        [$walId, $walObjOrNull, $needsWalletSelection] = $this->resolveWallet(
+            $parsed['wallet'],
+            $wallets
         );
         $parsed['wallet'] = $walId;
         if ($walObjOrNull) {
             $newEntries['wallets'][] = $walObjOrNull;
         }
+        // Flag for wallet selection if wallet not found
+        if ($needsWalletSelection) {
+            $parsed['needs_wallet_selection'] = true;
+            Log::info('Wallet selection required', [
+                'input_wallet' => $parsed['wallet'] ?? 'null',
+                'available_wallets' => array_column($wallets, 'name')
+            ]);
+        }
 
-        // PERSON: Handle self or process normally
-        if (is_string($parsed['person']) && $this->isSelfValue($parsed['person'])) {
-            $parsed['person'] = 'Self';
-        } else {
-            [$perId, $perObjOrNull] = $this->resolveOrCreateFromAI(
-                'PERSON', 
-                $parsed['person'], 
-                $persons, 
-                $aiNewEntries['persons'] ?? []
-            );
-            $parsed['person'] = $perId;
-            if ($perObjOrNull) {
-                $newEntries['persons'][] = $perObjOrNull;
-            }
+        // PERSON: Handle according to new rules - use existing, create new, or null
+        [$perId, $perObjOrNull] = $this->resolvePerson(
+            $parsed['person'],
+            $persons,
+            $aiNewEntries['persons'] ?? []
+        );
+        $parsed['person'] = $perId;
+        if ($perObjOrNull) {
+            $newEntries['persons'][] = $perObjOrNull;
         }
 
         // Final validation
@@ -336,7 +336,7 @@ class OpenRouterService
                     return [$aiEntry['id'], $aiEntry];
                 }
             }
-            
+
             // Create from the ID pattern
             $short = substr($val, strlen('NEW_' . $type . '_'));
             $newObj = ['id' => $val, 'name' => ucfirst(str_replace('_', ' ', $short))];
@@ -363,45 +363,45 @@ class OpenRouterService
 
         // Inline schema exactly as requested
         $prompt = <<<PROMPT
-You are a financial transaction parser that ONLY returns valid JSON.
+            You are a financial transaction parser that ONLY returns valid JSON.
 
-TASK: Parse this expense message and return ONLY the JSON response specified below.
+            TASK: Parse this expense message and return ONLY the JSON response specified below.
 
-USER MESSAGE: "{$this->escapeForPrompt($userMessage)}"
+            USER MESSAGE: "{$this->escapeForPrompt($userMessage)}"
 
-AVAILABLE DATA:
-Categories: {$this->buildObjectArrayText($categories)}
-Wallets: {$this->buildObjectArrayText($wallets)}
-Persons: {$this->buildObjectArrayText($persons)}
+            AVAILABLE DATA:
+            Categories: {$this->buildObjectArrayText($categories)}
+            Wallets: {$this->buildObjectArrayText($wallets)}
+            Persons: {$this->buildObjectArrayText($persons)}
 
-RULES:
-1. For category, wallet, person - match existing entries by name (case-insensitive)
-2. If no match found, create NEW entry with format: NEW_<TYPE>_<shortname>
-3. Amount must be numeric (remove currency symbols)
-4. Currency is always "INR"
-5. Date format: YYYY-MM-DD or null
-6. Person can be "Self" if referring to user
+            RULES:
+            1. For category, wallet, person - match existing entries by name (case-insensitive)
+            2. If no match found, create NEW entry with format: NEW_<TYPE>_<shortname>
+            3. Amount must be numeric (remove currency symbols)
+            4. Currency is always "INR"
+            5. Date format: YYYY-MM-DD or null
+            6. Person can be "Self" if referring to user
 
-REQUIRED JSON OUTPUT FORMAT:
-{
-  "parsed_data": {
-    "amount": <number>,
-    "currency": "INR",
-    "category": "<existing_id_or_NEW_CATEGORY_shortname>",
-    "wallet": "<existing_id_or_NEW_WALLET_shortname>",
-    "person": "<existing_id_or_NEW_PERSON_shortname_or_Self>",
-    "notes": "<string_or_null>",
-    "date": "<YYYY-MM-DD_or_null>"
-  },
-  "new_entries": {
-    "categories": [{"id": "NEW_CATEGORY_shortname", "name": "Category Name"}],
-    "wallets": [{"id": "NEW_WALLET_shortname", "name": "Wallet Name"}],
-    "persons": [{"id": "NEW_PERSON_shortname", "name": "Person Name"}]
-  }
-}
+            REQUIRED JSON OUTPUT FORMAT:
+            {
+            "parsed_data": {
+                "amount": <number>,
+                "currency": "INR",
+                "category": "<existing_id_or_NEW_CATEGORY_shortname>",
+                "wallet": "<existing_id_or_NEW_WALLET_shortname>",
+                "person": "<existing_id_or_NEW_PERSON_shortname_or_Self>",
+                "notes": "<string_or_null>",
+                "date": "<YYYY-MM-DD_or_null>"
+            },
+            "new_entries": {
+                "categories": [{"id": "NEW_CATEGORY_shortname", "name": "Category Name"}],
+                "wallets": [{"id": "NEW_WALLET_shortname", "name": "Wallet Name"}],
+                "persons": [{"id": "NEW_PERSON_shortname", "name": "Person Name"}]
+            }
+            }
 
-RETURN ONLY VALID JSON - NO EXPLANATIONS OR EXTRA TEXT.
-PROMPT;
+            RETURN ONLY VALID JSON - NO EXPLANATIONS OR EXTRA TEXT.
+            PROMPT;
 
         return $prompt;
     }
@@ -531,7 +531,7 @@ PROMPT;
 
         $parsedData = $data['parsed_data'];
         $requiredKeys = ['amount', 'currency', 'category', 'wallet', 'person', 'notes', 'date'];
-        
+
         foreach ($requiredKeys as $k) {
             if (!array_key_exists($k, $parsedData)) {
                 throw new Exception("Missing required key in parsed_data: {$k}");
@@ -568,7 +568,7 @@ PROMPT;
         // Validate new_entries structure
         $newEntries = $data['new_entries'];
         $expectedEntryTypes = ['categories', 'wallets', 'persons'];
-        
+
         foreach ($expectedEntryTypes as $type) {
             if (!isset($newEntries[$type])) {
                 $newEntries[$type] = []; // Set default empty array if missing
@@ -704,11 +704,27 @@ PROMPT;
             throw new Exception('Currency must be INR');
         }
 
-        // category/wallet/person must be non-empty strings (ids or "Self")
-        foreach (['category', 'wallet', 'person'] as $k) {
-            if (!is_string($data[$k]) || trim($data[$k]) === '') {
-                throw new Exception("Final {$k} must be non-empty string");
+        // category must be non-empty string
+        if (!is_string($data['category']) || trim($data['category']) === '') {
+            throw new Exception("Final category must be non-empty string.");
+        }
+
+        // wallet can be null if needs_wallet_selection is true
+        if (isset($data['needs_wallet_selection']) && $data['needs_wallet_selection'] === true) {
+            // wallet can be null when user needs to select
+            if (!is_null($data['wallet']) && (!is_string($data['wallet']) || trim($data['wallet']) === '')) {
+            throw new Exception("Final wallet must be null or non-empty string when needs_wallet_selection is true.");
             }
+        } else {
+            // wallet must be non-empty string when not flagged for selection
+            if (!is_string($data['wallet']) || trim($data['wallet']) === '') {
+            throw new Exception("Final wallet must be non-empty string.");
+            }
+        }
+
+        // person can be null or non-empty string (including "Self")
+        if (!is_null($data['person']) && (!is_string($data['person']) || trim($data['person']) === '')) {
+            throw new Exception("Final person must be null or non-empty string.");
         }
 
         // notes string or null
@@ -769,5 +785,130 @@ PROMPT;
     protected function sanitizeId(string $s): string
     {
         return preg_replace('/[^A-Za-z0-9_\-]/', '_', $s);
+    }
+
+    /**
+     * Resolve category - only create new if not found
+     */
+    protected function resolveCategory($value, array $existingList, array $aiNewEntries): array
+    {
+        Log::debug('Resolving category', [
+            'input' => $value,
+            'existing_categories' => array_column($existingList, 'name'),
+            'ai_new_entries' => array_column($aiNewEntries, 'name')
+        ]);
+
+        // If null or empty -> treat as null
+        $val = $value === null ? '' : (string)$value;
+        $norm = $this->normalizeNameForMatch($val);
+
+        // Check if AI already provided this as a new entry
+        foreach ($aiNewEntries as $aiEntry) {
+            if (isset($aiEntry['id']) && $aiEntry['id'] === $val) {
+                return [$aiEntry['id'], $aiEntry];
+            }
+        }
+
+        // Check existing entries for exact match
+        foreach ($existingList as $existing) {
+            $existingNorm = $this->normalizeNameForMatch($existing['id']);
+            if ($existingNorm === $norm) {
+                return [(string)$existing['id'], null];
+            }
+        }
+
+        // Category not found - create new only if it doesn't exist
+        if (!empty($val) && !str_starts_with($val, 'NEW_CATEGORY_')) {
+            $newId = 'NEW_CATEGORY_' . $this->sanitizeId($val);
+            $newObj = ['id' => $newId, 'name' => $val];
+            return [$newId, $newObj];
+        }
+
+        return [$val, null];
+    }
+
+    /**
+     * Resolve wallet - do not create new, flag for user selection if not found
+     */
+    protected function resolveWallet($value, array $existingList): array
+    {
+        Log::debug('Resolving wallet', [
+            'input' => $value,
+            'existing_wallets' => array_column($existingList, 'name')
+        ]);
+
+        // If null or empty -> flag for selection
+        $val = $value === null ? '' : (string)$value;
+        $norm = $this->normalizeNameForMatch($val);
+
+        if (empty($val)) {
+            Log::info('Wallet not provided, flagging for user selection');
+            return [null, null, true]; // needs wallet selection
+        }
+
+        // Check existing entries for exact match
+        foreach ($existingList as $existing) {
+            $existingNorm = $this->normalizeNameForMatch($existing['name']);
+            if ($existingNorm === $norm) {
+                Log::info('Wallet matched', [
+                    'input' => $val,
+                    'matched' => $existing['name'],
+                    'id' => $existing['id']
+                ]);
+                return [(string)$existing['id'], null, false];
+            }
+        }
+
+        // Wallet not found - do not create, flag for user selection
+        Log::info('Wallet not found, flagging for user selection', [
+            'input' => $val,
+            'available_wallets' => array_column($existingList, 'name')
+        ]);
+        
+        return [null, null, true];
+    }
+
+    /**
+     * Resolve person - use existing, create new if name available, or null
+     */
+    protected function resolvePerson($value, array $existingList, array $aiNewEntries): array
+    {
+        // Handle self reference
+        if (is_string($value) && $this->isSelfValue($value)) {
+            return ['Self', null];
+        }
+
+        // If null or empty -> set to null
+        $val = $value === null ? '' : (string)$value;
+        $norm = $this->normalizeNameForMatch($val);
+
+        if (empty($val)) {
+            return [null, null];
+        }
+
+        // Check if AI already provided this as a new entry
+        foreach ($aiNewEntries as $aiEntry) {
+            if (isset($aiEntry['id']) && $aiEntry['id'] === $val) {
+                return [$aiEntry['id'], $aiEntry];
+            }
+        }
+
+        // Check existing entries for exact match
+        foreach ($existingList as $existing) {
+            $existingNorm = $this->normalizeNameForMatch($existing['name']);
+            if ($existingNorm === $norm) {
+                return [(string)$existing['id'], null];
+            }
+        }
+
+        // Person not found but name available - create new person
+        if (!empty($val) && !str_starts_with($val, 'NEW_PERSON_')) {
+            $newId = 'NEW_PERSON_' . $this->sanitizeId($val);
+            $newObj = ['id' => $newId, 'name' => $val];
+            return [$newId, $newObj];
+        }
+
+        // No name available - set to null
+        return [null, null];
     }
 }

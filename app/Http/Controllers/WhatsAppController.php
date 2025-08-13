@@ -34,7 +34,7 @@ class WhatsAppController extends Controller
     {
         // Remove auth:sanctum middleware - use WhatsApp session identification instead
         $this->openRouterService = $openRouterService;
-        
+
         // Validate configurations on instantiation
         $this->validateConfigurations();
     }
@@ -124,8 +124,14 @@ class WhatsAppController extends Controller
     protected function validateWhatsAppUser(Request $request): array
     {
         $user = $this->getUserFromRequest($request);
-        
+
         if (!$user) {
+            Log::warning('WhatsApp user validation failed', [
+                'whatsapp_number' => $request->whatsapp_number,
+                'session_id' => $request->session_id,
+                'user_id' => $request->user_id
+            ]);
+
             return [
                 'success' => false,
                 'message' => 'User not found or not authenticated via WhatsApp',
@@ -156,7 +162,7 @@ class WhatsAppController extends Controller
             'message' => 'required|string|max:1000',
             'whatsapp_number' => 'sometimes|string',
             'session_id' => 'sometimes|string',
-            'user_id' => 'sometimes|exists:users,id' // Optional fallback for backward compatibility
+            'user_id' => 'sometimes|exists:users,id'
         ]);
 
         if ($validator->fails()) {
@@ -173,10 +179,23 @@ class WhatsAppController extends Controller
         }
 
         try {
+            Log::info('Parsing expense message', [
+                'message' => $request->message,
+                'whatsapp_number' => $request->whatsapp_number,
+                'session_id' => $request->session_id,
+                'user_id' => $request->user_id
+            ]);
+
             // Get user from WhatsApp session or number
             $user = $this->getUserFromRequest($request);
 
             if (!$user) {
+                Log::warning('Expense parsing failed - user not found', [
+                    'whatsapp_number' => $request->whatsapp_number,
+                    'session_id' => $request->session_id,
+                    'user_id' => $request->user_id
+                ]);
+
                 return response()->json([
                     'success' => false,
                     'message' => 'User not found or not authenticated via WhatsApp'
@@ -185,13 +204,14 @@ class WhatsAppController extends Controller
 
             $userId = $user->id;
 
-            // Check rate limiting
-            if ($this->isRateLimited($userId)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Too many requests. Please try again later.'
-                ], 429);
-            }
+            // TODO: Uncomment when rate limiting is implemented
+            // // Check rate limiting
+            // if ($this->isRateLimited($userId)) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Too many requests. Please try again later.'
+            //     ], 429);
+            // }
 
             // Get user's existing data with caching
             $userContext = $this->getUserContext($userId);
@@ -203,6 +223,10 @@ class WhatsAppController extends Controller
                 $userContext['wallets'],
                 $userContext['persons']
             );
+
+            Log::info('OpenRouter response decoded successfully', [
+                'response' => $result
+            ]);
 
             if (!$result['success']) {
                 return response()->json([
@@ -216,6 +240,12 @@ class WhatsAppController extends Controller
             // Validate parsed data
             $validationResult = $this->validateParsedData($result['parsed_data']);
             if (!$validationResult['valid']) {
+                Log::warning('Parsed data validation failed', [
+                    'user_id' => $userId,
+                    'parsed_data' => $result['parsed_data'],
+                    'errors' => $validationResult['errors']
+                ]);
+
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid parsed data',
@@ -233,15 +263,37 @@ class WhatsAppController extends Controller
                 $userId
             );
 
+            // Log final parsed data state for debugging
+            Log::info('Final parsed data after DB ID updates', [
+                'user_id' => $userId,
+                'has_wallet_id' => !empty($parsedData['wallet_id']),
+                'needs_wallet_selection' => !empty($parsedData['needs_wallet_selection']),
+                'wallet_data' => [
+                    'wallet_id' => $parsedData['wallet_id'] ?? null,
+                    'wallet_name' => $parsedData['wallet_name'] ?? null
+                ]
+            ]);
+
+            // Check if wallet selection is needed and provide appropriate response
+            $responseMessage = 'Expense parsed successfully';
+            if (!empty($parsedData['needs_wallet_selection'])) {
+                $responseMessage = 'Expense parsed successfully. Wallet selection required.';
+                Log::info('Wallet selection required', [
+                    'user_id' => $userId,
+                    'parsed_data' => $parsedData
+                ]);
+            }
+
             return response()->json([
                 'success' => true,
                 'data' => [
                     'parsed_expense' => $parsedData,
                     'new_entries_created' => $createdEntries,
                     'processing_time' => $result['processing_time'],
-                    'suggestions' => $this->generateSuggestions($parsedData, $userId)
+                    'suggestions' => $this->generateSuggestions($parsedData, $userId),
+                    'requires_wallet_selection' => !empty($parsedData['needs_wallet_selection'])
                 ],
-                'message' => 'Expense parsed successfully'
+                'message' => $responseMessage
             ]);
         } catch (Exception $e) {
             Log::error('WhatsApp expense parsing failed', [
@@ -274,8 +326,8 @@ class WhatsAppController extends Controller
             'notes' => 'nullable|string|max:1000',
             'type' => 'sometimes|in:expense,income',
             'whatsapp_number' => 'sometimes|string',
-            'session_id' => 'sometimes|string',
-            'user_id' => 'sometimes|exists:users,id' // Optional fallback
+            'session_id' => 'sometimes|nullable|string',
+            'user_id' => 'sometimes|exists:users,id'
         ]);
 
         if ($validator->fails()) {
@@ -294,6 +346,7 @@ class WhatsAppController extends Controller
 
             if (!$user) {
                 DB::rollBack();
+
                 return response()->json([
                     'success' => false,
                     'message' => 'User not found or not authenticated via WhatsApp'
@@ -447,7 +500,10 @@ class WhatsAppController extends Controller
                     'person_name' => $parsedExpense['person_name'],
                     'date' => $parsedExpense['date'],
                     'notes' => $parsedExpense['notes'] ?? null,
-                    'type' => 'expense'
+                    'type' => 'expense',
+                    'whatsapp_number' => $request->whatsapp_number,
+                    'session_id' => $request->session_id,
+                    'user_id' => $request->user_id
                 ]);
 
                 $createResponse = $this->createTransaction($createRequest);
@@ -517,6 +573,12 @@ class WhatsAppController extends Controller
             $user = $this->getUserFromRequest($request);
 
             if (!$user) {
+                Log::warning('Recent transactions request failed - user not found', [
+                    'whatsapp_number' => $request->whatsapp_number,
+                    'session_id' => $request->session_id,
+                    'user_id' => $request->user_id
+                ]);
+
                 return response()->json([
                     'success' => false,
                     'message' => 'User not found or not authenticated via WhatsApp'
@@ -597,7 +659,7 @@ class WhatsAppController extends Controller
 
         try {
             $validation = $this->validateWhatsAppUser($request);
-            
+
             if (!$validation['success']) {
                 return response()->json([
                     'success' => false,
@@ -627,7 +689,6 @@ class WhatsAppController extends Controller
                 ],
                 'message' => 'WhatsApp authentication successful'
             ]);
-
         } catch (Exception $e) {
             Log::error('WhatsApp auth test failed', [
                 'error' => $e->getMessage(),
@@ -666,13 +727,6 @@ class WhatsAppController extends Controller
     {
         try {
             $data = $request->all();
-            
-            // Log incoming webhook for debugging
-            Log::info('WhatsApp webhook received', [
-                'payload_keys' => array_keys($data),
-                'has_entry' => isset($data['entry']),
-                'entry_count' => isset($data['entry']) ? count($data['entry']) : 0
-            ]);
 
             // Validate webhook structure
             if (!$this->isValidWebhookPayload($data)) {
@@ -684,21 +738,11 @@ class WhatsAppController extends Controller
             $messageData = $this->parseIncomingMessage($data);
 
             if (!$messageData) {
-                Log::info('No processable message found in webhook');
                 return response()->json(['status' => 'no_message'], 200);
             }
 
             $fromNumber = $messageData['from'];
             $messageType = $messageData['type'] ?? null;
-
-            Log::info('Processing WhatsApp message', [
-                'from' => $fromNumber,
-                'type' => $messageType,
-                'has_message_text' => isset($messageData['message']),
-                'has_button_id' => isset($messageData['button_id']),
-                'has_list_id' => isset($messageData['list_id']),
-                'has_media' => isset($messageData['media_id'])
-            ]);
 
             // Handle different message types
             switch ($messageType) {
@@ -727,7 +771,6 @@ class WhatsAppController extends Controller
             }
 
             return response()->json(['status' => 'processed'], 200);
-
         } catch (Exception $e) {
             Log::error('WhatsApp webhook processing failed', [
                 'error' => $e->getMessage(),
@@ -832,7 +875,7 @@ class WhatsAppController extends Controller
             $errors[] = 'Category is required';
         }
 
-        if (empty($parsedData['wallet'])) {
+        if (empty($parsedData['wallet']) && empty($parsedData['needs_wallet_selection'])) {
             $errors[] = 'Wallet is required';
         }
 
@@ -900,9 +943,8 @@ class WhatsAppController extends Controller
         try {
             // Safely extract the message object with multiple fallback checks
             $messageObject = data_get($data, 'entry.0.changes.0.value.messages.0');
-            
+
             if (!$messageObject || !is_array($messageObject)) {
-                Log::warning('WhatsApp webhook: No valid message object found', ['data' => $data]);
                 return null;
             }
 
@@ -921,7 +963,8 @@ class WhatsAppController extends Controller
             $result = [
                 'from' => $fromNumber,
                 'type' => $messageType,
-                'timestamp' => $messageObject['timestamp'] ?? time()
+                'timestamp' => $messageObject['timestamp'] ?? time(),
+                'whatsapp_id' => $messageObject['id'] ?? null // Extract WhatsApp message ID as user identifier
             ];
 
             // Handle different message types
@@ -940,7 +983,7 @@ class WhatsAppController extends Controller
                         $result['button_id'] = $buttonId;
                         $result['button_title'] = data_get($messageObject, 'interactive.button_reply.title');
                     }
-                    
+
                     // Handle list replies
                     $listId = data_get($messageObject, 'interactive.list_reply.id');
                     if ($listId) {
@@ -966,19 +1009,17 @@ class WhatsAppController extends Controller
             }
 
             // Ensure we have actionable content
-            $hasContent = isset($result['message']) || 
-                         isset($result['button_id']) || 
-                         isset($result['list_id']) || 
-                         isset($result['media_id']);
+            $hasContent = isset($result['message']) ||
+                isset($result['button_id']) ||
+                isset($result['list_id']) ||
+                isset($result['media_id']);
 
             if (!$hasContent) {
                 Log::warning('WhatsApp webhook: Message has no actionable content', $result);
                 return null;
             }
 
-            Log::info('WhatsApp webhook: Successfully parsed message', $result);
             return $result;
-
         } catch (\Exception $e) {
             Log::error('WhatsApp webhook: Error parsing message', [
                 'error' => $e->getMessage(),
@@ -1009,7 +1050,7 @@ class WhatsAppController extends Controller
             case 'awaiting_expense':
                 $this->handleExpenseInput($fromNumber, $messageText, $session, $user);
                 break;
-                
+
             case 'awaiting_wallet_selection':
                 $this->handleWalletSelection($fromNumber, $messageText, $session, $user);
                 break;
@@ -1039,11 +1080,11 @@ class WhatsAppController extends Controller
         // Handle button replies
         if (isset($messageData['button_id'])) {
             $buttonId = $messageData['button_id'];
-            
+
             switch ($buttonId) {
                 case 'new_entry':
                     $session->update(['state' => 'awaiting_expense']);
-                    $this->sendTextMessage($fromNumber, "💰 Please describe your expense:\n\nExample: \"Spent 50 on groceries from Cash wallet\"");
+                    $this->sendTextMessage($fromNumber, "Please describe your expense:\n\nExample: \"Spent 50 on groceries from Cash wallet\"");
                     break;
 
                 case 'view_wallets':
@@ -1063,11 +1104,11 @@ class WhatsAppController extends Controller
                     $this->sendLinkedMenu($fromNumber);
             }
         }
-        
+
         // Handle list replies
         elseif (isset($messageData['list_id'])) {
             $listId = $messageData['list_id'];
-            
+
             // Handle wallet selection from list
             if (str_starts_with($listId, 'wallet_') && $session->state === 'awaiting_wallet_selection') {
                 $walletId = str_replace('wallet_', '', $listId);
@@ -1077,7 +1118,7 @@ class WhatsAppController extends Controller
                 $this->sendLinkedMenu($fromNumber);
             }
         }
-        
+
         // No recognizable interactive content
         else {
             Log::warning('WhatsApp: Interactive message without button_id or list_id', $messageData);
@@ -1115,11 +1156,12 @@ class WhatsAppController extends Controller
             $this->handleExpenseInput($fromNumber, $caption, $session, $user);
         } else {
             // For now, just acknowledge the media
-            $this->sendTextMessage($fromNumber, 
-                "📎 I received your " . $mediaType . " file. " .
-                (!empty($caption) ? "However, I couldn't process it as an expense. " : "") .
-                "Please send a text message describing your expense instead.\n\n" .
-                "Example: \"Spent 50 on groceries from Cash wallet\""
+            $this->sendTextMessage(
+                $fromNumber,
+                "I received your " . $mediaType . " file. " .
+                    (!empty($caption) ? "However, I couldn't process it as an expense. " : "") .
+                    "Please send a text message describing your expense instead.\n\n" .
+                    "Example: \"Spent 50 on groceries from Cash wallet\""
             );
         }
     }
@@ -1169,7 +1211,7 @@ class WhatsAppController extends Controller
     protected function handleEmailInput(string $fromNumber, string $email, WhatsappSession $session): void
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $this->sendTextMessage($fromNumber, "❌ Invalid email format. Please enter a valid email address.");
+            $this->sendTextMessage($fromNumber, "Invalid email format. Please enter a valid email address.");
             return;
         }
 
@@ -1179,7 +1221,7 @@ class WhatsAppController extends Controller
             $user->update(['whatsapp_number' => $fromNumber, 'whatsapp_status' => 'pending']);
             $this->initiateOtpVerification($user, $fromNumber, $session);
         } else {
-            $this->sendTextMessage($fromNumber, "❌ No account found with this email. Please check and try again or contact support.");
+            $this->sendTextMessage($fromNumber, "No account found with this email. Please check and try again or contact support.");
             $session->update(['state' => 'start']);
         }
     }
@@ -1191,7 +1233,7 @@ class WhatsAppController extends Controller
     {
         // Validate OTP format (6 digits)
         if (!preg_match('/^\d{6}$/', $otp)) {
-            $this->sendTextMessage($fromNumber, "❌ Please enter a valid 6-digit OTP code.");
+            $this->sendTextMessage($fromNumber, "Please enter a valid 6-digit OTP code.");
             return;
         }
 
@@ -1201,7 +1243,7 @@ class WhatsAppController extends Controller
 
         // Check if OTP has expired (15 minutes)
         if ($generatedAt && now()->diffInMinutes($generatedAt) > 15) {
-            $this->sendTextMessage($fromNumber, "❌ OTP has expired. Please request a new one.");
+            $this->sendTextMessage($fromNumber, "OTP has expired. Please request a new one.");
             $session->update(['state' => 'start']);
             return;
         }
@@ -1209,13 +1251,18 @@ class WhatsAppController extends Controller
         if ($otp === (string)$storedOtp) {
             $user = User::where('whatsapp_number', $fromNumber)->first();
             if ($user) {
-                $user->update(['whatsapp_status' => 'verified']);
+                // Store WhatsApp ID and number in user table
+                $user->update([
+                    'whatsapp_status' => 'verified',
+                    'whatsapp_number' => $fromNumber, // Ensure it's stored
+                    'whatsapp_id' => $fromNumber // Use phone number as ID for now, can be updated with actual WhatsApp ID from webhook
+                ]);
                 $session->update(['state' => 'finished']);
-                $this->sendTextMessage($fromNumber, "✅ Verification successful! Welcome to Expense Tracker.");
+                $this->sendTextMessage($fromNumber, "Verification successful! Welcome to Expense Tracker.");
                 $this->sendLinkedMenu($fromNumber);
             }
         } else {
-            $this->sendTextMessage($fromNumber, "❌ Invalid OTP. Please try again.");
+            $this->sendTextMessage($fromNumber, "Invalid OTP. Please try again.");
         }
     }
 
@@ -1225,7 +1272,7 @@ class WhatsAppController extends Controller
     protected function handleExpenseInput(string $fromNumber, string $message, WhatsappSession $session, User $user): void
     {
         if (!$user) {
-            $this->sendTextMessage($fromNumber, "❌ Please link your account first.");
+            $this->sendTextMessage($fromNumber, "Please link your account first.");
             return;
         }
 
@@ -1240,6 +1287,12 @@ class WhatsAppController extends Controller
 
                 // Check if wallet selection is needed
                 if (!empty($parsedData['needs_wallet_selection'])) {
+                    Log::info('Wallet selection needed for WhatsApp user', [
+                        'user_id' => $user->id,
+                        'whatsapp_number' => $fromNumber,
+                        'parsed_data' => $parsedData
+                    ]);
+
                     // Store the parsed data in session and ask for wallet selection
                     $session->update([
                         'state' => 'awaiting_wallet_selection',
@@ -1248,6 +1301,8 @@ class WhatsAppController extends Controller
                             'original_message' => $message
                         ]
                     ]);
+
+                    // Send wallet selection menu with clear instructions
                     $this->sendWalletSelectionMenu($fromNumber, $user);
                     return;
                 }
@@ -1258,6 +1313,7 @@ class WhatsAppController extends Controller
                         'message' => $message,
                         'auto_create' => true,
                         'whatsapp_number' => $fromNumber,
+                        'user_id' => $user->id,
                     ]);
 
                     $createResponse = $this->parseAndCreate($createRequest);
@@ -1267,26 +1323,26 @@ class WhatsAppController extends Controller
                         $transaction = $createData['data']['transaction'];
                         $this->sendTextMessage(
                             $fromNumber,
-                            "✅ Expense recorded successfully!\n\n" .
-                                "💰 Amount: {$transaction['amount']}\n" .
-                                "📂 Category: {$transaction['category']['name']}\n" .
-                                "💳 Wallet: {$transaction['wallet']['name']}"
+                            "Expense recorded successfully.\n\n" .
+                                "Amount: {$transaction['amount']}\n" .
+                                "Category: {$transaction['category']['name']}\n" .
+                                "Wallet: {$transaction['wallet']['name']}"
                         );
                     } else {
-                        $this->sendTextMessage($fromNumber, "❌ Failed to create expense: " . ($createData['message'] ?? 'Unknown error'));
+                        $this->sendTextMessage($fromNumber, "Failed to create expense: " . ($createData['message'] ?? 'Unknown error'));
                     }
                 } else {
                     // Send confirmation message for manual review
                     $this->sendExpenseConfirmation($fromNumber, $parsedData);
                 }
             } else {
-                $this->sendTextMessage($fromNumber, "❌ Couldn't understand the expense. Please try again with format: 'Spent [amount] on [description]'");
+                $this->sendTextMessage($fromNumber, "Couldn't understand the expense. Please try again with format: 'Spent [amount] on [description]'");
             }
 
             $session->update(['state' => 'start']);
         } catch (Exception $e) {
             Log::error('Expense processing failed', ['error' => $e->getMessage()]);
-            $this->sendTextMessage($fromNumber, "❌ An error occurred. Please try again.");
+            $this->sendTextMessage($fromNumber, "An error occurred. Please try again.");
             $session->update(['state' => 'start']);
         }
     }
@@ -1296,10 +1352,21 @@ class WhatsAppController extends Controller
      */
     protected function canAutoCreate(array $parsedData): bool
     {
-        return !empty($parsedData['amount']) &&
+        $canAutoCreate = !empty($parsedData['amount']) &&
             !empty($parsedData['category_id']) &&
             !empty($parsedData['wallet_id']) &&
             empty($parsedData['needs_wallet_selection']);
+
+        Log::debug('Checking auto-create eligibility', [
+            'has_amount' => !empty($parsedData['amount']),
+            'has_category_id' => !empty($parsedData['category_id']),
+            'has_wallet_id' => !empty($parsedData['wallet_id']),
+            'needs_wallet_selection' => !empty($parsedData['needs_wallet_selection']),
+            'can_auto_create' => $canAutoCreate,
+            'parsed_data_keys' => array_keys($parsedData)
+        ]);
+
+        return $canAutoCreate;
     }
 
     /**
@@ -1308,16 +1375,16 @@ class WhatsAppController extends Controller
     protected function sendExpenseConfirmation(string $fromNumber, array $parsedData): void
     {
         if (!empty($parsedData['needs_wallet_selection'])) {
-            $message = "📊 Expense parsed:\n\n" .
-                "💰 Amount: " . ($parsedData['amount'] ?? 'Not detected') . "\n" .
-                "📂 Category: " . ($parsedData['category_name'] ?? 'Not detected') . "\n" .
-                "💳 Wallet: Please select from your wallets\n\n" .
+            $message = "Expense parsed:\n\n" .
+                "Amount: " . ($parsedData['amount'] ?? 'Not detected') . "\n" .
+                "Category: " . ($parsedData['category_name'] ?? 'Not detected') . "\n" .
+                "Wallet: Please select from your wallets\n\n" .
                 "Wallet selection needed - check your wallets in the app.";
         } else {
-            $message = "📊 Expense parsed:\n\n" .
-                "💰 Amount: " . ($parsedData['amount'] ?? 'Not detected') . "\n" .
-                "📂 Category: " . ($parsedData['category_name'] ?? 'Not detected') . "\n" .
-                "💳 Wallet: " . ($parsedData['wallet_name'] ?? 'Not detected') . "\n\n" .
+            $message = "Expense parsed:\n\n" .
+                "Amount: " . ($parsedData['amount'] ?? 'Not detected') . "\n" .
+                "Category: " . ($parsedData['category_name'] ?? 'Not detected') . "\n" .
+                "Wallet: " . ($parsedData['wallet_name'] ?? 'Not detected') . "\n\n" .
                 "Please review and confirm in the app.";
         }
 
@@ -1394,13 +1461,18 @@ class WhatsAppController extends Controller
                 $updated['wallet_id'] = null;
                 $updated['wallet_name'] = null;
                 $updated['needs_wallet_selection'] = true;
+
+                Log::info('NEW_WALLET detected, flagging for selection', [
+                    'user_id' => $userId,
+                    'wallet_input' => $parsedData['wallet']
+                ]);
             } elseif (is_numeric($parsedData['wallet'])) {
                 $walletId = (int)$parsedData['wallet'];
                 $wallet = Wallet::where('id', $walletId)
                     ->where('user_id', $userId)
                     ->where('is_active', true)
                     ->first();
-                
+
                 if ($wallet) {
                     $updated['wallet_id'] = $wallet->id;
                     $updated['wallet_name'] = $wallet->name;
@@ -1408,8 +1480,27 @@ class WhatsAppController extends Controller
                     $updated['wallet_id'] = null;
                     $updated['wallet_name'] = null;
                     $updated['needs_wallet_selection'] = true;
+
+                    Log::info('Wallet ID not found or inactive, flagging for selection', [
+                        'user_id' => $userId,
+                        'wallet_id' => $walletId
+                    ]);
                 }
+            } elseif (is_null($parsedData['wallet'])) {
+                // Null wallet - needs selection
+                $updated['wallet_id'] = null;
+                $updated['wallet_name'] = null;
+                $updated['needs_wallet_selection'] = true;
+
+                Log::info('Null wallet detected, flagging for selection', [
+                    'user_id' => $userId
+                ]);
             }
+        }
+
+        // Preserve the needs_wallet_selection flag if it was already set
+        if (isset($parsedData['needs_wallet_selection']) && $parsedData['needs_wallet_selection']) {
+            $updated['needs_wallet_selection'] = true;
         }
 
         // Update person ID
@@ -1544,7 +1635,9 @@ class WhatsAppController extends Controller
      */
     protected function sendLinkedMenu(string $fromNumber): void
     {
-        $this->sendInteractiveButtons($fromNumber, "🏠 Main Menu\n\nWhat would you like to do?", [
+        $user = User::where('whatsapp_number', $fromNumber)->first();
+
+        $this->sendInteractiveButtons($fromNumber, "Welcome Back {$user->name},\n\nMain Menu\n\nWhat would you like to do?", [
             ['id' => 'new_entry', 'title' => 'Add Expense'],
             ['id' => 'view_wallets', 'title' => 'View Wallets'],
             ['id' => 'view_categories', 'title' => 'Categories']
@@ -1562,13 +1655,13 @@ class WhatsAppController extends Controller
             ->get();
 
         if ($wallets->isEmpty()) {
-            $this->sendTextMessage($fromNumber, "💳 No wallets found. Please add wallets in the app first.");
+            $this->sendTextMessage($fromNumber, "No wallets found. Please add wallets in the app first.");
             return;
         }
 
-        $message = "💰 Your Wallets:\n\n";
+        $message = "Your Wallets:\n\n";
         foreach ($wallets as $wallet) {
-            $message .= "💳 {$wallet->name}: {$wallet->balance}\n";
+            $message .= "{$wallet->name}: {$wallet->balance}\n";
         }
 
         $this->sendTextMessage($fromNumber, $message);
@@ -1715,16 +1808,28 @@ class WhatsAppController extends Controller
             ->get();
 
         if ($wallets->isEmpty()) {
-            $this->sendTextMessage($fromNumber, "❌ No wallets found. Please add wallets in the app first.");
+            $this->sendTextMessage(
+                $fromNumber,
+                "❌ No active wallets found in your account.\n\n" .
+                    "Please add at least one wallet in the app first, then try again.\n\n" .
+                    "Send 'menu' to see other options."
+            );
             return;
         }
 
-        $message = "💳 Please select a wallet for your expense:\n\n";
+        // Clear, professional message for wallet selection
+        $message = "💳 *Wallet Selection Required*\n\n" .
+            "I couldn't determine which wallet to use for this transaction.\n\n" .
+            "Please select a wallet:\n\n";
+
         foreach ($wallets as $index => $wallet) {
             $number = $index + 1;
-            $message .= "{$number}. {$wallet->name} (Balance: {$wallet->balance})\n";
+            $message .= "🔹 *{$number}.* {$wallet->name}\n";
+            $message .= "   Balance: " . number_format($wallet->balance, 2) . "\n\n";
         }
-        $message .= "\nReply with the number (1-{$wallets->count()}) to select:";
+
+        $message .= "📝 *Reply with the number* (1-{$wallets->count()}) of your chosen wallet.\n\n";
+        $message .= "Type 'cancel' to cancel this transaction.";
 
         $this->sendTextMessage($fromNumber, $message);
     }
@@ -1735,48 +1840,94 @@ class WhatsAppController extends Controller
     protected function handleWalletSelection(string $fromNumber, string $input, WhatsappSession $session, ?User $user): void
     {
         if (!$user) {
-            $this->sendTextMessage($fromNumber, "❌ Please link your account first.");
+            $this->sendTextMessage($fromNumber, "❌ Please link your account first. Send 'start' to begin.");
+            return;
+        }
+
+        $input = trim(strtolower($input));
+
+        // Handle cancellation
+        if (in_array($input, ['cancel', 'stop', 'exit'])) {
+            $session->update(['state' => 'start', 'temp_data' => null]);
+            $this->sendTextMessage($fromNumber, "❌ Transaction cancelled. Send a new expense message to try again.");
             return;
         }
 
         // Validate input is a number
         if (!is_numeric($input)) {
-            $this->sendTextMessage($fromNumber, "❌ Please enter a valid number.");
+            $this->sendTextMessage(
+                $fromNumber,
+                "❌ Please enter a valid number.\n\n" .
+                    "Send the number corresponding to your wallet choice, or 'cancel' to cancel."
+            );
             return;
         }
 
         $selectedNumber = (int)$input;
-        
+
         // Get user's wallets
         $wallets = Wallet::where('user_id', $user->id)
             ->where('is_active', true)
             ->orderBy('name')
             ->get();
 
+        if ($wallets->isEmpty()) {
+            $session->update(['state' => 'start', 'temp_data' => null]);
+            $this->sendTextMessage(
+                $fromNumber,
+                "❌ No active wallets found. Please add wallets in the app first."
+            );
+            return;
+        }
+
         if ($selectedNumber < 1 || $selectedNumber > $wallets->count()) {
-            $this->sendTextMessage($fromNumber, "❌ Invalid selection. Please choose a number between 1 and {$wallets->count()}.");
+            $this->sendTextMessage(
+                $fromNumber,
+                "❌ Invalid selection. Please choose a number between 1 and {$wallets->count()}.\n\n" .
+                    "Or send 'cancel' to cancel this transaction."
+            );
             return;
         }
 
         $selectedWallet = $wallets[$selectedNumber - 1];
-        
+
         try {
             // Get stored parsed data from session
             $tempData = $session->temp_data ?? [];
             $parsedExpense = $tempData['parsed_expense'] ?? null;
 
             if (!$parsedExpense) {
-                $this->sendTextMessage($fromNumber, "❌ Session expired. Please send your expense message again.");
-                $session->update(['state' => 'start']);
+                $session->update(['state' => 'start', 'temp_data' => null]);
+                $this->sendTextMessage(
+                    $fromNumber,
+                    "❌ Session expired. Please send your expense message again."
+                );
                 return;
             }
+
+            Log::info('Processing wallet selection', [
+                'user_id' => $user->id,
+                'selected_wallet' => $selectedWallet->name,
+                'wallet_id' => $selectedWallet->id,
+                'parsed_expense' => $parsedExpense
+            ]);
 
             // Update parsed data with selected wallet
             $parsedExpense['wallet_id'] = $selectedWallet->id;
             $parsedExpense['wallet_name'] = $selectedWallet->name;
             unset($parsedExpense['needs_wallet_selection']);
 
-            // Now try to create the transaction
+            // Verify we have all required data
+            if (empty($parsedExpense['amount']) || empty($parsedExpense['category_id'])) {
+                $session->update(['state' => 'start', 'temp_data' => null]);
+                $this->sendTextMessage(
+                    $fromNumber,
+                    "❌ Missing required transaction data. Please send your expense message again."
+                );
+                return;
+            }
+
+            // Now try to create the transaction with proper user context
             $createRequest = new Request([
                 'amount' => $parsedExpense['amount'],
                 'category_id' => $parsedExpense['category_id'],
@@ -1785,7 +1936,9 @@ class WhatsAppController extends Controller
                 'person_name' => $parsedExpense['person_name'] ?? null,
                 'date' => $parsedExpense['date'] ?? null,
                 'notes' => $parsedExpense['notes'] ?? null,
-                'type' => 'expense'
+                'type' => 'expense',
+                'whatsapp_number' => $fromNumber,
+                'user_id' => $user->id
             ]);
 
             $createResponse = $this->createTransaction($createRequest);
@@ -1793,26 +1946,63 @@ class WhatsAppController extends Controller
 
             if ($createData['success']) {
                 $transaction = $createData['data']['transaction'];
-                $this->sendTextMessage(
-                    $fromNumber,
-                    "✅ Expense recorded successfully!\n\n" .
-                        "💰 Amount: {$transaction['amount']}\n" .
-                        "📂 Category: {$transaction['category']['name']}\n" .
-                        "💳 Wallet: {$transaction['wallet']['name']}"
-                );
+
+                // Build success message with all transaction details
+                $successMessage = "✅ *Expense Recorded Successfully*\n\n";
+                $successMessage .= "💰 Amount: " . number_format($transaction['amount'], 2) . "\n";
+                $successMessage .= "📁 Category: {$transaction['category']['name']}\n";
+                $successMessage .= "💳 Wallet: {$transaction['wallet']['name']}\n";
+
+                if (!empty($transaction['notes'])) {
+                    $successMessage .= "📝 Notes: {$transaction['notes']}\n";
+                }
+
+                if (!empty($parsedExpense['person_name']) && $parsedExpense['person_name'] !== 'Self') {
+                    $successMessage .= "👤 Person: {$parsedExpense['person_name']}\n";
+                }
+
+                $successMessage .= "\n💡 Send another expense message anytime!";
+
+                $this->sendTextMessage($fromNumber, $successMessage);
+
+                Log::info('WhatsApp expense created successfully via wallet selection', [
+                    'user_id' => $user->id,
+                    'transaction_id' => $transaction['id'],
+                    'wallet_selected' => $selectedWallet->name
+                ]);
             } else {
-                $this->sendTextMessage($fromNumber, "❌ Failed to create expense: " . ($createData['message'] ?? 'Unknown error'));
+                $errorMessage = "❌ *Failed to Create Expense*\n\n";
+                $errorMessage .= ($createData['message'] ?? 'Unknown error occurred') . "\n\n";
+                $errorMessage .= "Please try again or contact support if the issue persists.";
+
+                $this->sendTextMessage($fromNumber, $errorMessage);
+
+                Log::error('Failed to create expense after wallet selection', [
+                    'user_id' => $user->id,
+                    'error' => $createData['message'] ?? 'Unknown error',
+                    'parsed_expense' => $parsedExpense
+                ]);
             }
 
-            $session->update(['state' => 'start']);
-
+            // Clear session state
+            $session->update(['state' => 'start', 'temp_data' => null]);
         } catch (Exception $e) {
             Log::error('Wallet selection processing failed', [
                 'error' => $e->getMessage(),
-                'user_id' => $user->id
+                'trace' => $e->getTraceAsString(),
+                'user_id' => $user->id,
+                'selected_wallet_id' => $selectedWallet->id ?? null,
+                'whatsapp_number' => $fromNumber
             ]);
-            $this->sendTextMessage($fromNumber, "❌ An error occurred. Please try again.");
-            $session->update(['state' => 'start']);
+
+            $this->sendTextMessage(
+                $fromNumber,
+                "❌ *An error occurred while processing your transaction.*\n\n" .
+                    "Please try sending your expense message again.\n\n" .
+                    "If the problem persists, please contact support."
+            );
+
+            $session->update(['state' => 'start', 'temp_data' => null]);
         }
     }
 

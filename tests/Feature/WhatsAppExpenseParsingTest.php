@@ -49,6 +49,84 @@ class WhatsAppExpenseParsingTest extends TestCase
         $this->assertEquals('Self', $result['parsed_data']['person']);
     }
 
+    public function test_parse_expense_with_wallet_not_found_requires_selection()
+    {
+        // Mock the OpenRouter API response where wallet doesn't match available ones
+        Http::fake([
+            'openrouter.ai/*' => Http::response([
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => json_encode([
+                                'amount' => 300,
+                                'currency' => 'INR',
+                                'category' => 'Food',
+                                'wallet' => 'Unknown Bank',  // This wallet doesn't exist in our list
+                                'person' => 'Self',
+                                'notes' => 'Coffee',
+                                'date' => '2025-08-11'
+                            ])
+                        ]
+                    ]
+                ]
+            ], 200)
+        ]);
+
+        $service = new OpenRouterService();
+        
+        $result = $service->parseTransaction(
+            'Spent 300 on coffee from unknown bank card',
+            [['id' => '1', 'name' => 'Food']],
+            [['id' => '1', 'name' => 'HDFC'], ['id' => '2', 'name' => 'SBI']],  // Available wallets
+            [['id' => '1', 'name' => 'John']]
+        );
+
+        $this->assertTrue($result['success']);
+        $this->assertEquals(300, $result['parsed_data']['amount']);
+        $this->assertEquals('1', $result['parsed_data']['category']);
+        $this->assertNull($result['parsed_data']['wallet']); // Wallet should be null
+        $this->assertTrue($result['parsed_data']['needs_wallet_selection']); // Flag should be set
+    }
+
+    public function test_parse_expense_with_empty_wallet_requires_selection()
+    {
+        // Mock the OpenRouter API response where wallet is not specified
+        Http::fake([
+            'openrouter.ai/*' => Http::response([
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => json_encode([
+                                'amount' => 150,
+                                'currency' => 'INR',
+                                'category' => 'Transport',
+                                'wallet' => '',  // Empty wallet
+                                'person' => 'Self',
+                                'notes' => 'Bus fare',
+                                'date' => '2025-08-11'
+                            ])
+                        ]
+                    ]
+                ]
+            ], 200)
+        ]);
+
+        $service = new OpenRouterService();
+        
+        $result = $service->parseTransaction(
+            'Paid 150 for bus fare',
+            [['id' => '1', 'name' => 'Transport']],
+            [['id' => '1', 'name' => 'HDFC'], ['id' => '2', 'name' => 'SBI']],
+            [['id' => '1', 'name' => 'John']]
+        );
+
+        $this->assertTrue($result['success']);
+        $this->assertEquals(150, $result['parsed_data']['amount']);
+        $this->assertEquals('1', $result['parsed_data']['category']);
+        $this->assertNull($result['parsed_data']['wallet']); // Wallet should be null
+        $this->assertTrue($result['parsed_data']['needs_wallet_selection']); // Flag should be set
+    }
+
     public function test_create_new_category_and_wallet()
     {
         Http::fake([
