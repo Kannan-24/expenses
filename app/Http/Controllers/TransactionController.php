@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\UserAnalytics;
 use App\Models\Wallet;
 use App\Models\WalletType;
+use App\Services\AttachmentService;
 use App\Services\StreakService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -19,13 +20,16 @@ use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
+    protected $attachmentService;
+
     /**
      * Create a new controller instance.
      */
-    public function __construct()
+    public function __construct(AttachmentService $attachmentService)
     {
         $this->middleware('auth');
         $this->middleware('can:manage transactions');
+        $this->attachmentService = $attachmentService;
     }
 
     /**
@@ -127,7 +131,11 @@ class TransactionController extends Controller
             'date'               => 'required|date',
             'note'               => 'nullable|string',
             'type'               => 'required|in:income,expense',
-            'wallet_id'     => 'required|exists:wallets,id',
+            'wallet_id'          => 'required|exists:wallets,id',
+            'attachments.*'      => 'nullable|file|mimes:jpeg,jpg,png,gif,webp,pdf|max:5120', // 5MB max
+            'camera_image'       => 'nullable|string', // legacy single camera image (kept for backwards compat)
+            'camera_images'      => 'nullable|array',
+            'camera_images.*'    => 'nullable|string', // multiple base64 camera images
         ]);
 
         $wallet = Wallet::where('user_id', Auth::id())->findOrFail($request->wallet_id);
@@ -135,6 +143,46 @@ class TransactionController extends Controller
         // Check wallet balance
         if ($request->type === 'expense' && $wallet->balance < $request->amount) {
             return redirect()->back()->withErrors(['wallet' => 'Insufficient balance in the selected wallet.']);
+        }
+
+        // Handle attachments
+        $attachments = [];
+        
+        // Handle file uploads
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                try {
+                    $attachmentData = $this->attachmentService->uploadAttachment($file, Auth::id());
+                    $attachments[] = $attachmentData;
+                } catch (\Exception $e) {
+                    return redirect()->back()->withErrors(['attachments' => $e->getMessage()]);
+                }
+            }
+        }
+
+        // Handle single legacy camera image
+        if ($request->filled('camera_image')) {
+            try {
+                $cameraImageData = $this->attachmentService->saveBase64Image($request->camera_image, Auth::id());
+                $attachments[] = $cameraImageData;
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors(['camera_image' => $e->getMessage()])->withInput();
+            }
+        }
+
+        // Handle multiple camera images
+        if ($request->filled('camera_images')) {
+            foreach ($request->camera_images as $idx => $base64Image) {
+                if (!$base64Image) { continue; }
+                try {
+                    $cameraImageData = $this->attachmentService->saveBase64Image($base64Image, Auth::id());
+                    $attachments[] = $cameraImageData;
+                } catch (\Exception $e) {
+                    return redirect()->back()->withErrors([
+                        'camera_images.' . $idx => $e->getMessage()
+                    ])->withInput();
+                }
+            }
         }
 
         // Adjust wallet balance based on transaction type
@@ -156,6 +204,7 @@ class TransactionController extends Controller
             'note'              => $request->note,
             'type'              => $request->type,
             'wallet_id'         => $request->wallet_id,
+            'attachments'       => $attachments,
         ]);
 
         $streakInfo = StreakService::updateUserStreak($user);
@@ -219,7 +268,12 @@ class TransactionController extends Controller
             'date'               => 'required|date',
             'note'               => 'nullable|string',
             'type'               => 'required|in:income,expense',
-            'wallet_id'     => 'required|exists:wallets,id',
+            'wallet_id'          => 'required|exists:wallets,id',
+            'attachments.*'      => 'nullable|file|mimes:jpeg,jpg,png,gif,webp,pdf|max:5120', // 5MB max
+            'removed_attachments.*' => 'nullable|string', // paths of removed attachments
+            'camera_images'      => 'nullable|array',
+            'camera_images.*'    => 'nullable|string',
+            'camera_image'       => 'nullable|string'
         ]);
 
         $wallet = Wallet::where('user_id', Auth::id())
@@ -241,9 +295,61 @@ class TransactionController extends Controller
             $this->updateBudgetHistory($transaction->category_id, -$transaction->amount, $transaction->date);
         }
 
-
         if ($request->type == 'expense' && $request->category_id) {
             $this->updateBudgetHistory($request->category_id, $request->amount, $request->date);
+        }
+
+        // Handle attachments
+        $currentAttachments = $transaction->attachments ?? [];
+        
+        // Remove deleted attachments
+        if ($request->has('removed_attachments')) {
+            foreach ($request->removed_attachments as $removedPath) {
+                // Remove from current attachments array
+                $currentAttachments = array_filter($currentAttachments, function($attachment) use ($removedPath) {
+                    return $attachment['path'] !== $removedPath;
+                });
+                
+                // Delete file from storage
+                $this->attachmentService->deleteAttachment($removedPath);
+            }
+        }
+        
+        // Add new attachments (uploaded files)
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                try {
+                    $attachmentData = $this->attachmentService->uploadAttachment($file, Auth::id());
+                    $currentAttachments[] = $attachmentData;
+                } catch (\Exception $e) {
+                    return redirect()->back()->withErrors(['attachments' => $e->getMessage()]);
+                }
+            }
+        }
+
+        // Add new camera images (multiple)
+        if ($request->filled('camera_images')) {
+            foreach ($request->camera_images as $idx => $base64Image) {
+                if (!$base64Image) { continue; }
+                try {
+                    $cameraImageData = $this->attachmentService->saveBase64Image($base64Image, Auth::id());
+                    $currentAttachments[] = $cameraImageData;
+                } catch (\Exception $e) {
+                    return redirect()->back()->withErrors([
+                        'camera_images.' . $idx => $e->getMessage()
+                    ])->withInput();
+                }
+            }
+        }
+
+        // Single legacy camera image
+        if ($request->filled('camera_image')) {
+            try {
+                $cameraImageData = $this->attachmentService->saveBase64Image($request->camera_image, Auth::id());
+                $currentAttachments[] = $cameraImageData;
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors(['camera_image' => $e->getMessage()])->withInput();
+            }
         }
 
         $transaction->update([
@@ -253,12 +359,13 @@ class TransactionController extends Controller
             'date'              => $request->date,
             'note'              => $request->note,
             'type'              => $request->type,
-            'wallet_id'    => $request->wallet_id,
+            'wallet_id'         => $request->wallet_id,
+            'attachments'       => array_values($currentAttachments), // Re-index array
         ]);
 
         return redirect()->route('transactions.index')->with(
             'success',
-            ucfirst($request->type) . " updated successfully. " . ucfirst($request->payment_method) . " balance adjusted."
+            ucfirst($request->type) . " updated successfully. Wallet balance adjusted."
         );
     }
 
@@ -406,5 +513,105 @@ class TransactionController extends Controller
         } elseif ($exceededPercent >= 90 && $exceededPercent < 100) {
             $user->notify(new \App\Notifications\BudgetLimit($budget, $exceededPercent));
         }
+    }
+
+    /**
+     * Upload attachment files via AJAX
+     */
+    public function uploadAttachment(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:jpeg,jpg,png,gif,webp,pdf|max:5120',
+        ]);
+
+        try {
+            $attachmentData = $this->attachmentService->uploadAttachment($request->file('file'), Auth::id());
+            
+            return response()->json([
+                'success' => true,
+                'data' => $attachmentData,
+                'message' => 'File uploaded successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    /**
+     * Save camera image via AJAX
+     */
+    public function saveCameraImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|string',
+        ]);
+
+        try {
+            $imageData = $this->attachmentService->saveBase64Image($request->image, Auth::id());
+            
+            return response()->json([
+                'success' => true,
+                'data' => $imageData,
+                'message' => 'Photo saved successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    /**
+     * Delete attachment
+     */
+    public function deleteAttachment(Request $request)
+    {
+        $request->validate([
+            'path' => 'required|string',
+        ]);
+
+        try {
+            $this->attachmentService->deleteAttachment($request->path);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Attachment deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    /**
+     * Stream or download an attachment ensuring ownership.
+     */
+    public function attachment(Transaction $transaction, $index)
+    {
+        $this->authorizeTransaction($transaction);
+        $attachments = $transaction->attachments ?? [];
+        if (!isset($attachments[$index])) {
+            abort(404);
+        }
+        $att = $attachments[$index];
+        $path = $att['path'] ?? null;
+        if (!$path || !\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+            abort(404);
+        }
+        $mime = $att['mime_type'] ?? 'application/octet-stream';
+        $filename = $att['original_name'] ?? basename($path);
+        $stream = \Illuminate\Support\Facades\Storage::disk('public')->readStream($path);
+        return response()->stream(function() use ($stream) {
+            fpassthru($stream);
+        }, 200, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => str_starts_with($mime, 'image/') ? 'inline; filename="'.$filename.'"' : 'attachment; filename="'.$filename.'"'
+        ]);
     }
 }

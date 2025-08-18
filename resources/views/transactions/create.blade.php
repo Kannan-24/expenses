@@ -117,7 +117,7 @@
                         </div>
 
                         <div class="p-4 sm:p-6 lg:p-8">
-                            <form action="{{ route('transactions.store') }}" method="POST" x-data="transactionForm()" @submit="handleSubmit">
+                            <form action="{{ route('transactions.store') }}" method="POST" enctype="multipart/form-data" x-data="transactionForm()" @submit="handleSubmit">
                                 @csrf
                                 
                                 <div class="space-y-8">
@@ -312,6 +312,130 @@
                                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                 </svg>
+                                                {{ $message }}
+                                            </p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Attachments Section (simplified with camera support) -->
+                                    <div class="space-y-4" x-data="createAttachmentHandler()">
+                                        <label class="flex items-center text-sm font-bold text-gray-900 dark:text-white">
+                                            Attachments & Receipts
+                                            <span class="text-gray-500 dark:text-gray-400 text-xs ml-2">(Optional)</span>
+                                        </label>
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 text-center hover:border-blue-400 dark:hover:border-blue-400 transition-colors">
+                                                <input type="file" name="attachments[]" multiple accept="image/*,application/pdf" id="create-file-upload" class="hidden" @change="handleFiles($event)" />
+                                                <label for="create-file-upload" class="cursor-pointer">
+                                                    <svg class="w-8 h-8 mx-auto text-gray-400 dark:text-gray-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                                    </svg>
+                                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Upload Files</p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400">Images or PDFs</p>
+                                                </label>
+                                            </div>
+                                            <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 text-center hover:border-blue-400 dark:hover:border-blue-400 transition-colors">
+                                                <button type="button" class="w-full" @click="openCamera()">
+                                                    <svg class="w-8 h-8 mx-auto text-gray-400 dark:text-gray-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    </svg>
+                                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Take Photo</p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400">Use Camera</p>
+                                                </button>
+                                            </div>
+                                            <div class="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center">
+                                                <svg class="w-8 h-8 mx-auto text-gray-300 dark:text-gray-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                <p class="text-sm font-medium text-gray-400 dark:text-gray-500">Tips</p>
+                                                <p class="text-xs text-gray-400 dark:text-gray-500">Max 5MB per file</p>
+                                            </div>
+                                        </div>
+                                        <!-- Selected File Previews -->
+                                        <div x-show="files.length > 0" class="space-y-2">
+                                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Selected Files:</h4>
+                                            <div class="space-y-2">
+                                                <template x-for="(f, i) in files" :key="i">
+                                                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
+                                                        <div class="flex items-center space-x-3">
+                                                            <template x-if="f.isImage">
+                                                                <img :src="f.preview" class="w-10 h-10 object-cover rounded" />
+                                                            </template>
+                                                            <template x-if="!f.isImage">
+                                                                <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                                            </template>
+                                                            <div>
+                                                                <p class="text-sm font-medium text-gray-900 dark:text-white" x-text="f.name"></p>
+                                                                <p class="text-xs text-gray-500 dark:text-gray-400" x-text="f.sizeLabel"></p>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" @click="removeFile(i)" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                        </button>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+
+                                        <div x-show="cameraImages.length > 0" class="space-y-2">
+                                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Captured Photos:</h4>
+                                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                                <template x-for="(img, idx) in cameraImages" :key="idx">
+                                                    <div class="relative group">
+                                                        <img :src="img.preview" class="w-full h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-600" />
+                                                        <button type="button" @click="removeCameraImage(idx)" class="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                                        </button>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                        <!-- Hidden inputs for base64 camera images -->
+                                        <template x-for="(img, idx) in cameraImages" :key="'hidden-' + idx">
+                                            <input type="hidden" name="camera_images[]" :value="img.data" />
+                                        </template>
+
+                                        <!-- Camera Modal -->
+                                        <div x-show="showCamera" class="fixed inset-0 z-50" style="display:none;">
+                                            <div class="absolute inset-0 bg-black bg-opacity-60" @click="closeCamera()"></div>
+                                            <div class="relative mx-auto mt-10 max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-5 space-y-4">
+                                                <div class="flex justify-between items-center">
+                                                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Capture Photo</h3>
+                                                    <button type="button" @click="closeCamera()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                    </button>
+                                                </div>
+                                                <div class="relative">
+                               <video x-ref="video" class="w-full rounded-lg bg-black select-none"
+                                   @mousedown="startCrop($event)" @mousemove="moveCrop($event)" @mouseup="endCrop()" @mouseleave="endCrop()"
+                                   autoplay playsinline></video>
+                               <!-- Crop rectangle -->
+                               <template x-if="cropRect">
+                                <div class="absolute border-2 border-yellow-400 bg-yellow-200 bg-opacity-10 pointer-events-none"
+                                     :style="`left:${Math.min(cropRect.w<0?cropRect.x+cropRect.w:cropRect.x)}px;top:${Math.min(cropRect.h<0?cropRect.y+cropRect.h:cropRect.y)}px;width:${Math.abs(cropRect.w)}px;height:${Math.abs(cropRect.h)}px;`"></div>
+                               </template>
+                                                    <canvas x-ref="canvas" class="hidden"></canvas>
+                                                </div>
+                                                <div class="flex justify-center space-x-4">
+                                                    <button type="button" @click="capturePhoto()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium flex items-center">
+                                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                                        Capture
+                                                    </button>
+                                                    <button type="button" @click="closeCamera()" class="px-6 py-2 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200 rounded-lg font-medium">Done</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @error('attachments')
+                                            <p class="text-sm text-red-700 dark:text-red-400 flex items-center mt-2 font-semibold">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                {{ $message }}
+                                            </p>
+                                        @enderror
+                                        @error('camera_images.*')
+                                            <p class="text-sm text-red-700 dark:text-red-400 flex items-center mt-2 font-semibold">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                                 {{ $message }}
                                             </p>
                                         @enderror
@@ -543,6 +667,7 @@
                 
                 handleSubmit(event) {
                     this.isSubmitting = true;
+                    // Let the form submit normally - the attachments will be handled by the backend
                 }
             }
         }
@@ -729,6 +854,249 @@
             if (this.value) {
                 document.getElementById('amount').focus();
             }
+        });
+
+        // Attachment Handler
+        function attachmentHandler() {
+            return {
+                attachments: [],
+                showCamera: false,
+                stream: null,
+
+                handleFileUpload(event) {
+                    const files = Array.from(event.target.files);
+                    
+                    files.forEach(file => {
+                        // Validate file
+                        if (!this.validateFile(file)) {
+                            return;
+                        }
+
+                        // Create attachment object
+                        const attachment = {
+                            original_name: file.name,
+                            filename: file.name,
+                            size: file.size,
+                            mime_type: file.type,
+                            url: URL.createObjectURL(file),
+                            file: file
+                        };
+
+                        this.attachments.push(attachment);
+                    });
+
+                    // Update the form's file input
+                    this.updateFormFileInputs();
+                    
+                    // Clear the input
+                    event.target.value = '';
+                },
+
+                updateFormFileInputs() {
+                    // Remove existing file inputs
+                    const existingInputs = document.querySelectorAll('input[name^="attachments["]');
+                    existingInputs.forEach(input => input.remove());
+
+                    // Create new file inputs for each attachment
+                    const form = document.querySelector('form');
+                    this.attachments.forEach((attachment, index) => {
+                        if (attachment.file) {
+                            const fileInput = document.createElement('input');
+                            fileInput.type = 'hidden';
+                            fileInput.name = `attachments[${index}]`;
+                            
+                            // For file objects, we need a different approach
+                            // We'll create a data transfer and use the files property
+                            const dt = new DataTransfer();
+                            dt.items.add(attachment.file);
+                            
+                            // Create visible file input for this file
+                            const visibleInput = document.createElement('input');
+                            visibleInput.type = 'file';
+                            visibleInput.name = `attachments[]`;
+                            visibleInput.style.display = 'none';
+                            visibleInput.files = dt.files;
+                            form.appendChild(visibleInput);
+                        }
+                    });
+                },
+
+                validateFile(file) {
+                    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
+                    const maxSize = 5 * 1024 * 1024; // 5MB
+
+                    if (!allowedTypes.includes(file.type)) {
+                        alert('File type not allowed. Only images (JPG, PNG, GIF, WebP) and PDF files are supported.');
+                        return false;
+                    }
+
+                    if (file.size > maxSize) {
+                        alert('File size too large. Maximum size is 5MB.');
+                        return false;
+                    }
+
+                    return true;
+                },
+
+                removeAttachment(index) {
+                    // Revoke object URL to free memory
+                    if (this.attachments[index].url.startsWith('blob:')) {
+                        URL.revokeObjectURL(this.attachments[index].url);
+                    }
+                    
+                    this.attachments.splice(index, 1);
+                    this.updateFormFileInputs();
+                },
+
+                async openCamera() {
+                    this.showCamera = true;
+                    
+                    try {
+                        this.stream = await navigator.mediaDevices.getUserMedia({ 
+                            video: { facingMode: 'environment' } // Use rear camera if available
+                        });
+                        
+                        this.$nextTick(() => {
+                            this.$refs.video.srcObject = this.stream;
+                        });
+                    } catch (err) {
+                        console.error('Error accessing camera:', err);
+                        alert('Unable to access camera. Please check permissions.');
+                        this.closeCamera();
+                    }
+                },
+
+                closeCamera() {
+                    if (this.stream) {
+                        this.stream.getTracks().forEach(track => track.stop());
+                        this.stream = null;
+                    }
+                    this.showCamera = false;
+                },
+
+                capturePhoto() {
+                    const video = this.$refs.video;
+                    const canvas = this.$refs.canvas;
+                    const context = canvas.getContext('2d');
+
+                    // Set canvas size to video size
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+
+                    // Draw video frame to canvas
+                    context.drawImage(video, 0, 0);
+
+                    // Convert to blob and create attachment
+                    canvas.toBlob((blob) => {
+                        const file = new File([blob], `camera_photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
+                        
+                        const attachment = {
+                            original_name: `Camera Photo ${new Date().toISOString().slice(0, 16)}.jpg`,
+                            filename: `camera_photo_${Date.now()}.jpg`,
+                            size: blob.size,
+                            mime_type: 'image/jpeg',
+                            url: URL.createObjectURL(blob),
+                            file: file
+                        };
+
+                        this.attachments.push(attachment);
+                        this.updateFormFileInputs();
+                        this.closeCamera();
+                    }, 'image/jpeg', 0.9);
+                }
+            };
+        }
+    </script>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('createAttachmentHandler', () => ({
+                showCamera: false,
+                stream: null,
+                cameraImages: [], // { preview: blobUrl, data: base64Data }
+                files: [], // { file, name, sizeLabel, isImage, preview }
+                handleFiles(e) {
+                    const input = e.target;
+                    const selected = Array.from(input.files);
+                    selected.forEach(f => {
+                        const isImage = f.type.startsWith('image/');
+                        const sizeLabel = (f.size/1024).toFixed(1) + ' KB';
+                        const preview = isImage ? URL.createObjectURL(f) : null;
+                        this.files.push({ file: f, name: f.name, sizeLabel, isImage, preview });
+                    });
+                },
+                removeFile(index) {
+                    const removed = this.files.splice(index,1)[0];
+                    if (removed && removed.preview) URL.revokeObjectURL(removed.preview);
+                    // Rebuild FileList
+                    const dt = new DataTransfer();
+                    this.files.forEach(f => dt.items.add(f.file));
+                    const fileInput = document.getElementById('create-file-upload');
+                    fileInput.files = dt.files;
+                },
+                openCamera() {
+                    this.showCamera = true;
+                    this.$nextTick(async () => {
+                        try {
+                            this.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } }).catch(()=>navigator.mediaDevices.getUserMedia({ video: true }));
+                            this.$refs.video.srcObject = this.stream;
+                        } catch (e) {
+                            alert('Unable to access camera');
+                            this.showCamera = false;
+                        }
+                    });
+                },
+                closeCamera() {
+                    if (this.stream) {
+                        this.stream.getTracks().forEach(t => t.stop());
+                        this.stream = null;
+                    }
+                    this.showCamera = false;
+                },
+                capturePhoto() {
+                    // Simple capture -> crop flow
+                    if (!this.$refs.video) return;
+                    const video = this.$refs.video;
+                    if (video.videoWidth === 0) { setTimeout(()=>this.capturePhoto(),120); return; }
+
+                    // If a crop rectangle was defined store it on this.cropRect
+                    const crop = this.cropRect || { x:0, y:0, w: video.videoWidth, h: video.videoHeight };
+                    const canvas = this.$refs.canvas;
+                    const maxWidth = 1280;
+                    const scale = Math.min(1, maxWidth / crop.w);
+                    canvas.width = Math.round(crop.w * scale);
+                    canvas.height = Math.round(crop.h * scale);
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(video, crop.x, crop.y, crop.w, crop.h, 0, 0, canvas.width, canvas.height);
+                    canvas.toBlob(blob => {
+                        if (!blob) return;
+                        if (blob.size > 5*1024*1024) { alert('Image >5MB after crop.'); return; }
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                            this.cameraImages.push({ preview: URL.createObjectURL(blob), data: reader.result });
+                        };
+                        reader.readAsDataURL(blob);
+                    }, 'image/jpeg', 0.85);
+                    // Reset crop rectangle after capture
+                    this.cropRect = null;
+                },
+                cropRect: null,
+                // Pointer-based crop selection overlay
+                startCrop(e){
+                    const video = this.$refs.video; if(!video) return; const r = video.getBoundingClientRect();
+                    this._cropStart = { x: e.clientX - r.left, y: e.clientY - r.top };
+                    this.cropRect = { x: this._cropStart.x, y: this._cropStart.y, w:0, h:0 };
+                },
+                moveCrop(e){ if(!this._cropStart) return; const video = this.$refs.video; const r = video.getBoundingClientRect();
+                    const cx = e.clientX - r.left; const cy = e.clientY - r.top;
+                    this.cropRect.w = cx - this._cropStart.x; this.cropRect.h = cy - this._cropStart.y;
+                },
+                endCrop(){ this._cropStart = null; },
+                removeCameraImage(idx) {
+                    const removed = this.cameraImages.splice(idx, 1);
+                    if (removed.length && removed[0].preview) URL.revokeObjectURL(removed[0].preview);
+                }
+            }));
         });
     </script>
 

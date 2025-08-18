@@ -18,10 +18,12 @@ class Transaction extends Model
         'type',
         'date',
         'note',
+        'attachments',
     ];
 
     protected $casts = [
         'date' => 'date',
+        'attachments' => 'array',
     ];
 
     // Expense belongs to a user

@@ -111,7 +111,7 @@
                         </div>
 
                         <div class="p-4 sm:p-6 lg:p-8">
-                            <form action="{{ route('transactions.update', $transaction->id) }}" method="POST" x-data="transactionForm()" @submit="handleSubmit">
+                            <form action="{{ route('transactions.update', $transaction->id) }}" method="POST" enctype="multipart/form-data" x-data="transactionForm()" @submit="handleSubmit">
                                 @csrf
                                 @method('PUT')
                                 
@@ -310,6 +310,163 @@
                                                 {{ $message }}
                                             </p>
                                         @enderror
+                                    </div>
+
+                                    <!-- Attachments & Camera (Cleaned) -->
+                                    <div class="space-y-4" x-data="editAttachmentHandler()">
+                                        <label class="flex items-center text-sm font-bold text-gray-900 dark:text-white">
+                                            Attachments & Receipts
+                                            <span class="text-gray-500 dark:text-gray-400 text-xs ml-2">(Optional)</span>
+                                        </label>
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 text-center hover:border-blue-400 dark:hover:border-blue-400 transition-colors">
+                                                <input type="file" name="attachments[]" multiple accept="image/*,application/pdf" id="edit-file-upload" class="hidden" />
+                                                <label for="edit-file-upload" class="cursor-pointer">
+                                                    <svg class="w-8 h-8 mx-auto text-gray-400 dark:text-gray-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                                    </svg>
+                                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Upload Files</p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400">Images or PDFs</p>
+                                                </label>
+                                            </div>
+                                            <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 text-center hover:border-blue-400 dark:hover:border-blue-400 transition-colors">
+                                                <button type="button" class="w-full" @click="openCamera()">
+                                                    <svg class="w-8 h-8 mx-auto text-gray-400 dark:text-gray-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    </svg>
+                                                    <p class="text-sm font-medium text-gray-900 dark:text-white">Take Photo</p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400">Use Camera</p>
+                                                </button>
+                                            </div>
+                                            <div class="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center">
+                                                <svg class="w-8 h-8 mx-auto text-gray-300 dark:text-gray-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                <p class="text-sm font-medium text-gray-400 dark:text-gray-500">Tips</p>
+                                                <p class="text-xs text-gray-400 dark:text-gray-500">Max 5MB per file</p>
+                                            </div>
+                                        </div>
+
+                                        @if($transaction->attachments && count($transaction->attachments) > 0)
+                                            <div class="space-y-2">
+                                                <h4 class="text-sm font-medium text-gray-900 dark:text-white">Existing Attachments:</h4>
+                                                <div class="space-y-2">
+                                                    @foreach($transaction->attachments as $index => $attachment)
+                                                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
+                                                            <div class="flex items-center space-x-3">
+                                                                <div class="flex-shrink-0">
+                                                                    @if(str_starts_with($attachment['mime_type'] ?? '', 'image/'))
+                                                                        <img src="{{ $attachment['url'] ?? '' }}" alt="Thumbnail" class="w-10 h-10 object-cover rounded">
+                                                                    @elseif(($attachment['mime_type'] ?? '') === 'application/pdf')
+                                                                        <svg class="w-10 h-10 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                                                    @endif
+                                                                </div>
+                                                                <div>
+                                                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $attachment['original_name'] ?? 'file' }}</p>
+                                                                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                                                                        @if(isset($attachment['size']))
+                                                                            {{ number_format($attachment['size'] / 1024, 1) }} KB
+                                                                        @endif
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <button type="button" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 remove-existing-attachment" data-path="{{ $attachment['path'] }}">
+                                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                            </button>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        <!-- Newly selected files (before submit) -->
+                                        <div x-show="files.length > 0" class="space-y-2">
+                                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Selected Files:</h4>
+                                            <div class="space-y-2">
+                                                <template x-for="(f, i) in files" :key="i">
+                                                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600">
+                                                        <div class="flex items-center space-x-3">
+                                                            <template x-if="f.isImage">
+                                                                <img :src="f.preview" class="w-10 h-10 object-cover rounded" />
+                                                            </template>
+                                                            <template x-if="!f.isImage">
+                                                                <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                                            </template>
+                                                            <div>
+                                                                <p class="text-sm font-medium text-gray-900 dark:text-white" x-text="f.name"></p>
+                                                                <p class="text-xs text-gray-500 dark:text-gray-400" x-text="f.sizeLabel"></p>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" @click="removeFile(i)" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                        </button>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+
+                                        <div x-show="cameraImages.length > 0" class="space-y-2">
+                                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">New Captured Photos:</h4>
+                                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                                <template x-for="(img, idx) in cameraImages" :key="idx">
+                                                    <div class="relative group">
+                                                        <img :src="img.preview" class="w-full h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-600" />
+                                                        <button type="button" @click="removeCameraImage(idx)" class="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                                        </button>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                        <template x-for="(img, idx) in cameraImages" :key="'hidden-edit-' + idx">
+                                            <input type="hidden" name="camera_images[]" :value="img.data" />
+                                        </template>
+
+                                        <!-- Camera Modal -->
+                                        <div x-show="showCamera" class="fixed inset-0 z-50" style="display:none;">
+                                            <div class="absolute inset-0 bg-black bg-opacity-60" @click="closeCamera()"></div>
+                                            <div class="relative mx-auto mt-10 max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-5 space-y-4">
+                                                <div class="flex justify-between items-center">
+                                                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Capture Photo</h3>
+                                                    <button type="button" @click="closeCamera()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                    </button>
+                                                </div>
+                                                <div class="relative">
+                                                    <video x-ref="video" class="w-full rounded-lg bg-black select-none" autoplay playsinline
+                                                        @mousedown="startCrop($event)" @mousemove="moveCrop($event)" @mouseup="endCrop()" @mouseleave="endCrop()"></video>
+                                                    <template x-if="cropRect">
+                                                        <div class="absolute border-2 border-yellow-400 bg-yellow-200 bg-opacity-10 pointer-events-none"
+                                                             :style="`left:${Math.min(cropRect.w<0?cropRect.x+cropRect.w:cropRect.x)}px;top:${Math.min(cropRect.h<0?cropRect.y+cropRect.h:cropRect.y)}px;width:${Math.abs(cropRect.w)}px;height:${Math.abs(cropRect.h)}px;`"></div>
+                                                    </template>
+                                                    <canvas x-ref="canvas" class="hidden"></canvas>
+                                                </div>
+                                                <div class="flex justify-center space-x-4">
+                                                    <button type="button" @click="capturePhoto()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium flex items-center">
+                                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                                        Capture
+                                                    </button>
+                                                    <button type="button" @click="closeCamera()" class="px-6 py-2 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200 rounded-lg font-medium">Done</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @error('attachments')
+                                            <p class="text-sm text-red-700 dark:text-red-400 flex items-center mt-2 font-semibold">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                {{ $message }}
+                                            </p>
+                                        @enderror
+                                        @error('camera_images.*')
+                                            <p class="text-sm text-red-700 dark:text-red-400 flex items-center mt-2 font-semibold">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                {{ $message }}
+                                            </p>
+                                        @enderror
+
+                                        <!-- Hidden container for removed attachments -->
+                                        <div id="removed-attachments"></div>
                                     </div>
 
                                     <!-- Form Actions -->
@@ -571,6 +728,23 @@
             }
         }
 
+        // Simple function to remove existing attachments
+        function removeExistingAttachment(index) {
+            // Find the attachment element and hide it
+            const attachmentElements = document.querySelectorAll('[data-attachment-index]');
+            if (attachmentElements[index]) {
+                attachmentElements[index].style.display = 'none';
+                
+                // Add hidden input to track removed attachment
+                const removedContainer = document.getElementById('removed-attachments');
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'removed_attachments[]';
+                hiddenInput.value = attachmentElements[index].dataset.attachmentPath;
+                removedContainer.appendChild(hiddenInput);
+            }
+        }
+
         // Fixed modal functions
         function openCategoryModal() {
             document.getElementById('categoryModal').classList.remove('hidden');
@@ -754,6 +928,106 @@
                 closePersonModal();
                 closeWalletModal();
             }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('editAttachmentHandler', () => ({
+                showCamera: false,
+                stream: null,
+                cameraImages: [],
+                files: [],
+                init() {
+                    // Bind remove buttons for existing attachments
+                    document.querySelectorAll('.remove-existing-attachment').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const path = btn.getAttribute('data-path');
+                            const container = btn.closest('.flex');
+                            if (container) container.remove();
+                            if (path) {
+                                const hidden = document.createElement('input');
+                                hidden.type = 'hidden';
+                                hidden.name = 'removed_attachments[]';
+                                hidden.value = path;
+                                document.getElementById('removed-attachments').appendChild(hidden);
+                            }
+                        });
+                    });
+
+                    // Bind file input change once Alpine is ready
+                    const fileInput = document.getElementById('edit-file-upload');
+                    if (fileInput) {
+                        fileInput.addEventListener('change', e => {
+                            const selected = Array.from(e.target.files);
+                            selected.forEach(f => {
+                                const isImage = f.type.startsWith('image/');
+                                const sizeLabel = (f.size / 1024).toFixed(1) + ' KB';
+                                const preview = isImage ? URL.createObjectURL(f) : null;
+                                this.files.push({ file: f, name: f.name, sizeLabel, isImage, preview });
+                            });
+                        });
+                    }
+                },
+                removeFile(i) {
+                    const removed = this.files.splice(i,1)[0];
+                    if (removed && removed.preview) URL.revokeObjectURL(removed.preview);
+                    const dt = new DataTransfer();
+                    this.files.forEach(f => dt.items.add(f.file));
+                    const fileInput = document.getElementById('edit-file-upload');
+                    if (fileInput) fileInput.files = dt.files;
+                },
+                openCamera() {
+                    this.showCamera = true;
+                    this.$nextTick(async () => {
+                        try {
+                            this.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } }).catch(()=>navigator.mediaDevices.getUserMedia({ video: true }));
+                            this.$refs.video.srcObject = this.stream;
+                        } catch (e) {
+                            alert('Unable to access camera');
+                            this.showCamera = false;
+                        }
+                    });
+                },
+                closeCamera() {
+                    if (this.stream) {
+                        this.stream.getTracks().forEach(t => t.stop());
+                        this.stream = null;
+                    }
+                    this.showCamera = false;
+                },
+                capturePhoto() {
+                    if (!this.$refs.video) return;
+                    const video = this.$refs.video;
+                    if (video.videoWidth === 0) { setTimeout(()=>this.capturePhoto(),120); return; }
+                    const crop = this.cropRect || { x:0, y:0, w: video.videoWidth, h: video.videoHeight };
+                    const canvas = this.$refs.canvas;
+                    const maxWidth = 1280;
+                    const scale = Math.min(1, maxWidth / crop.w);
+                    canvas.width = Math.round(crop.w * scale);
+                    canvas.height = Math.round(crop.h * scale);
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(video, crop.x, crop.y, crop.w, crop.h, 0, 0, canvas.width, canvas.height);
+                    canvas.toBlob(blob => {
+                        if (!blob) return;
+                        if (blob.size > 5 * 1024 * 1024) { alert('Image >5MB after crop.'); return; }
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                            this.cameraImages.push({ preview: URL.createObjectURL(blob), data: reader.result });
+                        };
+                        reader.readAsDataURL(blob);
+                    }, 'image/jpeg', 0.85);
+                    this.cropRect = null;
+                },
+                cropRect: null,
+                startCrop(e){ const video = this.$refs.video; if(!video) return; const r = video.getBoundingClientRect(); this._cropStart={x:e.clientX-r.left,y:e.clientY-r.top}; this.cropRect={x:this._cropStart.x,y:this._cropStart.y,w:0,h:0}; },
+                moveCrop(e){ if(!this._cropStart) return; const video=this.$refs.video; const r=video.getBoundingClientRect(); const cx=e.clientX-r.left; const cy=e.clientY-r.top; this.cropRect.w=cx-this._cropStart.x; this.cropRect.h=cy-this._cropStart.y; },
+                endCrop(){ this._cropStart=null; },
+                removeCameraImage(idx) {
+                    const removed = this.cameraImages.splice(idx, 1);
+                    if (removed.length && removed[0].preview) URL.revokeObjectURL(removed[0].preview);
+                }
+            }));
         });
     </script>
 

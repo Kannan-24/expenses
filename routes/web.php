@@ -62,6 +62,13 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
     })->name('notifications.markAllAsRead');
 
     Route::resource('transactions', TransactionController::class);
+    Route::get('transactions/{transaction}/attachment/{index}', [TransactionController::class, 'attachment'])->name('transactions.attachment');
+    
+    // Transaction attachment routes
+    Route::post('transactions/upload-attachment', [TransactionController::class, 'uploadAttachment'])->name('transactions.upload-attachment');
+    Route::post('transactions/save-camera-image', [TransactionController::class, 'saveCameraImage'])->name('transactions.save-camera-image');
+    Route::delete('transactions/delete-attachment', [TransactionController::class, 'deleteAttachment'])->name('transactions.delete-attachment');
+    
     Route::resource('categories', CategoryController::class);
     Route::resource('expense-people', ExpensePersonController::class);
     Route::resource('budgets', BudgetController::class);
