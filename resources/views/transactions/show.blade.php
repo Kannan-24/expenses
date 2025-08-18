@@ -250,19 +250,7 @@
                                                                 alt="{{ $attachment['original_name'] }}"
                                                                 class="w-full h-full object-cover cursor-pointer"
                                                                 onclick="openImageModal('{{ route('transactions.attachment', [$transaction->id, $idx]) }}', '{{ $attachment['original_name'] }}')">
-                                                            <div class="absolute top-2 right-2">
-                                                                <a href="{{ route('transactions.attachment', [$transaction->id, $idx]) }}"
-                                                                    download="{{ $attachment['original_name'] }}"
-                                                                    class="bg-black bg-opacity-50 text-white p-1 rounded-full hover:bg-opacity-70 transition-all">
-                                                                    <svg class="w-4 h-4" fill="none"
-                                                                        stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round"
-                                                                            stroke-linejoin="round" stroke-width="2"
-                                                                            d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z">
-                                                                        </path>
-                                                                    </svg>
-                                                                </a>
-                                                            </div>
+                                                            
                                                         </div>
                                                     @else
                                                         <!-- PDF or Other File Attachment -->
@@ -290,20 +278,6 @@
                                                                 {{ number_format($attachment['size'] / 1024, 1) }} KB
                                                             </p>
                                                             <div class="flex space-x-2">
-                                                                @if ($attachment['mime_type'] === 'application/pdf')
-                                                                    <a href="{{ route('transactions.attachment', [$transaction->id, $idx]) }}"
-                                                                        target="_blank"
-                                                                        class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
-                                                                        <svg class="w-4 h-4" fill="none"
-                                                                            stroke="currentColor" viewBox="0 0 24 24">
-                                                                            <path stroke-linecap="round"
-                                                                                stroke-linejoin="round"
-                                                                                stroke-width="2"
-                                                                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
-                                                                            </path>
-                                                                        </svg>
-                                                                    </a>
-                                                                @endif
                                                                 <a href="{{ route('transactions.attachment', [$transaction->id, $idx]) }}"
                                                                     download="{{ $attachment['original_name'] }}"
                                                                     class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300">
