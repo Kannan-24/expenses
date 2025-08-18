@@ -58,7 +58,7 @@ class AttachmentService
             'path' => $path,
             'size' => $file->getSize(),
             'mime_type' => $file->getMimeType(),
-            'url' => Storage::disk('public')->url($path),
+            'url' => 'attachments/' . $filename,
         ];
     }
 
@@ -144,7 +144,7 @@ class AttachmentService
             'path' => $path,
             'size' => strlen($imageData),
             'mime_type' => 'image/' . $extension,
-            'url' => Storage::disk('public')->url($path),
+            'url' => 'attachments/' . $filename,
         ];
     }
 }

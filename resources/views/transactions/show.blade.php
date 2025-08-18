@@ -224,31 +224,42 @@
                                 </div>
 
                                 <!-- Attachments -->
-                                @if($transaction->attachments && count($transaction->attachments) > 0)
+                                @if ($transaction->attachments && count($transaction->attachments) > 0)
                                     <div class="space-y-2 md:col-span-2">
-                                        <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
-                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.586-6.586a2 2 0 00-2.828-2.828z"></path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                        <label
+                                            class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.586-6.586a2 2 0 00-2.828-2.828z">
+                                                </path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z">
+                                                </path>
                                             </svg>
                                             Attachments ({{ count($transaction->attachments) }})
                                         </label>
                                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                            @foreach($transaction->attachments as $idx => $attachment)
-                                                <div class="bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 overflow-hidden">
-                                                    @if(str_starts_with($attachment['mime_type'], 'image/'))
+                                            @foreach ($transaction->attachments as $idx => $attachment)
+                                                <div
+                                                    class="bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 overflow-hidden">
+                                                    @if (str_starts_with($attachment['mime_type'], 'image/'))
                                                         <!-- Image Attachment -->
                                                         <div class="aspect-square relative">
-                                                <img src="{{ route('transactions.attachment', [$transaction->id, $idx]) }}" 
-                                                    alt="{{ $attachment['original_name'] }}"
-                                                                 class="w-full h-full object-cover cursor-pointer"
-                                                    onclick="openImageModal('{{ route('transactions.attachment', [$transaction->id, $idx]) }}', '{{ $attachment['original_name'] }}')">
+                                                            <img src="{{ route('transactions.attachment', [$transaction->id, $idx]) }}"
+                                                                alt="{{ $attachment['original_name'] }}"
+                                                                class="w-full h-full object-cover cursor-pointer"
+                                                                onclick="openImageModal('{{ route('transactions.attachment', [$transaction->id, $idx]) }}', '{{ $attachment['original_name'] }}')">
                                                             <div class="absolute top-2 right-2">
-                                                                <a href="{{ route('transactions.attachment', [$transaction->id, $idx]) }}" 
-                                                                   download="{{ $attachment['original_name'] }}"
-                                                                   class="bg-black bg-opacity-50 text-white p-1 rounded-full hover:bg-opacity-70 transition-all">
-                                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                                                                <a href="{{ route('transactions.attachment', [$transaction->id, $idx]) }}"
+                                                                    download="{{ $attachment['original_name'] }}"
+                                                                    class="bg-black bg-opacity-50 text-white p-1 rounded-full hover:bg-opacity-70 transition-all">
+                                                                    <svg class="w-4 h-4" fill="none"
+                                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                            d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z">
+                                                                        </path>
                                                                     </svg>
                                                                 </a>
                                                             </div>
@@ -257,16 +268,21 @@
                                                         <!-- PDF or Other File Attachment -->
                                                         <div class="p-4 flex items-center justify-center h-32">
                                                             <div class="text-center">
-                                                                <svg class="w-12 h-12 mx-auto text-red-500 mb-2" fill="currentColor" viewBox="0 0 24 24">
-                                                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                                                <svg class="w-12 h-12 mx-auto text-red-500 mb-2"
+                                                                    fill="currentColor" viewBox="0 0 24 24">
+                                                                    <path
+                                                                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                                                                 </svg>
-                                                                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">PDF</p>
+                                                                <p
+                                                                    class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                    PDF</p>
                                                             </div>
                                                         </div>
                                                     @endif
-                                                    
+
                                                     <div class="p-3 border-t border-gray-200 dark:border-gray-600">
-                                                        <p class="text-sm font-medium text-gray-900 dark:text-white truncate" title="{{ $attachment['original_name'] }}">
+                                                        <p class="text-sm font-medium text-gray-900 dark:text-white truncate"
+                                                            title="{{ $attachment['original_name'] }}">
                                                             {{ $attachment['original_name'] }}
                                                         </p>
                                                         <div class="flex items-center justify-between mt-1">
@@ -274,20 +290,29 @@
                                                                 {{ number_format($attachment['size'] / 1024, 1) }} KB
                                                             </p>
                                                             <div class="flex space-x-2">
-                                                                @if($attachment['mime_type'] === 'application/pdf')
-                                                                    <a href="{{ route('transactions.attachment', [$transaction->id, $idx]) }}" 
-                                                                       target="_blank"
-                                                                       class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
-                                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                                                @if ($attachment['mime_type'] === 'application/pdf')
+                                                                    <a href="{{ route('transactions.attachment', [$transaction->id, $idx]) }}"
+                                                                        target="_blank"
+                                                                        class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
+                                                                        <svg class="w-4 h-4" fill="none"
+                                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                stroke-width="2"
+                                                                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                                                                            </path>
                                                                         </svg>
                                                                     </a>
                                                                 @endif
-                                                                <a href="{{ route('transactions.attachment', [$transaction->id, $idx]) }}" 
-                                                                   download="{{ $attachment['original_name'] }}"
-                                                                   class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300">
-                                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                                                                <a href="{{ route('transactions.attachment', [$transaction->id, $idx]) }}"
+                                                                    download="{{ $attachment['original_name'] }}"
+                                                                    class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300">
+                                                                    <svg class="w-4 h-4" fill="none"
+                                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                            d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z">
+                                                                        </path>
                                                                     </svg>
                                                                 </a>
                                                             </div>
@@ -304,14 +329,19 @@
                 </div>
 
                 <!-- Image Modal -->
-                <div id="imageModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black bg-opacity-75" onclick="closeImageModal()">
-                    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-                        <div class="inline-block w-full max-w-4xl my-8 overflow-hidden text-left align-middle transition-all transform">
+                <div id="imageModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black bg-opacity-75"
+                    onclick="closeImageModal()">
+                    <div
+                        class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                        <div
+                            class="inline-block w-full max-w-4xl my-8 overflow-hidden text-left align-middle transition-all transform">
                             <img id="modalImage" src="" alt="" class="w-full h-auto rounded-lg">
                             <div class="absolute top-4 right-4">
-                                <button onclick="closeImageModal()" class="bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all">
+                                <button onclick="closeImageModal()"
+                                    class="bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
                                 </button>
                             </div>
