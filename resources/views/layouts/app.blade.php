@@ -168,7 +168,6 @@
                 if (permission === "granted") {
                     const token = await getToken(messaging, {
                         vapidKey: "{{ env('FCM_KEY_PAIR') }}",
-                        serviceWorkerRegistration: swRegistration
                     });
 
                     if (token) {
