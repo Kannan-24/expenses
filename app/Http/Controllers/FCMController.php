@@ -19,10 +19,10 @@ class FCMController extends Controller
             return response()->json(['error' => 'Token is required'], 400);
         }
 
-        UserToken::create([
+        UserToken::updateOrCreate([
             'user_id' => $user->id,
-            'token' => $token,
-        ]);
+            'fcm_token' => $token
+        ], []);
 
         return response()->json(['message' => 'Token stored successfully.']);
     }
