@@ -29,3 +29,16 @@ onBackgroundMessage((payload) => {
         }
     });
 });
+
+// Handle notification click events
+self.addEventListener('notificationclick', (event) => {
+    console.log('Notification clicked:', event.notification);
+
+    event.notification.close();
+
+    const urlToOpen = event.notification.data.url;
+
+    event.waitUntil(
+        clients.openWindow(urlToOpen)
+    );
+});
