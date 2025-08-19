@@ -9,6 +9,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\HtmlString;
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
+use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class SupportTicketReplied extends Notification
 {
@@ -32,7 +35,20 @@ class SupportTicketReplied extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        return ['mail', 'database', FcmChannel::class];
+    }
+
+    /**
+     * Get the FCM representation of the notification.
+     */
+    public function toFcm(object $notifiable): FcmMessage
+    {
+        return (new FcmMessage(notification: new FcmNotification(
+            title: 'Support Reply for Ticket #' . $this->ticket->id,
+            body: 'A new reply has been added to your support ticket: ' . $this->ticket->subject,
+        )))->setData([
+            'action_url' => route('support_tickets.show', $this->ticket->id),
+        ]);
     }
 
     /**

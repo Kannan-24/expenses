@@ -7,6 +7,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
+use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class SupportTicketCreated extends Notification
 {
@@ -24,7 +27,20 @@ class SupportTicketCreated extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        return ['mail', 'database', FcmChannel::class];
+    }
+
+    /**
+     * Get the FCM representation of the notification.
+     */
+    public function toFcm(object $notifiable): FcmMessage
+    {
+        return (new FcmMessage(notification: new FcmNotification(
+            title: 'New Support Ticket Created',
+            body: 'A new support ticket has been created: ' . $this->ticket->subject,
+        )))->setData([
+            'action_url' => route('support_tickets.show', $this->ticket->id),
+        ]);
     }
 
     /**

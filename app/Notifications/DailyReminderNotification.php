@@ -7,7 +7,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Log;
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
+use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class DailyReminderNotification extends Notification implements ShouldQueue
 {
@@ -28,9 +30,21 @@ class DailyReminderNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', FcmChannel::class];
     }
 
+    /**
+     * Get the FCM representation of the notification.
+     */
+    public function toFcm(object $notifiable): FcmMessage
+    {
+        return (new FcmMessage(notification: new FcmNotification(
+            title: 'Daily Reminder',
+            body: 'Don\'t forget to add today\'s transactions!',
+        )))->setData([
+            'action_url' => route('transactions.create'),
+        ]);
+    }
     /**
      * Get the mail representation of the notification.
      */

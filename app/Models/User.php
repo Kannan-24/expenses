@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -66,6 +67,16 @@ class User extends Authenticatable
             'wants_reminder' => 'boolean',
             'last_login_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Specifies the user's FCM tokens
+     *
+     * @return string|array
+     */
+    public function routeNotificationForFcm()
+    {
+        return $this->notificationTokens->pluck('fcm_token')->toArray();
     }
 
     /**
@@ -148,6 +159,14 @@ class User extends Authenticatable
         }
 
         return true;
+    }
+
+    /**
+     * Get the user fcm tokens associated with the user.
+     */
+    public function notificationTokens(): HasMany
+    {
+        return $this->hasMany(UserToken::class);
     }
 
     /**

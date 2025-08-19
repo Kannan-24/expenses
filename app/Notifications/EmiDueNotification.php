@@ -8,6 +8,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Carbon\Carbon;
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
+use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class EmiDueNotification extends Notification implements ShouldQueue
 {
@@ -30,7 +33,33 @@ class EmiDueNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        return ['database', 'mail', FcmChannel::class];
+    }
+
+    /**
+     * Get the FCM representation of the notification.
+     */
+    public function toFcm(object $notifiable): FcmMessage
+    {
+        $daysUntilDue = (int) Carbon::now()->diffInDays($this->schedule->due_date, false);
+        
+        if ($daysUntilDue > 0) {
+            $title = "EMI Due in {$daysUntilDue} day(s)";
+            $body = "Your EMI payment for {$this->schedule->emiLoan->name} is due in {$daysUntilDue} day(s).";
+        } elseif ($daysUntilDue == 0) {
+            $title = "EMI Due Today";
+            $body = "Your EMI payment for {$this->schedule->emiLoan->name} is due today.";
+        } else {
+            $title = "EMI Overdue";
+            $body = "Your EMI payment for {$this->schedule->emiLoan->name} is overdue by " . abs($daysUntilDue) . " day(s).";
+        }
+
+        return (new FcmMessage(notification: new FcmNotification(
+            title: $title,
+            body: $body,
+        )))->setData([
+            'action_url' => route('emi-loans.show', $this->schedule->emi_loan_id),
+        ]);
     }
 
     /**

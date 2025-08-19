@@ -124,7 +124,99 @@
                 'tracking_timestamp': '{{ now()->format('Y-m-d H:i:s') }}'
             });
         @endif
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/firebase-messaging-sw.js", {
+                    type: "module"
+                })
+                .then((registration) => {
+                    console.log("Service Worker registered with scope:", registration.scope);
+                })
+                .catch((err) => {
+                    console.error("Service Worker registration failed:", err);
+                });
+        }
     </script>
+
+    <script type="module">
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+        import {
+            getAnalytics
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+        import {
+            getMessaging,
+            getToken,
+            onMessage
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-messaging.js";
+
+        // Your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6DEyl86w_6NEtd6Wdtr1y27E1gWgeMNA",
+            authDomain: "expences-464117.firebaseapp.com",
+            projectId: "expences-464117",
+            storageBucket: "expences-464117.firebasestorage.app",
+            messagingSenderId: "216195529410",
+            appId: "1:216195529410:web:f1b3683e8e0a70f5e5595b",
+            measurementId: "G-P1YTSV6EVE"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const messaging = getMessaging(app);
+
+        // Ask for notification permission + get token
+        async function requestPermissionAndToken() {
+            try {
+                const permission = await Notification.requestPermission();
+
+                if (permission === "granted") {
+                    const token = await getToken(messaging, {
+                        vapidKey: "{{ env('FCM_KEY_PAIR') }}" // your Web Push certificate key from Firebase
+                    });
+
+                    if (token) {
+                        console.log("FCM Token:", token);
+
+                        // Send token to Laravel backend
+                        await fetch("{{ route('store.token') }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                            },
+                            body: JSON.stringify({
+                                token
+                            })
+                        });
+                    } else {
+                        console.warn("No registration token available. Request permission first.");
+                    }
+                } else {
+                    console.log("User denied notifications.");
+                }
+            } catch (err) {
+                console.error("Error getting permission or token:", err);
+            }
+        }
+
+        requestPermissionAndToken();
+
+        // Foreground message handling
+        onMessage(messaging, (payload) => {
+            console.log("Message received: ", payload);
+            new Notification(payload.notification.title, {
+                body: payload.notification.body,
+                icon: payload.notification.image || "https://cazhoo.duodev.in/assets/Cazhoo Logo.png",
+                data: {
+                    url: payload.notification.action_url || "https://cazhoo.duodev.in"
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

@@ -7,6 +7,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
+use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 use PhpParser\Node\Expr\Cast\Double;
 
 class BudgetLimit extends Notification
@@ -25,8 +28,23 @@ class BudgetLimit extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        return ['mail', 'database', FcmChannel::class];
     }
+
+    /**
+     * Get the FCM representation of the notification.
+     */
+    public function toFcm(object $notifiable): FcmMessage
+    {
+        return (new FcmMessage(notification: new FcmNotification(
+            title: 'Budget Alert: ' . $this->budget->category->name,
+            body: 'You have exceeded ' . $this->percent . '% of your budget for the category: ' . $this->budget->category->name,
+            image: asset('images/budget_alert.png'),
+        )))->setData([
+            'action_url' => route('budgets.show', $this->budget->id),
+        ]);
+    }
+
 
     /**
      * Get the mail representation of the notification.
