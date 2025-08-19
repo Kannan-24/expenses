@@ -38,7 +38,7 @@ class SupportTicketCreated extends Notification
         return (new FcmMessage(notification: new FcmNotification(
             title: 'New Support Ticket Created',
             body: 'A new support ticket has been created: ' . $this->ticket->subject,
-        )))->setData([
+        )))->data([
             'action_url' => route('support_tickets.show', $this->ticket->id),
         ]);
     }

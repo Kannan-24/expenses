@@ -40,7 +40,7 @@ class BudgetLimit extends Notification
             title: 'Budget Alert: ' . $this->budget->category->name,
             body: 'You have exceeded ' . $this->percent . '% of your budget for the category: ' . $this->budget->category->name,
             image: asset('images/budget_alert.png'),
-        )))->setData([
+        )))->data([
             'action_url' => route('budgets.show', $this->budget->id),
         ]);
     }

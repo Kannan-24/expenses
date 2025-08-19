@@ -57,7 +57,7 @@ class EmiDueNotification extends Notification implements ShouldQueue
         return (new FcmMessage(notification: new FcmNotification(
             title: $title,
             body: $body,
-        )))->setData([
+        )))->data([
             'action_url' => route('emi-loans.show', $this->schedule->emi_loan_id),
         ]);
     }

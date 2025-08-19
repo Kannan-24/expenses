@@ -41,7 +41,7 @@ class DailyReminderNotification extends Notification implements ShouldQueue
         return (new FcmMessage(notification: new FcmNotification(
             title: 'Daily Reminder',
             body: 'Don\'t forget to add today\'s transactions!',
-        )))->setData([
+        )))->data([
             'action_url' => route('transactions.create'),
         ]);
     }

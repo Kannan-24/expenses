@@ -46,7 +46,7 @@ class SupportTicketReplied extends Notification
         return (new FcmMessage(notification: new FcmNotification(
             title: 'Support Reply for Ticket #' . $this->ticket->id,
             body: 'A new reply has been added to your support ticket: ' . $this->ticket->subject,
-        )))->setData([
+        )))->data([
             'action_url' => route('support_tickets.show', $this->ticket->id),
         ]);
     }
