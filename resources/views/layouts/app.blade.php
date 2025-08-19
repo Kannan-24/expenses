@@ -124,26 +124,33 @@
                 'tracking_timestamp': '{{ now()->format('Y-m-d H:i:s') }}'
             });
         @endif
-
-        </script>
+    </script>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
-        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-messaging.js";
-        
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+        import {
+            getAnalytics
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+        import {
+            getMessaging,
+            getToken,
+            onMessage
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-messaging.js";
+
+        // Recommended async/await style
         if ("serviceWorker" in navigator) {
-            const swRegistration = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
+            try {
+                const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
                     type: "module"
-                })
-                .then((registration) => {
-                    console.log("Service Worker registered with scope:", registration.scope);
-                })
-                .catch((err) => {
-                    console.error("Service Worker registration failed:", err);
                 });
+                console.log("Service Worker registered with scope:", registration.scope);
+            } catch (err) {
+                console.error("Service Worker registration failed:", err);
+            }
         }
-    
+
         // Your Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyC6DEyl86w_6NEtd6Wdtr1y27E1gWgeMNA",
