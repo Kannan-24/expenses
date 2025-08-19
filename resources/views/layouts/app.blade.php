@@ -125,8 +125,15 @@
             });
         @endif
 
+        </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-messaging.js";
+        
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("/firebase-messaging-sw.js", {
+            const swRegistration = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
                     type: "module"
                 })
                 .then((registration) => {
@@ -136,21 +143,7 @@
                     console.error("Service Worker registration failed:", err);
                 });
         }
-    </script>
-
-    <script type="module">
-        import {
-            initializeApp
-        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-        import {
-            getAnalytics
-        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
-        import {
-            getMessaging,
-            getToken,
-            onMessage
-        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-messaging.js";
-
+    
         // Your Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyC6DEyl86w_6NEtd6Wdtr1y27E1gWgeMNA",
@@ -174,7 +167,8 @@
 
                 if (permission === "granted") {
                     const token = await getToken(messaging, {
-                        vapidKey: "{{ env('FCM_KEY_PAIR') }}" // your Web Push certificate key from Firebase
+                        vapidKey: "{{ env('FCM_KEY_PAIR') }}",
+                        serviceWorkerRegistration: swRegistration
                     });
 
                     if (token) {
