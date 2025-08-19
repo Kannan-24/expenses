@@ -218,4 +218,8 @@ return [
             ],
         ],
     ],
+
+    'fcm' => [
+        'key_pair' => env('FCM_KEY_PAIR'),
+    ]
 ];

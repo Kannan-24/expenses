@@ -174,7 +174,7 @@
 
                 if (permission === "granted") {
                     const token = await getToken(messaging, {
-                        vapidKey: "{{ env('FCM_KEY_PAIR') }}",
+                        vapidKey: "{{ config('firebase.fcm.key_pair') }}",
                     });
 
                     if (token) {
