@@ -139,17 +139,6 @@
             onMessage
         } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-messaging.js";
 
-        // Recommended async/await style
-        if ("serviceWorker" in navigator) {
-            try {
-                const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
-                    type: "module"
-                });
-                console.log("Service Worker registered with scope:", registration.scope);
-            } catch (err) {
-                console.error("Service Worker registration failed:", err);
-            }
-        }
 
         // Your Firebase config
         const firebaseConfig = {
@@ -169,12 +158,23 @@
 
         // Ask for notification permission + get token
         async function requestPermissionAndToken() {
+            if (!('serviceWorker' in navigator)) {
+                console.error("Service workers are not supported.");
+                return;
+            }
+
             try {
+                const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+                    type: 'module'
+                });
+                console.log('✅ Service Worker registered as module:', registration);
+
                 const permission = await Notification.requestPermission();
 
                 if (permission === "granted") {
                     const token = await getToken(messaging, {
                         vapidKey: "{{ config('firebase.fcm.key_pair') }}",
+                        serviceWorkerRegistration: registration
                     });
 
                     if (token) {
