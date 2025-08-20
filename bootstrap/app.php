@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Run reminder command every hour to check for users who should receive notifications
         // The command itself will handle user-specific timing and frequency preferences
         $schedule->command(SendDailyReminder::class)
-            ->hourly()
+            ->everyFiveMinutes()
             ->withoutOverlapping()
             ->onOneServer()
             ->runInBackground();
