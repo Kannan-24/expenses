@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withSchedule(function (Schedule $schedule) {
         $schedule->command(SendDailyReminder::class)
-            ->everyMinute()
+            ->everyFiveMinutes()
             ->withoutOverlapping();
             
         // Keep other scheduled tasks as they were

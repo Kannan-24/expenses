@@ -56,10 +56,9 @@ class SendDailyReminder extends Command
                 }
 
                 // Check if user already received a notification today
-                $alreadySentToday = $user->notifications()
-                    ->where('type', DailyReminderNotification::class)
-                    ->whereDate('created_at', Carbon::today())
-                    ->exists();
+                $alreadySentToday = $user->last_remainder_sent
+                    ? Carbon::parse($user->last_reminder_sent)->isToday()
+                    : false;
 
                 if (!$alreadySentToday) {
                     $delaySeconds = ($page * $delayBetweenBatches) + ($index * 2);
