@@ -184,88 +184,358 @@
         <!-- Additional Settings Section -->
         <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
             <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <svg class="w-6 h-6 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
-                Additional Settings
+            <svg class="w-6 h-6 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            Additional Settings
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Notification Preferences -->
-                <div class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors">
-                    <div class="flex items-center space-x-3 mb-3">
-                        <div class="p-2 bg-indigo-100 dark:bg-indigo-900 rounded-lg">
-                            <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a2 2 0 00-4 0v.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m7 0v1a3 3 0 01-6 0v-1m6 0H9"></path>
+            <!-- Enhanced Daily Reminder Preferences -->
+            <div class="md:col-span-2 lg:col-span-3 p-6 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors">
+                <div class="flex items-center space-x-3 mb-6">
+                <div class="p-2 bg-indigo-100 dark:bg-indigo-900 rounded-lg">
+                    <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a2 2 0 00-4 0v.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m7 0v1a3 3 0 01-6 0v-1m6 0H9"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">Daily Reminder Preferences</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Customize your daily reminder notifications</p>
+                </div>
+                </div>
+
+                <form method="POST" action="{{ route('account.update.notifications') }}" class="space-y-6" x-data="notificationSettings">
+                @csrf
+                @method('PATCH')
+                
+                <!-- Enable/Disable Reminders -->
+                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                        <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-900 dark:text-white">Enable Daily Reminders</label>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Receive reminders to track your expenses</p>
+                    </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="wants_reminder" value="1" 
+                           class="sr-only peer" 
+                           x-model="enableReminders"
+                           @checked(auth()->user()->wants_reminder)>
+                    <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 dark:after:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 dark:peer-checked:bg-blue-500"></div>
+                    </label>
+                </div>
+
+                <!-- Enhanced Frequency Selection -->
+                <div x-show="enableReminders" x-transition>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Reminder Frequency</label>
+                    <div class="space-y-4" x-data="{ selectedFrequency: '{{ auth()->user()->reminder_frequency ?? 'daily' }}' }">
+                    
+                    <!-- Basic Frequencies -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <label class="relative">
+                        <input type="radio" name="reminder_frequency" value="daily" 
+                               class="sr-only peer" x-model="selectedFrequency"
+                               @checked(auth()->user()->reminder_frequency === 'daily')>
+                        <div class="p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-blue-500 dark:peer-checked:border-blue-400 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-900 peer-checked:text-blue-900 dark:peer-checked:text-blue-200 hover:border-blue-300 dark:hover:border-blue-400 transition-colors">
+                            <div class="text-center">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-gray-600 dark:text-gray-400 peer-checked:text-blue-600 dark:peer-checked:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
                             </svg>
+                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Daily</span>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900 dark:text-white">Notifications</h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Manage your notification preferences</p>
+                        </label>
+                        
+                        <label class="relative">
+                        <input type="radio" name="reminder_frequency" value="every_2_days" 
+                               class="sr-only peer" x-model="selectedFrequency"
+                               @checked(auth()->user()->reminder_frequency === 'every_2_days')>
+                        <div class="p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-blue-500 dark:peer-checked:border-blue-400 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-900 peer-checked:text-blue-900 dark:peer-checked:text-blue-200 hover:border-blue-300 dark:hover:border-blue-400 transition-colors">
+                            <div class="text-center">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Every 2 Days</span>
+                            </div>
+                        </div>
+                        </label>
+                        
+                        <label class="relative">
+                        <input type="radio" name="reminder_frequency" value="every_3_days" 
+                               class="sr-only peer" x-model="selectedFrequency"
+                               @checked(auth()->user()->reminder_frequency === 'every_3_days')>
+                        <div class="p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-blue-500 dark:peer-checked:border-blue-400 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-900 peer-checked:text-blue-900 dark:peer-checked:text-blue-200 hover:border-blue-300 dark:hover:border-blue-400 transition-colors">
+                            <div class="text-center">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Every 3 Days</span>
+                            </div>
+                        </div>
+                        </label>
+                        
+                        <label class="relative">
+                        <input type="radio" name="reminder_frequency" value="weekly" 
+                               class="sr-only peer" x-model="selectedFrequency"
+                               @checked(auth()->user()->reminder_frequency === 'weekly')>
+                        <div class="p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-blue-500 dark:peer-checked:border-blue-400 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-900 peer-checked:text-blue-900 dark:peer-checked:text-blue-200 hover:border-blue-300 dark:hover:border-blue-400 transition-colors">
+                            <div class="text-center">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Weekly</span>
+                            </div>
+                        </div>
+                        </label>
+                    </div>
+
+                    <!-- Advanced Frequencies -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <label class="relative">
+                        <input type="radio" name="reminder_frequency" value="custom_weekdays" 
+                               class="sr-only peer" x-model="selectedFrequency"
+                               @checked(auth()->user()->reminder_frequency === 'custom_weekdays')>
+                        <div class="p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-purple-500 dark:peer-checked:border-purple-400 peer-checked:bg-purple-50 dark:peer-checked:bg-purple-900 peer-checked:text-purple-900 dark:peer-checked:text-purple-200 hover:border-purple-300 dark:hover:border-purple-400 transition-colors">
+                            <div class="text-center">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Custom Weekdays</span>
+                            </div>
+                        </div>
+                        </label>
+                        
+                        <label class="relative">
+                        <input type="radio" name="reminder_frequency" value="random" 
+                               class="sr-only peer" x-model="selectedFrequency"
+                               @checked(auth()->user()->reminder_frequency === 'random')>
+                        <div class="p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-green-500 dark:peer-checked:border-green-400 peer-checked:bg-green-50 dark:peer-checked:bg-green-900 peer-checked:text-green-900 dark:peer-checked:text-green-200 hover:border-green-300 dark:hover:border-green-400 transition-colors">
+                            <div class="text-center">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Random</span>
+                            </div>
+                        </div>
+                        </label>
+                        
+                        <label class="relative">
+                        <input type="radio" name="reminder_frequency" value="never" 
+                               class="sr-only peer" x-model="selectedFrequency"
+                               @checked(auth()->user()->reminder_frequency === 'never')>
+                        <div class="p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer peer-checked:border-red-500 dark:peer-checked:border-red-400 peer-checked:bg-red-50 dark:peer-checked:bg-red-900 peer-checked:text-red-900 dark:peer-checked:text-red-200 hover:border-red-300 dark:hover:border-red-400 transition-colors">
+                            <div class="text-center">
+                            <svg class="w-5 h-5 mx-auto mb-1 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">Never</span>
+                            </div>
+                        </div>
+                        </label>
+                    </div>
+
+                    <!-- Custom Weekdays Selection -->
+                    <div x-show="selectedFrequency === 'custom_weekdays'" x-transition class="p-4 bg-purple-50 dark:bg-purple-900 dark:bg-opacity-30 rounded-lg">
+                        <label class="block text-sm font-medium text-purple-900 dark:text-purple-200 mb-3">Select Days of the Week</label>
+                        <div class="grid grid-cols-7 gap-2">
+                        @php
+                            $weekdays = [
+                            1 => ['Mon', 'Monday'],
+                            2 => ['Tue', 'Tuesday'], 
+                            3 => ['Wed', 'Wednesday'],
+                            4 => ['Thu', 'Thursday'],
+                            5 => ['Fri', 'Friday'],
+                            6 => ['Sat', 'Saturday'],
+                            0 => ['Sun', 'Sunday']
+                            ];
+                            $userWeekdays = auth()->user()->custom_weekdays ?? [];
+                        @endphp
+                        @foreach($weekdays as $value => $labels)
+                            <label class="flex flex-col items-center">
+                            <input type="checkbox" name="custom_weekdays[]" value="{{ $value }}" 
+                                   class="mb-1 rounded border-purple-300 dark:border-purple-600 text-purple-600 dark:text-purple-500 bg-white dark:bg-gray-800 focus:ring-purple-500 dark:focus:ring-purple-400"
+                                   @checked(in_array($value, $userWeekdays))>
+                            <span class="text-xs text-purple-700 dark:text-purple-300">{{ $labels[0] }}</span>
+                            </label>
+                        @endforeach
                         </div>
                     </div>
-                    <div class="space-y-3">
-                        <label class="flex items-center">
-                            <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-indigo-600 dark:text-indigo-500 shadow-sm focus:border-indigo-300 dark:focus:border-indigo-500 focus:ring focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:ring-opacity-50 dark:bg-gray-900" checked>
-                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Email notifications</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-indigo-600 dark:text-indigo-500 shadow-sm focus:border-indigo-300 dark:focus:border-indigo-500 focus:ring focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:ring-opacity-50 dark:bg-gray-900">
-                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">In-app notifications</span>
-                        </label>
+
+                    <!-- Random Frequency Settings -->
+                    <div x-show="selectedFrequency === 'random'" x-transition class="p-4 bg-green-50 dark:bg-green-900 dark:bg-opacity-30 rounded-lg">
+                        <label class="block text-sm font-medium text-green-900 dark:text-green-200 mb-3">Random Frequency Range</label>
+                        <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-green-700 dark:text-green-300 mb-1">Minimum Days Between</label>
+                            <input type="number" name="random_min_days" min="1" max="30" 
+                               value="{{ auth()->user()->random_min_days ?? 1 }}"
+                               class="block w-full rounded-md border-green-300 dark:border-green-600 bg-white dark:bg-green-800 text-gray-900 dark:text-green-100 text-sm focus:border-green-500 focus:ring-green-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-green-700 dark:text-green-300 mb-1">Maximum Days Between</label>
+                            <input type="number" name="random_max_days" min="1" max="30" 
+                               value="{{ auth()->user()->random_max_days ?? 3 }}"
+                               class="block w-full rounded-md border-green-300 dark:border-green-600 bg-white dark:bg-green-800 text-gray-900 dark:text-green-100 text-sm focus:border-green-500 focus:ring-green-500">
+                        </div>
+                        </div>
+                        <p class="text-xs text-green-600 dark:text-green-400 mt-2">
+                        Reminders will be sent randomly between these day intervals to keep you engaged!
+                        </p>
+                    </div>
                     </div>
                 </div>
 
-                <!-- Privacy Settings -->
-                <div class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-green-300 dark:hover:border-green-500 transition-colors">
-                    <div class="flex items-center space-x-3 mb-3">
-                        <div class="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
-                            <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900 dark:text-white">Privacy</h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Control your privacy settings</p>
-                        </div>
+                <!-- Time Selection -->
+                <div x-show="enableReminders" x-transition class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Reminder Time</label>
+                    <input type="time" name="reminder_time" 
+                           value="{{ auth()->user()->reminder_time ? auth()->user()->reminder_time->format('H:i') : '09:00' }}"
+                           class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-indigo-500 dark:focus:ring-indigo-400">
                     </div>
-                    <div class="space-y-3">
-                        <label class="flex items-center">
-                            <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-green-600 dark:text-green-500 shadow-sm focus:border-green-300 dark:focus:border-green-500 focus:ring focus:ring-green-200 dark:focus:ring-green-800 focus:ring-opacity-50 dark:bg-gray-900" checked>
-                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Profile visibility</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-green-600 dark:text-green-500 shadow-sm focus:border-green-300 dark:focus:border-green-500 focus:ring focus:ring-green-200 dark:focus:ring-green-800 focus:ring-opacity-50 dark:bg-gray-900" checked>
-                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Data analytics</span>
-                        </label>
+                    <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Timezone</label>
+                    <select name="timezone" class="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-indigo-500 dark:focus:ring-indigo-400">
+                        @php
+                        $timezones = [
+                            'UTC' => 'UTC (Universal)',
+                            'Asia/Kolkata' => 'India (IST)',
+                            'America/New_York' => 'New York (EST)',
+                            'America/Los_Angeles' => 'Los Angeles (PST)',
+                            'Europe/London' => 'London (GMT)',
+                            'Europe/Paris' => 'Paris (CET)',
+                            'Asia/Tokyo' => 'Tokyo (JST)',
+                            'Australia/Sydney' => 'Sydney (AEST)',
+                        ];
+                        @endphp
+                        @foreach($timezones as $value => $label)
+                        <option value="{{ $value }}" @selected(auth()->user()->timezone === $value)>{{ $label }}</option>
+                        @endforeach
+                    </select>
                     </div>
                 </div>
 
-                <!-- Security Options -->
-                <div class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-orange-300 dark:hover:border-orange-500 transition-colors">
-                    <div class="flex items-center space-x-3 mb-3">
-                        <div class="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg">
-                            <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900 dark:text-white">Security</h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Enhanced security options</p>
-                        </div>
-                    </div>
+                <!-- Notification Channels -->
+                <div x-show="enableReminders" x-transition>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Notification Channels</label>
                     <div class="space-y-3">
-                        <label class="flex items-center">
-                            <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-orange-600 dark:text-orange-500 shadow-sm focus:border-orange-300 dark:focus:border-orange-500 focus:ring focus:ring-orange-200 dark:focus:ring-orange-800 focus:ring-opacity-50 dark:bg-gray-900">
-                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Two-factor authentication</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-orange-600 dark:text-orange-500 shadow-sm focus:border-orange-300 dark:focus:border-orange-500 focus:ring focus:ring-orange-200 dark:focus:ring-orange-800 focus:ring-opacity-50 dark:bg-gray-900" checked>
-                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Login alerts</span>
-                        </label>
+                    <label class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <input type="checkbox" name="email_reminders" value="1" 
+                           class="rounded border-gray-300 dark:border-gray-600 text-indigo-600 dark:text-indigo-500 bg-white dark:bg-gray-900 shadow-sm focus:border-indigo-300 dark:focus:border-indigo-500 focus:ring focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:ring-opacity-50"
+                           @checked(auth()->user()->email_reminders)>
+                        <div class="ml-3">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Email Notifications</span>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Receive reminders via email</p>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <input type="checkbox" name="push_reminders" value="1" 
+                           class="rounded border-gray-300 dark:border-gray-600 text-indigo-600 dark:text-indigo-500 bg-white dark:bg-gray-900 shadow-sm focus:border-indigo-300 dark:focus:border-indigo-500 focus:ring focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:ring-opacity-50"
+                           @checked(auth()->user()->push_reminders)>
+                        <div class="ml-3">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Push Notifications</span>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Receive reminders as push notifications</p>
+                        </div>
+                    </label>
                     </div>
                 </div>
+
+                <!-- Save Button -->
+                <div class="flex items-center justify-end pt-4 border-t border-gray-200 dark:border-gray-600">
+                    <button type="submit" 
+                        class="inline-flex items-center px-4 py-2 bg-indigo-600 dark:bg-indigo-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:border-indigo-700 dark:focus:border-indigo-300 focus:ring focus:ring-indigo-200 dark:focus:ring-indigo-800 disabled:opacity-25 transition">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Save Preferences
+                    </button>
+                </div>
+                </form>
+            </div>
+
+            <!-- Success Message -->
+            @if (session('status') === 'notification-preferences-updated')
+                <div class="md:col-span-2 lg:col-span-3 p-4 bg-green-100 dark:bg-green-900 dark:bg-opacity-30 border border-green-300 dark:border-green-600 text-green-800 dark:text-green-200 rounded-lg" x-data="{ show: true }" x-show="show" x-transition>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Your notification preferences have been updated successfully!
+                    </div>
+                    <button @click="show = false" class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    </button>
+                </div>
+                </div>
+            @endif
+
+            <script>
+                document.addEventListener('alpine:init', () => {
+                Alpine.data('notificationSettings', () => ({
+                    enableReminders: {{ auth()->user()->wants_reminder ? 'true' : 'false' }}
+                }))
+                })
+            </script>
+
+            <!-- Privacy Settings -->
+            <div class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-green-300 dark:hover:border-green-500 transition-colors">
+                <div class="flex items-center space-x-3 mb-3">
+                <div class="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
+                    <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">Privacy</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Control your privacy settings</p>
+                </div>
+                </div>
+                <div class="space-y-3">
+                <label class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-green-600 dark:text-green-500 bg-white dark:bg-gray-900 shadow-sm focus:border-green-300 dark:focus:border-green-500 focus:ring focus:ring-green-200 dark:focus:ring-green-800 focus:ring-opacity-50" checked>
+                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Profile visibility</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-green-600 dark:text-green-500 bg-white dark:bg-gray-900 shadow-sm focus:border-green-300 dark:focus:border-green-500 focus:ring focus:ring-green-200 dark:focus:ring-green-800 focus:ring-opacity-50" checked>
+                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Data analytics</span>
+                </label>
+                </div>
+            </div>
+
+            <!-- Security Options -->
+            <div class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-orange-300 dark:hover:border-orange-500 transition-colors">
+                <div class="flex items-center space-x-3 mb-3">
+                <div class="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg">
+                    <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">Security</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Enhanced security options</p>
+                </div>
+                </div>
+                <div class="space-y-3">
+                <label class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-orange-600 dark:text-orange-500 bg-white dark:bg-gray-900 shadow-sm focus:border-orange-300 dark:focus:border-orange-500 focus:ring focus:ring-orange-200 dark:focus:ring-orange-800 focus:ring-opacity-50">
+                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Two-factor authentication</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-orange-600 dark:text-orange-500 bg-white dark:bg-gray-900 shadow-sm focus:border-orange-300 dark:focus:border-orange-500 focus:ring focus:ring-orange-200 dark:focus:ring-orange-800 focus:ring-opacity-50" checked>
+                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Login alerts</span>
+                </label>
+                </div>
+            </div>
             </div>
         </div>
 
@@ -538,28 +808,28 @@
 
         <!-- Real-time Activity Updates Script -->
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Update timestamps every minute
-            setInterval(function() {
-                const timeElements = document.querySelectorAll('[data-time]');
-                timeElements.forEach(element => {
-                    const timestamp = element.getAttribute('data-time');
-                    const date = new Date(timestamp);
-                    const now = new Date();
-                    const diffMinutes = Math.floor((now - date) / (1000 * 60));
-                    
-                    if (diffMinutes < 60) {
-                        element.textContent = `${diffMinutes} minutes ago`;
-                    } else if (diffMinutes < 1440) {
-                        const hours = Math.floor(diffMinutes / 60);
-                        element.textContent = `${hours} hour${hours > 1 ? 's' : ''} ago`;
-                    }
-                });
-            }, 60000); // Update every minute
-            
-            console.log('Account Activity loaded for user: harithelord47');
-            console.log('Current time: 2025-07-07 15:53:10 UTC');
-        });
+            document.addEventListener('DOMContentLoaded', function() {
+                // Update timestamps every minute
+                setInterval(function() {
+                    const timeElements = document.querySelectorAll('[data-time]');
+                    timeElements.forEach(element => {
+                        const timestamp = element.getAttribute('data-time');
+                        const date = new Date(timestamp);
+                        const now = new Date();
+                        const diffMinutes = Math.floor((now - date) / (1000 * 60));
+                        
+                        if (diffMinutes < 60) {
+                            element.textContent = `${diffMinutes} minutes ago`;
+                        } else if (diffMinutes < 1440) {
+                            const hours = Math.floor(diffMinutes / 60);
+                            element.textContent = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+                        }
+                    });
+                }, 60000); // Update every minute
+                
+                console.log('Account Activity loaded for user: harithelord47');
+                console.log('Current time: 2025-07-07 15:53:10 UTC');
+            });
         </script>
 
         <!-- Enhanced Activity Styles -->

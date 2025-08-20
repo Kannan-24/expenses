@@ -53,6 +53,7 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
 
     Route::get('/account-settings', [AccountSettingsController::class, 'index'])->name('account.settings');
     Route::patch('/account-settings/password', [AccountSettingsController::class, 'updatePassword'])->name('account.update.password');
+    Route::patch('/account-settings/notifications', [AccountSettingsController::class, 'updateNotificationPreferences'])->name('account.update.notifications');
     Route::delete('/account-settings/delete', [AccountSettingsController::class, 'destroy'])->name('account.destroy');
 
     Route::get('/account/activity', [ActivityController::class, 'index'])->name('account.activity');

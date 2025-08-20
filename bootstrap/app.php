@@ -15,11 +15,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withSchedule(function (Schedule $schedule) {
+        // Run reminder command every hour to check for users who should receive notifications
+        // The command itself will handle user-specific timing and frequency preferences
         $schedule->command(SendDailyReminder::class)
-            ->dailyAt('20:30')
-            ->timezone('Asia/Kolkata')
+            ->hourly()
             ->withoutOverlapping()
-            ->onOneServer();
+            ->onOneServer()
+            ->runInBackground();
+            
+        // Keep other scheduled tasks as they were
         $schedule->command('streaks:update')->daily();
         $schedule->command('emi:check-due --days=3')->dailyAt('10:00')->timezone('Asia/Kolkata');
     })

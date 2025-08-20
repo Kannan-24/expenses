@@ -30,7 +30,17 @@ class DailyReminderNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail', FcmChannel::class];
+        $channels = [];
+        
+        if ($notifiable->email_reminders) {
+            $channels[] = 'mail';
+        }
+        
+        if ($notifiable->push_reminders) {
+            $channels[] = FcmChannel::class;
+        }
+        
+        return $channels;
     }
 
     /**
