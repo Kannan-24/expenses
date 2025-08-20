@@ -5,9 +5,9 @@ namespace App\Console\Commands;
 use App\Models\User;
 use App\Notifications\DailyReminderNotification;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class SendDailyReminder extends Command
 {
@@ -45,20 +45,25 @@ class SendDailyReminder extends Command
             ->select('id', 'name', 'email', 'reminder_frequency', 'reminder_time', 'timezone', 'custom_weekdays', 'random_min_days', 'random_max_days', 'last_reminder_sent', 'email_reminders', 'push_reminders');
 
         $this->info("Checking for users to send reminders at " . $currentTime->format('Y-m-d H:i:s T') . " (UTC)");
-        Log::info("Starting daily reminder check at " . $currentTime->toIso8601String());
-
 
         $query->chunk($batchSize, function ($users, $page) use ($delayBetweenBatches, &$totalNotificationsSent, $currentTime) {
             foreach ($users as $index => $user) {
+                // Convert current time to user's timezone for proper date comparison
+                $userTimezone = $user->timezone ?? config('app.timezone');
+                try {
+                    $userCurrentTime = $currentTime->copy()->setTimezone($userTimezone);
+                } catch (\Exception $e) {
+                    $userCurrentTime = $currentTime->copy()->setTimezone('UTC');
+                    $this->warn("Invalid timezone '{$userTimezone}' for user {$user->email}, using UTC");
+                }
+
                 // Check if user should receive reminder based on their frequency preference
                 if (!$this->option('force') && !$this->shouldSendReminder($user, $currentTime)) {
                     continue;
                 }
 
-                // Check if user already received a notification today
-                $alreadySentToday = $user->last_remainder_sent
-                    ? Carbon::parse($user->last_reminder_sent)->isToday()
-                    : false;
+                // Check if user already received a notification today (in their timezone)
+                $alreadySentToday = $this->hasReceivedReminderToday($user, $userCurrentTime);
 
                 if (!$alreadySentToday) {
                     $delaySeconds = ($page * $delayBetweenBatches) + ($index * 2);
@@ -66,19 +71,13 @@ class SendDailyReminder extends Command
                     // Queue notification with delay
                     $user->notify((new DailyReminderNotification())->delay(now()->addSeconds($delaySeconds)));
 
-                    // Update last reminder sent timestamp in user's timezone
-                    $userTimezone = $user->timezone ?? config('app.timezone');
-                    try {
-                        $userCurrentTime = $currentTime->copy()->setTimezone($userTimezone);
-                    } catch (\Exception $e) {
-                        $userCurrentTime = $currentTime->copy()->setTimezone('UTC');
-                    }
-                    $user->update(['last_reminder_sent' => $userCurrentTime]);
+                    // Update last reminder sent timestamp (store as date in user's timezone)
+                    $user->update(['last_reminder_sent' => $userCurrentTime->toDateString()]);
 
                     $totalNotificationsSent++;
-                    $this->line("Queued reminder for {$user->name} ({$user->email}) - Frequency: {$user->reminder_frequency} - Time: {$userCurrentTime->format('Y-m-d H:i:s T')}");
+                    $this->line("Queued reminder for {$user->name} ({$user->email}) - Frequency: {$user->reminder_frequency} - Date: {$userCurrentTime->toDateString()} {$userCurrentTime->format('H:i T')}");
                 } else {
-                    $this->line("Skipping {$user->name} - already sent today");
+                    $this->line("Skipping {$user->name} - already sent today ({$userCurrentTime->toDateString()})");
                 }
             }
 
@@ -127,7 +126,7 @@ class SendDailyReminder extends Command
             return false;
         }
 
-        $lastReminderSent = $user->last_reminder_sent ? Carbon::parse($user->last_reminder_sent)->setTimezone($userTimezone) : null;
+        $lastReminderSent = $user->last_reminder_sent; // This is a date string (Y-m-d)
 
         switch ($user->reminder_frequency) {
             case 'daily':
@@ -175,7 +174,11 @@ class SendDailyReminder extends Command
             return true; // First reminder
         }
 
-        $daysSinceLastReminder = $lastReminderSent->diffInDays($userCurrentTime);
+        // lastReminderSent is a date string (Y-m-d), convert to Carbon for date math
+        $lastSentDate = Carbon::createFromFormat('Y-m-d', $lastReminderSent);
+        $currentDate = Carbon::createFromFormat('Y-m-d', $userCurrentTime->toDateString());
+        $daysSinceLastReminder = $lastSentDate->diffInDays($currentDate);
+        
         return $daysSinceLastReminder >= $intervalDays;
     }
 
@@ -191,7 +194,10 @@ class SendDailyReminder extends Command
         $minDays = $user->random_min_days ?? 1;
         $maxDays = $user->random_max_days ?? 3;
 
-        $daysSinceLastReminder = $lastReminderSent->diffInDays($userCurrentTime);
+        // lastReminderSent is a date string (Y-m-d), convert to Carbon for date math
+        $lastSentDate = Carbon::createFromFormat('Y-m-d', $lastReminderSent);
+        $currentDate = Carbon::createFromFormat('Y-m-d', $userCurrentTime->toDateString());
+        $daysSinceLastReminder = $lastSentDate->diffInDays($currentDate);
 
         // Must wait at least minimum days
         if ($daysSinceLastReminder < $minDays) {
@@ -204,5 +210,25 @@ class SendDailyReminder extends Command
         $randomThreshold = min($probabilityFactor * 0.5, 0.8); // Max 80% chance per day
 
         return mt_rand() / mt_getrandmax() < $randomThreshold;
+    }
+
+    /**
+     * Check if user has already received a reminder today (in their timezone)
+     */
+    private function hasReceivedReminderToday($user, $userCurrentTime)
+    {
+        // Query the database directly to get the most current value
+        $freshUser = User::find($user->id);
+        
+        if (!$freshUser || !$freshUser->last_reminder_sent) {
+            return false;
+        }
+
+        // Compare dates in user's timezone
+        // last_reminder_sent is cast as 'date' so it returns a Carbon instance
+        $lastSentDate = $freshUser->last_reminder_sent->toDateString();
+        $todayDate = $userCurrentTime->toDateString();
+
+        return $lastSentDate === $todayDate;
     }
 }
