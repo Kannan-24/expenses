@@ -7,6 +7,7 @@ use App\Notifications\DailyReminderNotification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Notification;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class SendDailyReminder extends Command
 {
@@ -24,7 +25,7 @@ class SendDailyReminder extends Command
      */
     protected $description = 'Send daily reminders to users based on their preferences';
 
-        /**
+    /**
      * Execute the console command.
      */
     public function handle()
@@ -38,12 +39,14 @@ class SendDailyReminder extends Command
         $query = User::whereHas('roles', function ($query) {
             $query->where('name', 'user');
         })
-        ->where('wants_reminder', true)
-        ->where('email_reminders', true) // Only send to users who want email reminders
-        ->whereNotIn('reminder_frequency', ['never'])
-        ->select('id', 'name', 'email', 'reminder_frequency', 'reminder_time', 'timezone', 'custom_weekdays', 'random_min_days', 'random_max_days', 'last_reminder_sent');
+            ->where('wants_reminder', true)
+            ->where('email_reminders', true)
+            ->whereNotIn('reminder_frequency', ['never'])
+            ->select('id', 'name', 'email', 'reminder_frequency', 'reminder_time', 'timezone', 'custom_weekdays', 'random_min_days', 'random_max_days', 'last_reminder_sent', 'email_reminders', 'push_reminders');
 
         $this->info("Checking for users to send reminders at " . $currentTime->format('Y-m-d H:i:s T') . " (UTC)");
+        Log::info("Starting daily reminder check at " . $currentTime->toIso8601String());
+
 
         $query->chunk($batchSize, function ($users, $page) use ($delayBetweenBatches, &$totalNotificationsSent, $currentTime) {
             foreach ($users as $index => $user) {
@@ -54,39 +57,40 @@ class SendDailyReminder extends Command
 
                 // Check if user already received a notification today
                 $alreadySentToday = $user->notifications()
-                    ->where('type', 'App\Notifications\DailyReminderNotification')
+                    ->where('type', DailyReminderNotification::class)
                     ->whereDate('created_at', Carbon::today())
                     ->exists();
 
                 if (!$alreadySentToday) {
-                    $delaySeconds = ($page * $delayBetweenBatches) + ($index * 2); // Stagger individual sends
-                    
+                    $delaySeconds = ($page * $delayBetweenBatches) + ($index * 2);
+
                     // Queue notification with delay
                     $user->notify((new DailyReminderNotification())->delay(now()->addSeconds($delaySeconds)));
-                    
+
                     // Update last reminder sent timestamp in user's timezone
-                    $userTimezone = $user->timezone ?? 'UTC';
+                    $userTimezone = $user->timezone ?? config('app.timezone');
                     try {
                         $userCurrentTime = $currentTime->copy()->setTimezone($userTimezone);
                     } catch (\Exception $e) {
                         $userCurrentTime = $currentTime->copy()->setTimezone('UTC');
                     }
                     $user->update(['last_reminder_sent' => $userCurrentTime]);
-                    
+
                     $totalNotificationsSent++;
                     $this->line("Queued reminder for {$user->name} ({$user->email}) - Frequency: {$user->reminder_frequency} - Time: {$userCurrentTime->format('Y-m-d H:i:s T')}");
                 } else {
                     $this->line("Skipping {$user->name} - already sent today");
                 }
             }
-            
+
             if ($users->count() > 0) {
                 $this->info("Processed batch {$page} with {$users->count()} users");
             }
         });
 
         $this->info("Total reminder notifications queued: {$totalNotificationsSent}");
-        
+        Log::info("Total reminder notifications queued: {$totalNotificationsSent}");
+
         if ($totalNotificationsSent === 0) {
             $this->info("No reminders sent. This could be because:");
             $this->line("- No users have enabled daily reminders");
@@ -115,10 +119,10 @@ class SendDailyReminder extends Command
         $userReminderTime = Carbon::parse($user->reminder_time ?? '09:00')->setTimezone($userTimezone);
         $currentHour = $userCurrentTime->format('H:i');
         $reminderHour = $userReminderTime->format('H:i');
-        
+
         $currentMinutes = $userCurrentTime->hour * 60 + $userCurrentTime->minute;
         $reminderMinutes = $userReminderTime->hour * 60 + $userReminderTime->minute;
-        
+
         // Allow 1 hour window (before and after the preferred time)
         if (abs($currentMinutes - $reminderMinutes) > 60) {
             return false;
@@ -187,9 +191,9 @@ class SendDailyReminder extends Command
 
         $minDays = $user->random_min_days ?? 1;
         $maxDays = $user->random_max_days ?? 3;
-        
+
         $daysSinceLastReminder = $lastReminderSent->diffInDays($userCurrentTime);
-        
+
         // Must wait at least minimum days
         if ($daysSinceLastReminder < $minDays) {
             return false;
@@ -199,7 +203,7 @@ class SendDailyReminder extends Command
         // Higher probability as we approach maximum days
         $probabilityFactor = ($daysSinceLastReminder - $minDays + 1) / ($maxDays - $minDays + 1);
         $randomThreshold = min($probabilityFactor * 0.5, 0.8); // Max 80% chance per day
-        
+
         return mt_rand() / mt_getrandmax() < $randomThreshold;
     }
 }

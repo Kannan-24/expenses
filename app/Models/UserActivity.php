@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class UserActivity extends Model
 {
@@ -31,8 +32,12 @@ class UserActivity extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($model) {
+            // set login user ID if not set
+            if (!$model->user_id) {
+                $model->user_id = Auth::id();
+            }
             $model->created_at = now();
         });
     }
@@ -55,7 +60,7 @@ class UserActivity extends Model
     // Get activity icon and color
     public function getActivityIconAttribute(): array
     {
-        return match($this->activity_type) {
+        return match ($this->activity_type) {
             self::TYPE_LOGIN => [
                 'icon' => 'M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1',
                 'bg_color' => 'bg-green-100',
@@ -107,11 +112,11 @@ class UserActivity extends Model
         if ($this->location) {
             return $this->location;
         }
-        
+
         if ($this->ip_address) {
             return "IP: {$this->ip_address}";
         }
-        
+
         return 'Unknown location';
     }
 }

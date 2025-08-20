@@ -15,13 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withSchedule(function (Schedule $schedule) {
-        // Run reminder command every hour to check for users who should receive notifications
-        // The command itself will handle user-specific timing and frequency preferences
         $schedule->command(SendDailyReminder::class)
-            ->everyFiveMinutes()
-            ->withoutOverlapping()
-            ->onOneServer()
-            ->runInBackground();
+            ->everyMinute()
+            ->withoutOverlapping();
             
         // Keep other scheduled tasks as they were
         $schedule->command('streaks:update')->daily();

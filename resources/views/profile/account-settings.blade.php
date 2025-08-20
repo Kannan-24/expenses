@@ -553,7 +553,7 @@
                 </h2>
                 <div class="flex items-center space-x-3">
                     <span class="text-xs text-gray-500 dark:text-gray-400">
-                        Last updated: {{ now()->format('H:i \U\T\C') }}
+                        Last updated: {{ now()->format('H:i') }}
                     </span>
                     <a href="{{ route('account.activity') }}" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors">
                         View All
@@ -563,62 +563,7 @@
 
             <div class="space-y-4">
                 @php
-                    // Sample recent activities based on current time (2025-07-07 15:53:10 UTC)
-                    $currentTime = now(); // 2025-07-07 15:53:10
-                    $sampleActivities = collect([
-                        [
-                            'id' => 1,
-                            'description' => 'Successful login to dashboard',
-                            'created_at' => $currentTime->copy()->subMinutes(5), // 15:48:10
-                            'ip_address' => '192.168.1.105',
-                            'location' => 'Mumbai, India',
-                            'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                            'type' => 'login',
-                            'risk_level' => 'low'
-                        ],
-                        [
-                            'id' => 2,
-                            'description' => 'Budget created for Groceries category',
-                            'created_at' => $currentTime->copy()->subMinutes(15), // 15:38:10
-                            'ip_address' => '192.168.1.105',
-                            'location' => 'Mumbai, India',
-                            'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                            'type' => 'budget_create',
-                            'risk_level' => 'low'
-                        ],
-                        [
-                            'id' => 3,
-                            'description' => 'Expense transaction added - ₹1,250.00',
-                            'created_at' => $currentTime->copy()->subMinutes(45), // 15:08:10
-                            'ip_address' => '192.168.1.105',
-                            'location' => 'Mumbai, India',
-                            'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                            'type' => 'transaction',
-                            'risk_level' => 'low'
-                        ],
-                        [
-                            'id' => 4,
-                            'description' => 'Profile information updated',
-                            'created_at' => $currentTime->copy()->subHours(2)->subMinutes(10), // 13:43:10
-                            'ip_address' => '192.168.1.105',
-                            'location' => 'Mumbai, India',
-                            'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                            'type' => 'profile_update',
-                            'risk_level' => 'low'
-                        ],
-                        [
-                            'id' => 5,
-                            'description' => 'Password successfully updated',
-                            'created_at' => $currentTime->copy()->subHours(5)->subMinutes(30), // 10:23:10
-                            'ip_address' => '192.168.1.105',
-                            'location' => 'Mumbai, India',
-                            'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                            'type' => 'security',
-                            'risk_level' => 'medium'
-                        ]
-                    ])->map(function($item) {
-                        return (object) $item;
-                    });
+                    $currentTime = now();
 
                     // Function to get activity icon
                     function getActivityIcon($type, $riskLevel = 'low') {
@@ -669,7 +614,7 @@
                     }
                 @endphp
 
-                @forelse($sampleActivities as $activity)
+                @forelse(auth()->user()->activities->take(5) as $activity)
                     @php
                         $activityIcon = getActivityIcon($activity->type, $activity->risk_level);
                         $isRecent = $activity->created_at->diffInMinutes() < 60; // Within last hour
@@ -763,15 +708,15 @@
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
                     <div class="flex items-center space-x-6">
                         <div class="text-center">
-                            <div class="text-lg font-bold text-gray-900 dark:text-white">{{ $sampleActivities->count() }}</div>
+                            <div class="text-lg font-bold text-gray-900 dark:text-white">{{ auth()->user()->activities->count() }}</div>
                             <div class="text-xs text-gray-500 dark:text-gray-400">Recent Activities</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-lg font-bold text-green-600 dark:text-green-400">{{ $sampleActivities->where('created_at', '>=', now()->subHours(24))->count() }}</div>
+                            <div class="text-lg font-bold text-green-600 dark:text-green-400">{{ auth()->user()->activities->where('created_at', '>=', now()->subHours(24))->count() }}</div>
                             <div class="text-xs text-gray-500 dark:text-gray-400">Last 24 Hours</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ $sampleActivities->where('type', 'login')->count() }}</div>
+                            <div class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ auth()->user()->activities->where('type', 'login')->count() }}</div>
                             <div class="text-xs text-gray-500 dark:text-gray-400">Login Events</div>
                         </div>
                     </div>
