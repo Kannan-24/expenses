@@ -512,28 +512,65 @@
                 </div>
             </div>
 
-            <!-- Security Options -->
-            <div class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-orange-300 dark:hover:border-orange-500 transition-colors">
-                <div class="flex items-center space-x-3 mb-3">
-                <div class="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg">
-                    <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                    </svg>
+            <!-- Two-Factor Authentication Card -->
+            <div class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:border-orange-300 dark:hover:border-orange-500 transition-colors relative overflow-hidden">
+                @php
+                    $twoFactorEnabled = auth()->user()->two_factor_enabled ?? false;
+                    $trustedDevicesCount = method_exists(auth()->user(),'trustedDevices') ? auth()->user()->trustedDevices()->count() : 0;
+                @endphp
+                <div class="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-orange-100 dark:bg-orange-900 opacity-30"></div>
+                <div class="flex items-center space-x-3 mb-4 relative">
+                    <div class="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg">
+                        <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c.667-1.333 2-4 2-5a2 2 0 10-4 0c0 1 1.333 3.667 2 5zm0 0v2m-6 4h12a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white flex items-center space-x-2">
+                            <span>Two-Factor Authentication</span>
+                            @if($twoFactorEnabled)
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200">Enabled</span>
+                            @else
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">Disabled</span>
+                            @endif
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            {{ $twoFactorEnabled ? 'Your account is protected with an extra verification step.' : 'Add an extra layer of security to keep your account safe.' }}
+                        </p>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white">Security</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Enhanced security options</p>
-                </div>
-                </div>
-                <div class="space-y-3">
-                <label class="flex items-center">
-                    <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-orange-600 dark:text-orange-500 bg-white dark:bg-gray-900 shadow-sm focus:border-orange-300 dark:focus:border-orange-500 focus:ring focus:ring-orange-200 dark:focus:ring-orange-800 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Two-factor authentication</span>
-                </label>
-                <label class="flex items-center">
-                    <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-orange-600 dark:text-orange-500 bg-white dark:bg-gray-900 shadow-sm focus:border-orange-300 dark:focus:border-orange-500 focus:ring focus:ring-orange-200 dark:focus:ring-orange-800 focus:ring-opacity-50" checked>
-                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Login alerts</span>
-                </label>
+                <div class="space-y-4 relative">
+                    @if($twoFactorEnabled)
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div class="p-3 bg-green-50 dark:bg-green-900 dark:bg-opacity-30 rounded-lg border border-green-200 dark:border-green-700">
+                                <div class="flex items-center text-green-700 dark:text-green-300 font-medium">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    Active
+                                </div>
+                                <p class="mt-1 text-gray-600 dark:text-gray-400">TOTP codes required on new devices.</p>
+                            </div>
+                            <div class="p-3 bg-orange-50 dark:bg-orange-900 dark:bg-opacity-30 rounded-lg border border-orange-200 dark:border-orange-700">
+                                <div class="flex items-center text-orange-700 dark:text-orange-300 font-medium">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V5a2 2 0 00-4 0v.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m7 0v1a3 3 0 01-6 0v-1m6 0H9"/></svg>
+                                    Trusted Devices
+                                </div>
+                                <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $trustedDevicesCount }} device{{ $trustedDevicesCount === 1 ? '' : 's' }} trusted</p>
+                            </div>
+                        </div>
+                    @endif
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                            @if($twoFactorEnabled)
+                                You can manage trusted devices or disable 2FA.
+                            @else
+                                Recommended for all users.
+                            @endif
+                        </div>
+                        <a href="{{ route('security.2fa') }}" class="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium bg-orange-600 hover:bg-orange-500 dark:bg-orange-500 dark:hover:bg-orange-400 text-white shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c.667-1.333 2-4 2-5a2 2 0 10-4 0c0 1 1.333 3.667 2 5zm0 0v2m-6 4h12a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"/></svg>
+                            {{ $twoFactorEnabled ? 'Manage 2FA' : 'Enable 2FA' }}
+                        </a>
+                    </div>
                 </div>
             </div>
             </div>

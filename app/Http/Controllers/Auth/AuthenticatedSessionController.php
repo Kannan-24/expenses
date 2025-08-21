@@ -26,13 +26,28 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
+        $user = Auth::user();
 
-        // Check if the user has any roles assigned
-        if (Auth::user()->roles->isEmpty()) {
-            Auth::user()->assignRole(config('permission.default_role'));
+        // If user has 2FA enabled and device not trusted, log them out and send to challenge
+        if ($user->two_factor_enabled) {
+            $trustedCookie = request()->cookie('trusted_device_'.$user->id);
+            $trustedOk = false;
+            if ($trustedCookie) {
+                $trustedOk = $user->trustedDevices()->where('device_key',$trustedCookie)->exists();
+            }
+            if (!$trustedOk) {
+                // Temporarily logout and store user id for challenge
+                Auth::logout();
+                session(['2fa:user:id'=>$user->id]);
+                return redirect()->route('auth.2fa.challenge');
+            }
         }
 
+        $request->session()->regenerate();
+        if ($user->roles->isEmpty()) {
+            $user->assignRole(config('permission.default_role'));
+        }
+        $user->update(['last_login_at'=>now(),'last_login_ip'=>$request->ip(),'last_login_user_agent'=>$request->userAgent()]);
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

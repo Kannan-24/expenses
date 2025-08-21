@@ -51,6 +51,8 @@ class User extends Authenticatable
         'current_month_savings'
     ];
 
+    protected $appends = [];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -230,6 +232,11 @@ class User extends Authenticatable
     public function expensePeople(): HasMany
     {
         return $this->hasMany(ExpensePerson::class);
+    }
+
+    public function trustedDevices(): HasMany
+    {
+        return $this->hasMany(TrustedDevice::class);
     }
 
     public function activities(): HasMany

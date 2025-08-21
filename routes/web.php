@@ -16,6 +16,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WalletTypeController;
+use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\EmiLoanController;
 use App\Http\Controllers\FCMController;
@@ -44,6 +45,14 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
     Route::post('/send-notification', [FCMController::class, 'sendNotification'])->name('send.notification');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // 2FA security settings
+    Route::get('/security/two-factor', [TwoFactorController::class,'settings'])->name('security.2fa');
+    Route::post('/security/two-factor/start', [TwoFactorController::class,'startEnable'])->name('security.2fa.start');
+    Route::post('/security/two-factor/confirm', [TwoFactorController::class,'confirmEnable'])->name('security.2fa.confirm');
+    Route::post('/security/two-factor/disable', [TwoFactorController::class,'disable'])->name('security.2fa.disable');
+    Route::post('/security/trust-current-device', [TwoFactorController::class,'trustCurrent'])->name('security.device.trust');
+    Route::get('/security/trusted-devices/{device}', [TwoFactorController::class,'showDevice'])->name('security.device.show');
+    Route::delete('/security/trusted-devices/{device}', [TwoFactorController::class,'removeDevice'])->name('security.device.remove');
     Route::get('/chart-data', [DashboardController::class, 'getChartData'])->name('chart.data');
 
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
@@ -121,5 +130,9 @@ Route::middleware(['auth', 'verified', EnsureUserIsOnboarded::class])->group(fun
         ],
     ]);
 });
+
+// 2FA challenge (before onboarding middleware)
+Route::get('/two-factor-challenge', [TwoFactorController::class,'challengeForm'])->name('auth.2fa.challenge');
+Route::post('/two-factor-challenge', [TwoFactorController::class,'challenge'])->name('auth.2fa.challenge.post');
 
 require __DIR__ . '/auth.php';
