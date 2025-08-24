@@ -6,14 +6,18 @@ use App\Models\Currency;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Models\WalletType;
+use App\Services\WalletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class WalletController extends Controller
 {
-    public function __construct()
+    protected WalletService $walletService;
+
+    public function __construct(WalletService $walletService)
     {
+        $this->walletService = $walletService;
         $this->middleware('can:manage wallets');
     }
 
@@ -22,46 +26,25 @@ class WalletController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Wallet::with('walletType', 'currency')->where('user_id', Auth::id());
+        $search = $request->input('search');
+        $filter = $request->input('filter');
+        $walletType = $request->input('wallet_type');
+        $currency = $request->input('currency');
 
-        // Search filter
-        if ($search = $request->input('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhereHas('walletType', function ($q2) use ($search) {
-                        $q2->where('name', 'like', "%{$search}%");
-                    })
-                    ->orWhereHas('currency', function ($q3) use ($search) {
-                        $q3->where('code', 'like', "%{$search}%")
-                            ->orWhere('name', 'like', "%{$search}%");
-                    });
-            });
-        }
+        $wallets = $this->walletService->getPaginatedWallets(
+            Auth::user(),
+            $search,
+            $filter,
+            $walletType,
+            $currency,
+            10
+        );
 
-        // Quick filter: active/inactive
-        if ($request->filled('filter')) {
-            if ($request->filter === 'active') {
-                $query->where('is_active', true);
-            } elseif ($request->filter === 'inactive') {
-                $query->where('is_active', false);
-            }
-        }
-
-        // Wallet type filter
-        if ($walletType = $request->input('wallet_type')) {
-            $query->where('wallet_type_id', $walletType);
-        }
-
-        // Currency filter
-        if ($currency = $request->input('currency')) {
-            $query->where('currency_id', $currency);
-        }
-
-        $wallets = $query->paginate(10)->appends($request->except('page'));
+        $wallets->appends($request->except('page'));
 
         // For filter dropdowns
-        $walletTypes = WalletType::where('is_active', true)->get();
-        $currencies = Currency::all();
+        $walletTypes = $this->walletService->getActiveWalletTypes();
+        $currencies = $this->walletService->getAllCurrencies();
 
         return view('wallets.index', compact('wallets', 'walletTypes', 'currencies'));
     }
@@ -71,8 +54,8 @@ class WalletController extends Controller
      */
     public function create()
     {
-        $walletTypes = WalletType::where('is_active', true)->get();
-        $currencies = Currency::all();
+        $walletTypes = $this->walletService->getActiveWalletTypes();
+        $currencies = $this->walletService->getAllCurrencies();
         return view('wallets.create', compact('walletTypes', 'currencies'));
     }
 
@@ -89,22 +72,24 @@ class WalletController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        // Check if a wallet with the same name already exists for the user and wallet type
-        $existingWallet = Wallet::where('user_id', Auth::id())
-            ->where('wallet_type_id', $request->input('wallet_type_id'))
-            ->where('name', $request->input('name'));
+        $user = Auth::user();
 
-        if ($existingWallet->exists()) {
-            return redirect()->back()->withErrors(['name' => 'A wallet with this name already exists for this wallet type.'])
+        // Check if wallet name is unique for user and wallet type
+        if (!$this->walletService->isWalletNameUniqueForUserAndType(
+            $request->name,
+            $user,
+            $request->wallet_type_id
+        )) {
+            return redirect()->back()
+                ->withErrors(['name' => 'A wallet with this name already exists for this wallet type.'])
                 ->withInput();
         }
 
-        $wallet = Wallet::create([
-            'user_id' => Auth::id(),
-            'wallet_type_id' => $request->input('wallet_type_id'),
-            'name' => $request->input('name'),
-            'balance' => $request->input('balance'),
-            'currency_id' => $request->input('currency_id'),
+        $wallet = $this->walletService->createWallet($user, [
+            'wallet_type_id' => $request->wallet_type_id,
+            'name' => $request->name,
+            'balance' => $request->balance,
+            'currency_id' => $request->currency_id,
             'is_active' => $request->input('is_active', true),
         ]);
 
@@ -125,16 +110,10 @@ class WalletController extends Controller
     {
         $this->authorizeWallet($wallet);
 
-        $wallet->load('walletType', 'currency', 'transactions.category'); // eager load category if needed
+        $data = $this->walletService->getWalletWithTransactions($wallet, 10);
 
-        // Optionally, paginate transactions
-        $transactions = $wallet->transactions()->latest()->paginate(10);
-
-        $borrows = $wallet->borrows()->latest()->paginate(10);
-
-        return view('wallets.show', compact('wallet', 'transactions', 'borrows'));
+        return view('wallets.show', $data);
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -143,8 +122,8 @@ class WalletController extends Controller
     {
         $this->authorizeWallet($wallet);
 
-        $walletTypes = WalletType::where('is_active', true)->get();
-        $currencies = Currency::all();
+        $walletTypes = $this->walletService->getActiveWalletTypes();
+        $currencies = $this->walletService->getAllCurrencies();
         return view('wallets.edit', compact('wallet', 'walletTypes', 'currencies'));
     }
 
@@ -157,18 +136,31 @@ class WalletController extends Controller
 
         $request->validate([
             'wallet_type_id' => 'required|exists:wallet_types,id',
-            'name' => 'required|string|max:255|unique:wallets,name,' . $wallet->id . ',id,user_id,' . $wallet->user_id . ',wallet_type_id,' . $request->wallet_type_id,
+            'name' => 'required|string|max:255',
             'balance' => 'required|numeric|min:0',
             'currency_id' => 'required|exists:currencies,id',
             'is_active' => 'boolean',
         ]);
 
+        $user = Auth::user();
 
-        $wallet->update([
-            'wallet_type_id' => $request->input('wallet_type_id'),
-            'name' => $request->input('name'),
-            'balance' => $request->input('balance'),
-            'currency_id' => $request->input('currency_id'),
+        // Check if wallet name is unique for user and wallet type (excluding current wallet)
+        if (!$this->walletService->isWalletNameUniqueForUserAndType(
+            $request->name,
+            $user,
+            $request->wallet_type_id,
+            $wallet->id
+        )) {
+            return redirect()->back()
+                ->withErrors(['name' => 'A wallet with this name already exists for this wallet type.'])
+                ->withInput();
+        }
+
+        $this->walletService->updateWallet($wallet, [
+            'wallet_type_id' => $request->wallet_type_id,
+            'name' => $request->name,
+            'balance' => $request->balance,
+            'currency_id' => $request->currency_id,
             'is_active' => $request->input('is_active', true),
         ]);
 
@@ -182,33 +174,29 @@ class WalletController extends Controller
     {
         $this->authorizeWallet($wallet);
 
-        $transactions = Transaction::where('wallet_id', $wallet->id)->count();
-
-        if ($transactions > 0) {
+        if ($this->walletService->walletHasTransactions($wallet)) {
             return redirect()->back()->withErrors(['wallet' => 'Cannot delete wallet with existing transactions.']);
         }
 
-        $wallet->delete();
+        $this->walletService->deleteWallet($wallet);
         return redirect()->route('wallets.index')->with('success', 'Wallet deleted successfully.');
     }
 
     public function authorizeWallet(Wallet $wallet)
     {
-        if ($wallet->user_id !== Auth::id()) {
+        if (!$this->walletService->walletBelongsToUser($wallet, Auth::user())) {
             abort(403, 'Unauthorized action.');
         }
     }
-
 
     /**
      * Show the form for transferring funds between wallets.
      */
     public function showTransferForm()
     {
-        $wallets = Wallet::where('user_id', Auth::id())->get();
+        $wallets = $this->walletService->getUserWallets(Auth::user(), true);
         return view('wallets.transfer', compact('wallets'));
     }
-
 
     /**
      * Transfer funds between user's own wallets.
@@ -221,41 +209,19 @@ class WalletController extends Controller
             'amount' => 'required|numeric|min:0.01',
         ]);
 
-        $fromWallet = Wallet::where('id', $request->from_wallet_id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+        try {
+            $user = Auth::user();
+            [$fromWallet, $toWallet] = $this->walletService->validateTransfer(
+                $user,
+                $request->from_wallet_id,
+                $request->to_wallet_id
+            );
 
-        $toWallet = Wallet::where('id', $request->to_wallet_id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+            $this->walletService->transferFunds($fromWallet, $toWallet, $request->amount);
 
-        if ($fromWallet->balance < $request->amount) {
-            return redirect()->back()->withErrors(['amount' => 'Insufficient balance in source wallet.']);
+            return redirect()->route('wallets.index')->with('success', 'Transfer completed successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['amount' => $e->getMessage()]);
         }
-
-        // Optionally, handle currency conversion here if needed
-
-        DB::transaction(function () use ($fromWallet, $toWallet, $request) {
-            $fromWallet->decrement('balance', $request->amount);
-            $toWallet->increment('balance', $request->amount);
-
-            // Optionally, log transactions for both wallets
-            Transaction::create([
-                'wallet_id' => $fromWallet->id,
-                'user_id' => Auth::id(),
-                'amount' => -$request->amount,
-                'type' => 'transfer_out',
-                'description' => 'Transfer to wallet: ' . $toWallet->name,
-            ]);
-            Transaction::create([
-                'wallet_id' => $toWallet->id,
-                'user_id' => Auth::id(),
-                'amount' => $request->amount,
-                'type' => 'transfer_in',
-                'description' => 'Transfer from wallet: ' . $fromWallet->name,
-            ]);
-        });
-
-        return redirect()->route('wallets.index')->with('success', 'Transfer completed successfully.');
     }
 }

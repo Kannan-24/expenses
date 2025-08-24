@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Budget;
+use App\Services\BudgetService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BudgetController extends Controller
 {
-    public function __construct()
+    protected $budgetService;
+
+    public function __construct(BudgetService $budgetService)
     {
         $this->middleware('auth');
         $this->middleware('can:manage budgets');
+        $this->budgetService = $budgetService;
     }
 
     /**
@@ -19,57 +23,13 @@ class BudgetController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Budget::where('user_id', Auth::id())->with(['category', 'histories']);
+        $filters = $request->only(['search', 'filter', 'start_date', 'end_date', 'category', 'frequency', 'roll_over']);
+        
+        $budgets = $this->budgetService->getPaginatedBudgets(Auth::id(), $filters, 10);
+        $categories = $this->budgetService->getUserCategories(Auth::id());
 
-        // Search by keyword (searches category name and amount)
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('category', function ($cat) use ($search) {
-                    $cat->where('name', 'like', '%' . $search . '%');
-                })
-                ->orWhere('amount', 'like', '%' . $search . '%');
-            });
-        }
-
-        // Quick filter: active or expired
-        if ($request->filled('filter')) {
-            if ($request->filter === 'active') {
-                $query->where('end_date', '>=', now());
-            } elseif ($request->filter === 'expired') {
-                $query->where('end_date', '<', now());
-            }
-        }
-
-        // Start date filter
-        if ($request->filled('start_date')) {
-            $query->where('start_date', '>=', $request->start_date);
-        }
-
-        // End date filter
-        if ($request->filled('end_date')) {
-            $query->where('end_date', '<=', $request->end_date);
-        }
-
-        // Category filter
-        if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
-        }
-
-        // Frequency filter
-        if ($request->filled('frequency')) {
-            $query->where('frequency', $request->frequency);
-        }
-
-        // Roll over filter
-        if ($request->has('roll_over') && $request->roll_over !== '') {
-            $query->where('roll_over', $request->roll_over);
-        }
-
-        $budgets = $query->orderBy('start_date', 'desc')->paginate(10)->appends($request->except('page'));
-
-        // For the filter dropdowns
-        $categories = Auth::user()->categories()->get();
+        // Attach filter values to the pagination links
+        $budgets->appends($request->except('page'));
 
         return view('budgets.index', compact('budgets', 'categories'));
     }
@@ -79,7 +39,7 @@ class BudgetController extends Controller
      */
     public function create()
     {
-        $categories = Auth::user()->categories()->pluck('name', 'id');
+        $categories = $this->budgetService->getUserCategories(Auth::id())->pluck('name', 'id');
         return view('budgets.create', compact('categories'));
     }
 
@@ -97,17 +57,12 @@ class BudgetController extends Controller
             'frequency' => 'required|in:daily,weekly,monthly,yearly',
         ]);
 
-        Budget::create([
-            'user_id' => Auth::id(),
-            'category_id' => $request->category_id,
-            'amount' => $request->amount,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'roll_over' => $request->roll_over,
-            'frequency' => $request->frequency,
-        ]);
-
-        return redirect()->route('budgets.index')->with('success', 'Budget created successfully.');
+        try {
+            $this->budgetService->createBudget(Auth::id(), $request->all());
+            return redirect()->route('budgets.index')->with('success', 'Budget created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
+        }
     }
 
     /**
@@ -115,10 +70,13 @@ class BudgetController extends Controller
      */
     public function show(Budget $budget)
     {
-        $this->authorizeUser($budget);
-
-        $histories = $budget->histories()->orderBy('created_at', 'desc')->paginate(10);
-        return view('budgets.show', compact('budget', 'histories'));
+        try {
+            $this->budgetService->validateOwnership($budget, Auth::id());
+            $data = $this->budgetService->getBudgetWithHistories($budget, 10);
+            return view('budgets.show', $data);
+        } catch (\Exception $e) {
+            abort(403, 'Unauthorized.');
+        }
     }
 
     /**
@@ -126,10 +84,13 @@ class BudgetController extends Controller
      */
     public function edit(Budget $budget)
     {
-        $this->authorizeUser($budget);
-
-        $categories = Auth::user()->categories()->pluck('name', 'id');
-        return view('budgets.edit', compact('budget', 'categories'));
+        try {
+            $this->budgetService->validateOwnership($budget, Auth::id());
+            $categories = $this->budgetService->getUserCategories(Auth::id())->pluck('name', 'id');
+            return view('budgets.edit', compact('budget', 'categories'));
+        } catch (\Exception $e) {
+            abort(403, 'Unauthorized.');
+        }
     }
 
     /**
@@ -137,8 +98,6 @@ class BudgetController extends Controller
      */
     public function update(Request $request, Budget $budget)
     {
-        $this->authorizeUser($budget);
-
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'amount' => 'required|numeric|min:0',
@@ -148,16 +107,13 @@ class BudgetController extends Controller
             'frequency' => 'required|in:daily,weekly,monthly,yearly',
         ]);
 
-        $budget->update([
-            'category_id' => $request->category_id,
-            'amount' => $request->amount,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'roll_over' => $request->roll_over,
-            'frequency' => $request->frequency,
-        ]);
-
-        return redirect()->route('budgets.index')->with('success', 'Budget updated successfully.');
+        try {
+            $this->budgetService->validateOwnership($budget, Auth::id());
+            $this->budgetService->updateBudget($budget, $request->all());
+            return redirect()->route('budgets.index')->with('success', 'Budget updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
+        }
     }
 
     /**
@@ -165,24 +121,12 @@ class BudgetController extends Controller
      */
     public function destroy(Budget $budget)
     {
-        $this->authorizeUser($budget);
-
-        if ($budget->histories()->count() > 0) {
-            $budget->histories()->delete();
-        }
-
-        $budget->delete();
-
-        return redirect()->route('budgets.index')->with('success', 'Budget deleted successfully.');
-    }
-
-    /**
-     * Authorize the user can access the budget resource.
-     */
-    public function authorizeUser(Budget $budget)
-    {
-        if (Auth::user()->id !== $budget->user_id) {
-            abort(403, 'Unauthorized.');
+        try {
+            $this->budgetService->validateOwnership($budget, Auth::id());
+            $this->budgetService->deleteBudget($budget);
+            return redirect()->route('budgets.index')->with('success', 'Budget deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
 }

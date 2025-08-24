@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\EmiLoan;
 use App\Models\EmiSchedule;
-use App\Models\Wallet;
+use App\Services\EmiLoanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class EmiLoanController extends Controller
 {
-    public function __construct()
+    protected $emiLoanService;
+
+    public function __construct(EmiLoanService $emiLoanService)
     {
         $this->middleware(['auth', 'verified', 'can:manage emi loans']);
+        $this->emiLoanService = $emiLoanService;
     }
 
     /**
@@ -22,8 +23,14 @@ class EmiLoanController extends Controller
      */
     public function index()
     {
-        $emiLoans = EmiLoan::with(['user', 'category', 'emiSchedules'])->where('user_id', Auth::id())->paginate(10);
-        return view('emi_loans.index', compact('emiLoans'));
+        try {
+            $filters = request()->only(['search', 'category_id', 'status', 'loan_type', 'per_page']);
+            $emiLoans = $this->emiLoanService->getPaginatedEmiLoans(Auth::id(), $filters);
+            
+            return view('emi_loans.index', compact('emiLoans'));
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -31,8 +38,8 @@ class EmiLoanController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('user_id', Auth::id())->get();
-        $wallets = Wallet::where('user_id', Auth::id())->where('is_active', true)->get();
+        $categories = $this->emiLoanService->getUserCategories(Auth::id());
+        $wallets = $this->emiLoanService->getUserWallets(Auth::id());
         return view('emi_loans.create', compact('categories', 'wallets'));
     }
 
@@ -52,66 +59,11 @@ class EmiLoanController extends Controller
             'default_wallet_id' => 'nullable|exists:wallets,id'
         ]);
 
-        DB::beginTransaction();
-
         try {
-            $emiLoan = EmiLoan::create([
-                'user_id' => Auth::id(),
-                'category_id' => $request->category_id,
-                'name' => $request->name,
-                'total_amount' => $request->total_amount,
-                'interest_rate' => $request->interest_rate,
-                'start_date' => $request->start_date,
-                'tenure_months' => $request->tenure_months,
-                'monthly_emi' => $request->monthly_emi, // You may calculate below if null
-                'is_auto_deduct' => $request->is_auto_deduct ?? false,
-                'loan_type' => $request->loan_type ?? 'fixed',
-                'status' => $request->status ?? 'active'
-            ]);
-
-            $emiSchedules = [];
-            $dueDate = \Carbon\Carbon::parse($emiLoan->start_date);
-
-            $principalPerMonth = round($emiLoan->total_amount / $emiLoan->tenure_months, 2);
-            $totalInterest = ($emiLoan->total_amount * $emiLoan->interest_rate / 100);
-            $interestPerMonth = round($totalInterest / $emiLoan->tenure_months, 2);
-
-            for ($i = 0; $i < $emiLoan->tenure_months; $i++) {
-                $principal = $principalPerMonth;
-                $interest = $interestPerMonth;
-
-                // If reducing balance, recalculate interest each month
-                if ($emiLoan->loan_type === 'reducing_balance') {
-                    $remainingPrincipal = $emiLoan->total_amount - ($principalPerMonth * $i);
-                    $interest = round(($remainingPrincipal * $emiLoan->interest_rate / 100) / 12, 2);
-                }
-
-                $emiAmount = $principal + $interest;
-
-                $emiSchedules[] = [
-                    'user_id' => Auth::id(),
-                    'emi_loan_id' => $emiLoan->id,
-                    'due_date' => $dueDate->copy(),
-                    'principal_amount' => $principal,
-                    'interest_amount' => $interest,
-                    'total_amount' => $emiAmount,
-                    'wallet_id' => $request->default_wallet_id,
-                    'status' => 'upcoming',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-
-                $dueDate->addMonth();
-            }
-
-            EmiSchedule::insert($emiSchedules);
-
-            DB::commit();
-
+            $this->emiLoanService->createEmiLoan(Auth::id(), $request->all());
             return redirect()->route('emi-loans.index')->with('success', 'EMI Loan created successfully.');
         } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => 'Failed to create EMI loan: ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
     }
 
@@ -121,9 +73,15 @@ class EmiLoanController extends Controller
      */
     public function show(EmiLoan $emiLoan)
     {
-        $emiSchedules = $emiLoan->emiSchedules()->with('wallet')->paginate(10);
-        $wallets = Wallet::where('user_id', Auth::id())->where('is_active', true)->get();
-        return view('emi_loans.show', compact('emiLoan', 'emiSchedules', 'wallets'));
+        try {
+            $this->emiLoanService->validateOwnership($emiLoan, Auth::id());
+            $data = $this->emiLoanService->getEmiLoanWithSchedules($emiLoan, 10);
+            $wallets = $this->emiLoanService->getUserWallets(Auth::id());
+            
+            return view('emi_loans.show', array_merge($data, compact('wallets')));
+        } catch (\Exception $e) {
+            abort($e->getCode() === 403 ? 403 : 404, $e->getMessage());
+        }
     }
 
     /**
@@ -131,9 +89,15 @@ class EmiLoanController extends Controller
      */
     public function edit(EmiLoan $emiLoan)
     {
-        $categories = Category::where('user_id', Auth::id())->get();
-        $wallets = Wallet::where('user_id', Auth::id())->where('is_active', true)->get();
-        return view('emi_loans.edit', compact('emiLoan', 'categories', 'wallets'));
+        try {
+            $this->emiLoanService->validateOwnership($emiLoan, Auth::id());
+            $categories = $this->emiLoanService->getUserCategories(Auth::id());
+            $wallets = $this->emiLoanService->getUserWallets(Auth::id());
+            
+            return view('emi_loans.edit', compact('emiLoan', 'categories', 'wallets'));
+        } catch (\Exception $e) {
+            abort($e->getCode() === 403 ? 403 : 404, $e->getMessage());
+        }
     }
 
     /**
@@ -155,68 +119,13 @@ class EmiLoanController extends Controller
             'default_wallet_id' => 'nullable|exists:wallets,id'
         ]);
 
-        DB::beginTransaction();
-
         try {
-            $emiLoan->update([
-                'category_id' => $request->category_id,
-                'name' => $request->name,
-                'total_amount' => $request->total_amount,
-                'interest_rate' => $request->interest_rate,
-                'start_date' => $request->start_date,
-                'tenure_months' => $request->tenure_months,
-                'monthly_emi' => $request->monthly_emi,
-                'is_auto_deduct' => $request->is_auto_deduct ?? false,
-                'loan_type' => $request->loan_type ?? 'fixed',
-                'status' => $request->status ?? 'active',
-                'default_wallet_id' => $request->default_wallet_id
-            ]);
-
-            // Delete previous schedules (optional: only if schedule-affecting fields changed)
-            EmiSchedule::where('emi_loan_id', $emiLoan->id)->delete();
-
-            $emiSchedules = [];
-            $dueDate = \Carbon\Carbon::parse($emiLoan->start_date);
-
-            $principalPerMonth = round($emiLoan->total_amount / $emiLoan->tenure_months, 2);
-            $totalInterest = ($emiLoan->total_amount * $emiLoan->interest_rate / 100);
-            $interestPerMonth = round($totalInterest / $emiLoan->tenure_months, 2);
-
-            for ($i = 0; $i < $emiLoan->tenure_months; $i++) {
-                $principal = $principalPerMonth;
-                $interest = $interestPerMonth;
-
-                if ($emiLoan->loan_type === 'reducing_balance') {
-                    $remainingPrincipal = $emiLoan->total_amount - ($principalPerMonth * $i);
-                    $interest = round(($remainingPrincipal * $emiLoan->interest_rate / 100) / 12, 2);
-                }
-
-                $emiAmount = $principal + $interest;
-
-                $emiSchedules[] = [
-                    'user_id' => Auth::id(),
-                    'emi_loan_id' => $emiLoan->id,
-                    'due_date' => $dueDate->copy(),
-                    'principal_amount' => $principal,
-                    'interest_amount' => $interest,
-                    'total_amount' => $emiAmount,
-                    'wallet_id' => $request->default_wallet_id,
-                    'status' => 'upcoming',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-
-                $dueDate->addMonth();
-            }
-
-            EmiSchedule::insert($emiSchedules);
-
-            DB::commit();
-
+            $this->emiLoanService->validateOwnership($emiLoan, Auth::id());
+            $this->emiLoanService->updateEmiLoan($emiLoan, $request->all());
+            
             return redirect()->route('emi-loans.index')->with('success', 'EMI Loan updated successfully.');
         } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => 'Failed to update EMI loan: ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
     }
 
@@ -226,21 +135,13 @@ class EmiLoanController extends Controller
      */
     public function destroy(EmiLoan $emiLoan)
     {
-        DB::beginTransaction();
-
         try {
-            // Delete associated schedules
-            EmiSchedule::where('emi_loan_id', $emiLoan->id)->delete();
-
-            // Delete the EMI loan
-            $emiLoan->delete();
-
-            DB::commit();
-
+            $this->emiLoanService->validateOwnership($emiLoan, Auth::id());
+            $this->emiLoanService->deleteEmiLoan($emiLoan);
+            
             return redirect()->route('emi-loans.index')->with('success', 'EMI Loan deleted successfully.');
         } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => 'Failed to delete EMI loan: ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
     }
 
@@ -256,40 +157,13 @@ class EmiLoanController extends Controller
             'notes' => 'nullable|string|max:500'
         ]);
 
-        DB::beginTransaction();
-
         try {
-            // Check if wallet belongs to the user
-            $wallet = Wallet::where('id', $request->wallet_id)
-                ->where('user_id', Auth::id())
-                ->firstOrFail();
-
-            // Check if wallet has sufficient balance
-            if ($wallet->balance < $request->paid_amount) {
-                return back()->withErrors(['error' => 'Insufficient wallet balance.']);
-            }
-
-            // Update EMI schedule
-            $emiSchedule->update([
-                'status' => 'paid',
-                'paid_date' => $request->paid_date,
-                'paid_amount' => $request->paid_amount,
-                'wallet_id' => $request->wallet_id,
-                'notes' => $request->notes
-            ]);
-
-            // Deduct amount from wallet
-            $wallet->decrement('balance', $request->paid_amount);
-
-            // Create transaction record (optional - if you have transaction system)
-            // Transaction::create([...]);
-
-            DB::commit();
-
-            return back()->with('success', 'EMI payment recorded successfully.');
+            $this->emiLoanService->validateScheduleOwnership($emiLoan, $emiSchedule, Auth::id());
+            $this->emiLoanService->markSchedulePaid($emiLoan, $emiSchedule, $request->all());
+            
+            return redirect()->back()->with('success', 'EMI payment recorded successfully.');
         } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => 'Failed to record payment: ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
     }
 
@@ -298,15 +172,13 @@ class EmiLoanController extends Controller
      */
     public function getUpcomingSchedules()
     {
-        $notificationDays = env('EMI_NOTIFICATION_DAYS', 3);
-        $notificationDate = now()->addDays($notificationDays);
-
-        $upcomingSchedules = EmiSchedule::with(['emiLoan', 'user'])
-            ->where('status', 'upcoming')
-            ->where('due_date', '<=', $notificationDate)
-            ->where('due_date', '>=', now())
-            ->get();
-
-        return $upcomingSchedules;
+        try {
+            $notificationDays = env('EMI_NOTIFICATION_DAYS', 3);
+            $upcomingSchedules = $this->emiLoanService->getUpcomingSchedules(Auth::id(), $notificationDays);
+            
+            return $upcomingSchedules;
+        } catch (\Exception $e) {
+            return collect();
+        }
     }
 }
