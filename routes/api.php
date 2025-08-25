@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\AccountSettingsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BorrowController;
 use App\Http\Controllers\Api\BudgetController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\EmiLoanController;
 use App\Http\Controllers\Api\ExpensePersonController;
+use App\Http\Controllers\Api\SupportTicketController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\WalletController;
 use Illuminate\Http\Request;
@@ -137,6 +139,36 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{emiLoan}/schedules/{emiSchedule}/mark-paid', [EmiLoanController::class, 'markSchedulePaid']);
         Route::put('/{emiLoan}/schedules/{emiSchedule}/update-payment', [EmiLoanController::class, 'updateSchedulePayment']);
         Route::post('/{emiLoan}/schedules/{emiSchedule}/mark-unpaid', [EmiLoanController::class, 'markScheduleUnpaid']);
+    });
+
+    // Support Ticket routes
+    Route::prefix('support-tickets')->group(function () {
+        Route::get('/', [SupportTicketController::class, 'index']);
+        Route::post('/', [SupportTicketController::class, 'store']);
+        Route::get('/users', [SupportTicketController::class, 'getUsers']);
+        Route::get('/stats', [SupportTicketController::class, 'getStats']);
+        Route::get('/by-status', [SupportTicketController::class, 'getTicketsByStatus']);
+        Route::post('/bulk-update', [SupportTicketController::class, 'bulkUpdate']);
+        Route::get('/{supportTicket}', [SupportTicketController::class, 'show']);
+        Route::delete('/{supportTicket}', [SupportTicketController::class, 'destroy']);
+        Route::post('/{supportTicket}/reply', [SupportTicketController::class, 'reply']);
+        Route::post('/{supportTicket}/close', [SupportTicketController::class, 'markAsClosed']);
+        Route::post('/{supportTicket}/reopen', [SupportTicketController::class, 'markAsReopened']);
+        Route::post('/{supportTicket}/recover', [SupportTicketController::class, 'recover']);
+    });
+
+    // Account Settings routes
+    Route::prefix('account')->group(function () {
+        Route::get('/settings', [AccountSettingsController::class, 'getAllSettings']);
+        Route::get('/profile', [AccountSettingsController::class, 'getProfile']);
+        Route::put('/profile', [AccountSettingsController::class, 'updateProfile']);
+        Route::put('/password', [AccountSettingsController::class, 'updatePassword']);
+        Route::get('/notifications', [AccountSettingsController::class, 'getNotificationPreferences']);
+        Route::put('/notifications', [AccountSettingsController::class, 'updateNotificationPreferences']);
+        Route::get('/security', [AccountSettingsController::class, 'getAccountSecurity']);
+        Route::get('/activity', [AccountSettingsController::class, 'getAccountActivity']);
+        Route::get('/config-options', [AccountSettingsController::class, 'getConfigOptions']);
+        Route::delete('/delete', [AccountSettingsController::class, 'deleteAccount']);
     });
 
     // Legacy user route for backward compatibility

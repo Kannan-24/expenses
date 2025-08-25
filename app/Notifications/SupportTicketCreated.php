@@ -27,7 +27,8 @@ class SupportTicketCreated extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database', FcmChannel::class];
+        return ['mail', 'database'];
+        // return ['mail', 'database', FcmChannel::class];
     }
 
     /**

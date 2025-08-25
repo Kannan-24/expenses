@@ -262,11 +262,10 @@ class User extends Authenticatable
         });
 
         static::updated(function ($user) {
-            if ($user->wasChanged('password')) {
+            if ($user->wasChanged('password') && !$user->wasChanged('password_updated_at')) {
                 ActivityTracker::logPasswordChange($user->id);
 
-                $user->password_updated_at = now();
-                $user->save();
+                $user->updateQuietly(['password_updated_at' => now()]);
             }
         });
     }

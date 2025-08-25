@@ -3,81 +3,45 @@
 namespace App\Http\Controllers;
 
 use App\Models\SupportTicket;
-use App\Models\User;
-use App\Notifications\SupportTicketCreated;
-use App\Notifications\SupportTicketReplied;
+use App\Services\SupportTicketService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
 
 class SupportTicketController extends Controller
 {
+    protected $supportTicketService;
+
+    public function __construct(SupportTicketService $supportTicketService)
+    {
+        $this->supportTicketService = $supportTicketService;
+    }
 
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $query = SupportTicket::with('user');
-
-        // Filter by role
-        if (!Auth::user()->hasRole('admin')) {
-            $query->where('user_id', Auth::id());
-        } else {
-            // For admin, allow filtering by user
-            if ($userId = $request->input('user')) {
-                $query->where('user_id', $userId);
-            }
+        $user = Auth::user();
+        $isAdmin = $user->hasRole('admin');
+        
+        $filters = $request->only([
+            'user_id', 'show_deleted', 'search', 'filter', 
+            'start_date', 'end_date', 'status', 'per_page'
+        ]);
+        
+        // Map 'user' parameter to 'user_id' for consistency
+        if ($request->has('user')) {
+            $filters['user_id'] = $request->input('user');
         }
 
-        // Handle deleted tickets
-        if ($request->boolean('show_deleted')) {
-            $query->withTrashed();
-        }
+        $supportTickets = $this->supportTicketService->getPaginatedSupportTickets(
+            $user->id, 
+            $isAdmin, 
+            $filters
+        );
 
-        // Handle search
-        if ($search = $request->input('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('subject', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($q2) use ($search) {
-                        $q2->where('name', 'like', "%{$search}%");
-                    });
-            });
-        }
-
-        // Quick filter (last 7/15/30 days)
-        if ($filter = $request->input('filter')) {
-            if ($filter === '7days') {
-                $query->where('created_at', '>=', now()->subDays(7));
-            } elseif ($filter === '15days') {
-                $query->where('created_at', '>=', now()->subDays(15));
-            } elseif ($filter === '1month') {
-                $query->where('created_at', '>=', now()->subMonth());
-            }
-        }
-
-        // Start date filter
-        if ($start = $request->input('start_date')) {
-            $query->whereDate('created_at', '>=', $start);
-        }
-
-        // End date filter
-        if ($end = $request->input('end_date')) {
-            $query->whereDate('created_at', '<=', $end);
-        }
-
-        // Status filter
-        if ($status = $request->input('status')) {
-            $query->where('status', $status);
-        }
-
-        $supportTickets = $query->paginate(6)->appends($request->except('page'));
-
-        // For admin, pass users for filter dropdown
-        $users = [];
-        if (Auth::user()->hasRole('admin')) {
-            $users = \App\Models\User::orderBy('name')->get();
-        }
+        // For admin, get users for filter dropdown
+        $users = $isAdmin ? $this->supportTicketService->getAllUsers() : collect();
 
         return view('support_tickets.index', compact('supportTickets', 'users'));
     }
@@ -109,25 +73,19 @@ class SupportTicketController extends Controller
             'message' => 'required|string',
         ]);
 
-        $supportTicket = SupportTicket::create([
-            'user_id' => Auth::id(),
-            'subject' => $request->subject,
-            'status' => 'opened',
-        ]);
+        try {
+            $supportTicket = $this->supportTicketService->createSupportTicket(
+                Auth::id(), 
+                $request->only(['subject', 'message'])
+            );
 
-        $supportTicket->messages()->create([
-            'user_id' => Auth::id(),
-            'is_admin' => false,
-            'message' => $request->message,
-        ]);
-
-        // Notify admins about the new support ticket
-        $admins = User::whereHas('roles', function ($query) {
-            $query->where('name', 'admin');
-        })->get();
-        Notification::send($admins, new SupportTicketCreated($supportTicket));
-
-        return redirect()->route('support_tickets.index')->with('success', 'Support ticket created successfully.');
+            return redirect()->route('support_tickets.index')
+                ->with('success', 'Support ticket created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Failed to create support ticket: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -135,13 +93,19 @@ class SupportTicketController extends Controller
      */
     public function show(SupportTicket $supportTicket)
     {
-        if (!$this->canAccessTicket($supportTicket)) {
-            return redirect()->route('support_tickets.index')->with('error', 'You do not have permission to view this support ticket.');
+        $user = Auth::user();
+        $isAdmin = $user->hasRole('admin');
+
+        try {
+            $this->supportTicketService->validateTicketOwnership($supportTicket, $user->id, $isAdmin);
+            
+            $supportTicket = $this->supportTicketService->getSupportTicketWithMessages($supportTicket);
+
+            return view('support_tickets.show', compact('supportTicket'));
+        } catch (\Exception $e) {
+            return redirect()->route('support_tickets.index')
+                ->with('error', 'You do not have permission to view this support ticket.');
         }
-
-        $supportTicket->load(['messages.user']);
-
-        return view('support_tickets.show', compact('supportTicket'));
     }
 
     /**
@@ -149,79 +113,71 @@ class SupportTicketController extends Controller
      */
     public function reply(Request $request, SupportTicket $supportTicket)
     {
-        if (!$this->canAccessTicket($supportTicket)) {
-            return redirect()->route('support_tickets.index')->with('error', 'You do not have permission to add a message to this support ticket.');
+        $user = Auth::user();
+        $isAdmin = $user->hasRole('admin');
+
+        try {
+            $this->supportTicketService->validateTicketOwnership($supportTicket, $user->id, $isAdmin);
+
+            $request->validate([
+                'message' => 'required|string',
+            ]);
+
+            $this->supportTicketService->addReplyToTicket(
+                $supportTicket, 
+                $user->id, 
+                $isAdmin, 
+                $request->only(['message'])
+            );
+
+            return redirect()->route('support_tickets.show', $supportTicket)
+                ->with('success', 'Message added successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('support_tickets.index')
+                ->with('error', 'You do not have permission to add a message to this support ticket.');
         }
-
-        $request->validate([
-            'message' => 'required|string',
-        ]);
-
-        $supportTicket->update([
-            'status' => Auth::user()->hasRole('user') ? 'customer_replied' : 'admin_replied',
-        ]);
-
-        $supportTicket->messages()->create([
-            'user_id' => Auth::id(),
-            'is_admin' => Auth::user()->hasRole('admin'),
-            'message' => $request->message,
-        ]);
-
-        /**
-         *  Notify the ticket creator about the reply - if reply is from admin
-         */
-        if (Auth::user()->hasRole('admin')) {
-            $supportTicket->user->notify(new SupportTicketReplied($supportTicket, $supportTicket->messages()->latest()->first(), false));
-        } else if (Auth::user()->hasRole('user')) {
-            // Find last replied admin
-            $lastAdminMessage = $supportTicket->messages()->where('is_admin', true)->latest()->first();
-            if ($lastAdminMessage) {
-                $lastAdmin = User::find($lastAdminMessage->user_id);
-                if ($lastAdmin) {
-                    $lastAdmin->notify(new SupportTicketReplied($supportTicket, $supportTicket->messages()->latest()->first(), true));
-                } else {
-                    $admins = User::whereHas('roles', function ($query) {
-                        $query->where('name', 'admin');
-                    })->get();
-                    Notification::send($admins, new SupportTicketReplied($supportTicket, $supportTicket->messages()->latest()->first(), true));
-                }
-            }
-        }
-
-        return redirect()->route('support_tickets.show', $supportTicket)->with('success', 'Message added successfully.');
     }
 
     /**
-     *  Mark as closed.
+     * Mark as closed.
      */
     public function markAsClosed(SupportTicket $supportTicket)
     {
-        if (!$this->canAccessTicket($supportTicket)) {
-            return redirect()->route('support_tickets.index')->with('error', 'You do not have permission to close this support ticket.');
+        $user = Auth::user();
+        $isAdmin = $user->hasRole('admin');
+
+        try {
+            $this->supportTicketService->validateTicketOwnership($supportTicket, $user->id, $isAdmin);
+            
+            $this->supportTicketService->closeTicket($supportTicket);
+
+            return redirect()->route('support_tickets.index')
+                ->with('success', 'Support ticket closed successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('support_tickets.index')
+                ->with('error', 'You do not have permission to close this support ticket.');
         }
-
-        $supportTicket->update([
-            'status' => 'closed',
-            'closed_at' => now(),
-        ]);
-
-        return redirect()->route('support_tickets.index')->with('success', 'Support ticket closed successfully.');
     }
 
     /**
-     *  Mark as reopened.
+     * Mark as reopened.
      */
     public function markAsReopened(SupportTicket $supportTicket)
     {
-        if (!$this->canAccessTicket($supportTicket)) {
-            return redirect()->route('support_tickets.index')->with('error', 'You do not have permission to reopen this support ticket.');
-        }
+        $user = Auth::user();
+        $isAdmin = $user->hasRole('admin');
 
-        $supportTicket->update([
-            'status' => 'opened',
-            'closed_at' => null,
-        ]);
-        return redirect()->route('support_tickets.index')->with('success', 'Support ticket reopened successfully.');
+        try {
+            $this->supportTicketService->validateTicketOwnership($supportTicket, $user->id, $isAdmin);
+            
+            $this->supportTicketService->reopenTicket($supportTicket);
+
+            return redirect()->route('support_tickets.index')
+                ->with('success', 'Support ticket reopened successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('support_tickets.index')
+                ->with('error', 'You do not have permission to reopen this support ticket.');
+        }
     }
 
     /**
@@ -229,13 +185,20 @@ class SupportTicketController extends Controller
      */
     public function destroy(SupportTicket $supportTicket)
     {
-        if (!$this->canAccessTicket($supportTicket)) {
-            return redirect()->route('support_tickets.index')->with('error', 'You do not have permission to delete this support ticket.');
+        $user = Auth::user();
+        $isAdmin = $user->hasRole('admin');
+
+        try {
+            $this->supportTicketService->validateTicketOwnership($supportTicket, $user->id, $isAdmin);
+            
+            $this->supportTicketService->deleteTicket($supportTicket);
+
+            return redirect()->route('support_tickets.index')
+                ->with('success', 'Support ticket deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('support_tickets.index')
+                ->with('error', 'You do not have permission to delete this support ticket.');
         }
-
-        $supportTicket->delete();
-
-        return redirect()->route('support_tickets.index')->with('success', 'Support ticket deleted successfully.');
     }
 
     /**
@@ -243,23 +206,22 @@ class SupportTicketController extends Controller
      */
     public function recover(SupportTicket $supportTicket)
     {
-        if (!Auth::user()->hasRole('admin')) {
-            return redirect()->route('support_tickets.index')->with('error', 'You do not have permission to recover this support ticket.');
+        $user = Auth::user();
+        $isAdmin = $user->hasRole('admin');
+
+        if (!$isAdmin) {
+            return redirect()->route('support_tickets.index')
+                ->with('error', 'You do not have permission to recover this support ticket.');
         }
 
-        $supportTicket->restore();
-        return redirect()->route('support_tickets.index')->with('success', 'Support ticket recovered successfully.');
-    }
+        try {
+            $this->supportTicketService->recoverTicket($supportTicket);
 
-    /**
-     * Check if the user can access the support ticket.
-     */
-    protected function canAccessTicket(SupportTicket $supportTicket)
-    {
-        if (Auth::user()->hasRole('admin')) {
-            return true;
+            return redirect()->route('support_tickets.index')
+                ->with('success', 'Support ticket recovered successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('support_tickets.index')
+                ->with('error', 'Failed to recover support ticket.');
         }
-
-        return $supportTicket->user_id === Auth::id();
     }
 }

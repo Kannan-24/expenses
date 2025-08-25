@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AccountSettingsService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class AccountSettingsController extends Controller
 {
+    protected $accountSettingsService;
+
+    public function __construct(AccountSettingsService $accountSettingsService)
+    {
+        $this->accountSettingsService = $accountSettingsService;
+    }
+
     /**
      * Display the account settings page.
      */
@@ -26,9 +33,15 @@ class AccountSettingsController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . Auth::id()],
         ]);
 
-        Auth::user()->update($request->only('name', 'email'));
-
-        return redirect()->route('account.settings')->with('status', 'profile-updated');
+        try {
+            $this->accountSettingsService->updateProfile(Auth::user(), $request->only('name', 'email'));
+            
+            return redirect()->route('account.settings')->with('status', 'profile-updated');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Failed to update profile: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -41,11 +54,14 @@ class AccountSettingsController extends Controller
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
-        Auth::user()->update([
-            'password' => Hash::make($request->password),
-        ]);
-
-        return redirect()->route('account.settings')->with('status', 'password-updated');
+        try {
+            $this->accountSettingsService->updatePassword(Auth::user(), $request->password);
+            
+            return redirect()->route('account.settings')->with('status', 'password-updated');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['error' => 'Failed to update password: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -66,31 +82,27 @@ class AccountSettingsController extends Controller
             'random_max_days' => ['integer', 'min:1', 'max:30'],
         ]);
 
-        $data = [
-            'wants_reminder' => $request->boolean('wants_reminder'),
-            'reminder_frequency' => $request->reminder_frequency,
-            'reminder_time' => $request->reminder_time,
-            'timezone' => $request->timezone,
-            'email_reminders' => $request->boolean('email_reminders'),
-            'push_reminders' => $request->boolean('push_reminders'),
-        ];
+        try {
+            $data = [
+                'wants_reminder' => $request->boolean('wants_reminder'),
+                'reminder_frequency' => $request->reminder_frequency,
+                'reminder_time' => $request->reminder_time,
+                'timezone' => $request->timezone,
+                'email_reminders' => $request->boolean('email_reminders'),
+                'push_reminders' => $request->boolean('push_reminders'),
+                'custom_weekdays' => $request->custom_weekdays,
+                'random_min_days' => $request->random_min_days,
+                'random_max_days' => $request->random_max_days,
+            ];
 
-        // Handle custom weekdays
-        if ($request->reminder_frequency === 'custom_weekdays') {
-            $data['custom_weekdays'] = $request->custom_weekdays ?? [];
-        } else {
-            $data['custom_weekdays'] = null;
+            $this->accountSettingsService->updateNotificationPreferences(Auth::user(), $data);
+            
+            return redirect()->route('account.settings')->with('status', 'notification-preferences-updated');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Failed to update notification preferences: ' . $e->getMessage()]);
         }
-
-        // Handle random frequency settings
-        if ($request->reminder_frequency === 'random') {
-            $data['random_min_days'] = $request->random_min_days ?? 1;
-            $data['random_max_days'] = max($request->random_max_days ?? 3, $data['random_min_days']);
-        }
-
-        Auth::user()->update($data);
-
-        return redirect()->route('account.settings')->with('status', 'notification-preferences-updated');
     }
 
     /**
@@ -102,10 +114,16 @@ class AccountSettingsController extends Controller
             'password' => ['required', 'current_password'],
         ]);
 
-        $user = Auth::user();
-        Auth::logout();
-        $user->delete();
-
-        return redirect('/')->with('status', 'account-deleted');
+        try {
+            $user = Auth::user();
+            Auth::logout();
+            
+            $this->accountSettingsService->deleteAccount($user);
+            
+            return redirect('/')->with('status', 'account-deleted');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['error' => 'Failed to delete account: ' . $e->getMessage()]);
+        }
     }
 }
